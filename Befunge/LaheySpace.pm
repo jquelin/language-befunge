@@ -1,4 +1,4 @@
-# $Id: LaheySpace.pm 6 2003-09-25 14:39:55Z jquelin $
+# $Id: LaheySpace.pm 7 2004-10-25 18:06:53Z jquelin $
 #
 # Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -78,7 +78,7 @@ sub clear {
 Store the given code at the specified coordinates. If the coordinates
 are omitted, then the code is stored at the Origin(0, 0) coordinates.
 
-Return the widht and height of the code inserted.
+Return the width and height of the code inserted.
 
 =cut
 sub store {
@@ -116,6 +116,42 @@ sub store {
     return ($maxlen, scalar( @lines ) );
 }
 
+=head2 store_binary( code, [x, y] )
+
+Store the given code at the specified coordinates. If the coordinates
+are omitted, then the code is stored at the Origin(0, 0) coordinates.
+
+Return the width and height of the code inserted.
+
+This is binary insertion, that is, EOL and FF sequences are stored in
+Funge-space instead of causing the dimension counters to be reset and
+incremented.
+
+=cut
+sub store_binary {
+    my ($self, $code, $x, $y) = @_;
+    $x ||= 0;
+    $y ||= 0;
+
+    # The torus is an array of arrays of numbers.
+    # Each number is the ordinal value of the character
+    # held in this cell.
+
+    # Fetch min/max values.
+    my $maxy = $y - $self->{ymin};
+    my $maxlen = length $code;
+    my $maxx = $maxlen + $x - 1 + $self->{xmin};
+
+    # Enlarge torus.
+    $self->set_min( $x, $y );
+    $self->set_max( $maxx, $maxy );
+
+    # Store code.
+    my @chars = map { ord } split //, $code;
+    splice @{ $self->{torus}[ $y - $self->{ymin} ] }, $x - $self->{xmin}, $maxlen, @chars;
+
+    return ($maxlen, 1 );
+}
 
 =head2 get_value( x, y )
 

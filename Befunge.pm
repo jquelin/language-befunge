@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 5 2003-09-25 14:38:16Z jquelin $
+# $Id: Befunge.pm 7 2004-10-25 18:06:53Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -1281,7 +1281,7 @@ sub op_stdio_in_file {
 
     # Fetch arguments.
     my $path = $ip->spop_gnirts;
-    my $flag = $ip->spop; # unused in this interpreter.
+    my $flag = $ip->spop;
     my ($xin, $yin) = $ip->spop_vec;
     $xin += $ip->storx;
     $yin += $ip->story;
@@ -1297,7 +1297,9 @@ sub op_stdio_in_file {
     close F or $ip->dir_reverse, return;
 
     # Store the code and the result vector.
-    my ($wid, $hei) = $self->torus->store( $lines, $xin, $yin );
+    my ($wid, $hei) = $flag % 2
+        ? ( $self->torus->store_binary( $lines, $xin, $yin ) )
+        : ( $self->torus->store( $lines, $xin, $yin ) );
     $ip->spush( $wid, $hei, $xin, $yin );
 }
 $meths{'i'} = "op_stdio_in_file";

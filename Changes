@@ -1,5 +1,9 @@
 Revision history for Perl extension Language::Befunge.
 
+x.yz ??
+      Courtesy of Philippe Bruhat:
+        - i instruction support binary flag
+
 0.38 Fri May  3 14:47:09 CEST 2002
         - Removed a (silly) debug message.
         - Fool-proof for ascii input.
