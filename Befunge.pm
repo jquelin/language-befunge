@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 2 2003-02-22 10:17:10Z jquelin $
+# $Id: Befunge.pm 3 2003-02-22 10:31:35Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -8,7 +8,7 @@
 #
 
 package Language::Befunge;
-require v5.6;
+require 5.006;
 
 =head1 NAME
 
