@@ -1,0 +1,14 @@
+RCS/.*
+CVS/.*
+\.bak$
+\.tar$
+\.tgz$
+\.tar\.gz$
+^tmp/
+^blib/
+^Makefile$
+^Makefile\.[a-z]+$
+^pm_to_blib$
+~$
+(^|/)\.#
+^MANIFEST.SKIP$
