@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 3 2003-02-22 10:31:35Z jquelin $
+# $Id: Befunge.pm 5 2003-09-25 14:38:16Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -1420,12 +1420,12 @@ sub op_sys_info {
     push @cells, \@stor;
 
     # 13. Top-left point.
-    my @topleft = ( $torus->xmin, $torus->ymin );
+    my @topleft = ( $torus->{xmin}, $torus->{ymin} );
     push @cells, \@topleft;
 
     # 14. Dims of the torus.
-    my @dims = ( $torus->xmax - $torus->xmin + 1,
-                 $torus->ymax - $torus->ymin + 1 );
+    my @dims = ( $torus->{xmax} - $torus->{xmin} + 1,
+                 $torus->{ymax} - $torus->{ymin} + 1 );
     push @cells, \@dims;
 
     # 15/16. Current date/time.
