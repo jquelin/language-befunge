@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 7 2004-10-25 18:06:53Z jquelin $
+# $Id: Befunge.pm 8 2004-10-28 17:20:46Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -74,7 +74,7 @@ use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
 
 # Public variables of the module.
-our $VERSION   = '0.38';
+our $VERSION   = '1.0.0';
 our $HANDPRINT = 'JQBF98'; # the handprint of the interpreter.
 our $AUTOLOAD;
 our $subs;
@@ -1652,6 +1652,8 @@ numbers greater than C<0xffffffff>.
 =head1 AUTHOR
 
 Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
 
 
 =head1 ACKNOWLEDGEMENTS
