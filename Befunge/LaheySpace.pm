@@ -1,6 +1,6 @@
-# $Id: LaheySpace.pm 3 2003-02-22 10:31:35Z jquelin $
+# $Id: LaheySpace.pm 4 2003-09-25 14:13:36Z jquelin $
 #
-# Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
+# Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
 #
 # This program is free software; you can redistribute it and/or
@@ -24,11 +24,10 @@ Language::Befunge::LaheySpace - a LaheySpace representation.
 
 =cut
 
-# A little anal retention ;-)
+
+# Modules we rely upon.
 use strict;
 use warnings;
-
-# Modules we relied upon.
 use Carp;     # This module can't explode :o)
 
 # Variables of the module.
@@ -56,8 +55,8 @@ sub new {
     my $class = ref($proto) || $proto;
     my $self  = 
       { xmin   => 0, # the upper-left x-coordinate
-        xmax   => 0, # the bottom-right x-coordinate
         ymin   => 0, # the upper-left y-coordinate
+        xmax   => 0, # the bottom-right x-coordinate
         ymax   => 0, # the bottom-right y-coordinate
         torus  => [],
       };
