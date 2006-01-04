@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 13 2005-12-02 20:49:53Z jquelin $
+# $Id: Befunge.pm 15 2006-01-04 17:07:11Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -74,7 +74,7 @@ use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
 
 # Public variables of the module.
-our $VERSION   = '1.02';
+our $VERSION   = '1.03';
 our $HANDPRINT = 'JQBF98'; # the handprint of the interpreter.
 our $AUTOLOAD;
 our $subs;
