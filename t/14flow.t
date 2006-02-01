@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 14flow.t 2 2003-02-22 10:17:10Z jquelin $
+# $Id: 14flow.t 16 2006-02-01 17:45:52Z jquelin $
 #
 
 #---------------------------------#
@@ -169,7 +169,19 @@ END_OF_CODE
 eval { $bef->run_code; };
 $out = slurp;
 ok( $@, qr/Attempt to repeat \('k'\) a repeat instruction \('k'\)/ );
-BEGIN { $tests += 6 };
+sel; # move_curip() short circuits on a dead end
+$bef->store_code( <<'END_OF_CODE' );
+    
+END_OF_CODE
+eval {
+    local $SIG{ALRM} = sub { die "timeout\n" };
+    alarm 10;
+    $bef->move_curip(qr/ /);
+    alarm 0;
+};
+$out = slurp;
+ok( $@, qr/infinite loop/ );
+BEGIN { $tests += 7 };
 
 
 
