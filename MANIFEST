@@ -2,7 +2,9 @@ Befunge.pm
 Befunge/bin/jqbf98
 Befunge/doc/bf98-specs.html
 Befunge/doc/instr.txt
+Befunge/doc/laheys.jpg
 Befunge/doc/library.pod
+Befunge/doc/wrap.jpg
 Befunge/examples/anagram.bf
 Befunge/examples/fact.bf
 Befunge/examples/hello.bf
@@ -13,9 +15,10 @@ Befunge/IP.pm
 Befunge/LaheySpace.pm
 Befunge/lib/FOO.pm
 Befunge/lib/HELO.pm
+Build.PL
 Changes
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 META.yml
 README
 t/01basic.t

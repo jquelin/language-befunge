@@ -1,11 +1,12 @@
-# -*- perl -*-
+#!/usr/bin/env perl
 #
 # This script writes the Makefile for Language::Befunge
-# $Id: Makefile.PL 18 2006-02-06 20:23:21Z jquelin $
+# $Id: Makefile.PL 19 2006-02-07 14:38:53Z jquelin $
 #
 
-# The modules.
 use strict;
+use warnings;
+
 use Config;
 use ExtUtils::MakeMaker;
 use Getopt::Std;
@@ -36,12 +37,14 @@ EOT
     my @tmp;
     foreach my $prg (@programs_to_install) {
         push @tmp, $prg 
-          if prompt("Do you want to install $prg?", "y") =~ /^y/i;
+          if prompt("Do you want to install $prg?", 'y') =~ /^y/i;
     }
     @programs_to_install = @tmp;
 }
 
+#---
 
+# Write Makefile.
 WriteMakefile(
     NAME          => 'Language::Befunge',
     VERSION_FROM  => 'Befunge.pm',
