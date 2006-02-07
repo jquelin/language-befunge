@@ -1,4 +1,4 @@
-# $Id: IP.pm 3 2003-02-22 10:31:35Z jquelin $
+# $Id: IP.pm 21 2006-02-07 17:11:00Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -328,6 +328,7 @@ sub svalue {
     my ($self, $idx) = @_;
 
     $idx = - abs( $idx );
+    return 0 unless exists $self->toss->[$idx];
     return $self->toss->[$idx];
 }
 

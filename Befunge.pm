@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 19 2006-02-07 14:38:53Z jquelin $
+# $Id: Befunge.pm 21 2006-02-07 17:11:00Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -63,7 +63,6 @@ This module also implements the Concurrent Funge semantics.
 
 =cut
 
-# A little anal retention ;-)
 use strict;
 use warnings;
 
@@ -74,7 +73,7 @@ use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
 
 # Public variables of the module.
-our $VERSION   = '1.10';
+our $VERSION   = '1.11';
 our $HANDPRINT = 'JQBF98'; # the handprint of the interpreter.
 our $AUTOLOAD;
 our $subs;
