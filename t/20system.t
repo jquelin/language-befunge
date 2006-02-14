@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 20system.t 2 2003-02-22 10:17:10Z jquelin $
+# $Id: 20system.t 22 2006-02-14 15:44:47Z jquelin $
 #
 
 #---------------------------------#
@@ -156,8 +156,11 @@ BEGIN { $tests += 1 };
 
 sel; # 11. delta of IP.
 $bef->store_code( <<'END_OF_CODE' );
-b 21x   .   q
-      y   .
+v .      
+    q    
+>b  21x  
+        y
+          .
 END_OF_CODE
 $bef->run_code;
 $out = slurp;

@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 13dir.t 2 2003-02-22 10:17:10Z jquelin $
+# $Id: 13dir.t 22 2006-02-14 15:44:47Z jquelin $
 #
 
 #---------------------------------------#
@@ -228,9 +228,9 @@ ok( $out, "1 " );
 sel; # diagonal/out-of-bounds.
 $bef->store_code( <<'END_OF_CODE' );
 101-x
-       q
-      .
-     1
+   q  
+  .  
+ 1   
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
