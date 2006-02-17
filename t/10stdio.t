@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 10stdio.t 7 2004-10-25 18:06:53Z jquelin $
+# $Id: 10stdio.t 23 2006-02-17 13:53:06Z jquelin $
 #
 
 #----------------------------------#
@@ -97,7 +97,7 @@ v qiv# "t/hello.bf"0        <
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $bef->torus->rectangle(6, 9, 71, 1),
+ok( $bef->get_torus->rectangle(6, 9, 71, 1),
     qq{v q  ,,,,,,,,,,,,,"hello world!"a <\n>                                 ^} . "\n" );
 ok( $out, "" );
 BEGIN { $tests += 2 };
