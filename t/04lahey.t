@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 04lahey.t 28 2006-04-29 16:47:22Z jquelin $
+# $Id: 04lahey.t 29 2006-04-29 16:56:57Z jquelin $
 #
 
 #------------------------------------------#
@@ -16,13 +16,14 @@ my $ip = new Language::Befunge::IP;
 my $href;
 BEGIN { $tests = 0 };
 
-# Constructor.
+
+# constructor.
 my $ls = new Language::Befunge::LaheySpace;
 isa_ok( $ls, "Language::Befunge::LaheySpace");
 BEGIN { $tests += 1 };
 
 
-# Clear method.
+# clear method.
 $ls->clear;
 is( $ls->{xmin}, 0, "clear resets xmin" );
 is( $ls->{ymin}, 0, "clear resets ymin" );
@@ -57,41 +58,46 @@ is( $ls->out_of_bounds( 0,  0), 0, "out_of_bounds in torus" );
 BEGIN{ $tests += 5; }
 
 
-# Enlarge torus.
+# enlarge torus.
 $ls->clear;
 $ls->enlarge_y( 3 );
-is( $ls->{xmin}, 0 );
-is( $ls->{ymin}, 0 );
-is( $ls->{xmax}, 0 );
-is( $ls->{ymax}, 3 );
+is( $ls->{xmin}, 0, "enlarge_y >0 does not grow xmin" );
+is( $ls->{ymin}, 0, "enlarge_y >0 does not grow ymin" );
+is( $ls->{xmax}, 0, "enlarge_y >0 does not grow xmax" );
+is( $ls->{ymax}, 3, "enlarge_y >0 does grow ymax" );
 $ls->enlarge_x( 2 );
-is( $ls->{xmin}, 0 );
-is( $ls->{ymin}, 0 );
-is( $ls->{xmax}, 2 );
-is( $ls->{ymax}, 3 );
+is( $ls->{xmin}, 0, "enlarge_x >0 does not grow xmin" );
+is( $ls->{ymin}, 0, "enlarge_x >0 does not grow ymin" );
+is( $ls->{xmax}, 2, "enlarge_x >0 does grow xmax" );
+is( $ls->{ymax}, 3, "enlarge_x >0 does not grow ymax" );
 $ls->enlarge_y( -5 );
-is( $ls->{xmin}, 0 );
-is( $ls->{ymin}, -5 );
-is( $ls->{xmax}, 2 );
-is( $ls->{ymax}, 3 );
+is( $ls->{xmin}, 0,  "enlarge_y <0 does not grow xmin" );
+is( $ls->{ymin}, -5, "enlarge_y <0 does grow ymin" );
+is( $ls->{xmax}, 2,  "enlarge_y <0 does not grow xmax" );
+is( $ls->{ymax}, 3,  "enlarge_y <0 does not grow ymax" );
 $ls->enlarge_x( -4 );
-is( $ls->{xmin}, -4 );
-is( $ls->{ymin}, -5 );
-is( $ls->{xmax}, 2 );
-is( $ls->{ymax}, 3 );
+is( $ls->{xmin}, -4, "enlarge_x <0 does grow xmin" );
+is( $ls->{ymin}, -5, "enlarge_x <0 does not grow ymin" );
+is( $ls->{xmax}, 2,  "enlarge_x <0 does not grow xmax" );
+is( $ls->{ymax}, 3,  "enlarge_x <0 does not grow ymax" );
 BEGIN { $tests += 16; }
 
-# Get/Set value.
+
+# get/set value.
 $ls->clear;
 $ls->set_value( 10, 5, 65 );
-is( $ls->{xmin}, 0 );
-is( $ls->{ymin}, 0 );
-is( $ls->{xmax}, 10 );
-is( $ls->{ymax}, 5 );
-is( $ls->get_value( 10, 5 ), 65 );
-is( $ls->get_value( 1, 1),   32 ); # default to space.
-is( $ls->get_value( 20, 20), 32 ); # out of bounds.
-BEGIN { $tests += 7; }
+is( $ls->{xmax}, 10, "set_value should grow xmax if needed" );
+is( $ls->{ymax}, 5,  "set_value should grow ymax if needed" );
+is( $ls->get_value( 10, 5 ), 65, "get_value should return correct value" );
+$ls->set_value( -10, -5, 65 );
+is( $ls->{xmin}, -10, "set_value should grow xmin if needed" );
+is( $ls->{ymin}, -5,  "set_value should grow ymin if needed" );
+is( $ls->get_value( -10, -5 ), 65, "get_value should return correct value" );
+
+is( $ls->get_value( 1, 1),   32, "get_value defaults to space" );
+is( $ls->get_value( 20, 20), 32, "get_value out of bounds defaults to space" );
+BEGIN { $tests += 8; }
+
 
 # Store method.
 $ls->clear;
