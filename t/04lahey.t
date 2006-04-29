@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 04lahey.t 27 2006-04-29 16:44:12Z jquelin $
+# $Id: 04lahey.t 28 2006-04-29 16:47:22Z jquelin $
 #
 
 #------------------------------------------#
@@ -24,35 +24,38 @@ BEGIN { $tests += 1 };
 
 # Clear method.
 $ls->clear;
-is( $ls->{xmin}, 0 );
-is( $ls->{ymin}, 0 );
-is( $ls->{xmax}, 0 );
-is( $ls->{ymax}, 0 );
+is( $ls->{xmin}, 0, "clear resets xmin" );
+is( $ls->{ymin}, 0, "clear resets ymin" );
+is( $ls->{xmax}, 0, "clear resets xmax" );
+is( $ls->{ymax}, 0, "clear resets ymax" );
 BEGIN { $tests += 4; }
+
 
 # set_min/set_max methods.
 $ls->clear;
-$ls->set_min( -2, -3 );
-is( $ls->{xmin}, -2 );
-is( $ls->{ymin}, -3 );
-$ls->set_min( -1, -1 ); # Can't shrink.
-is( $ls->{xmin}, -2 );
-is( $ls->{ymin}, -3 );
-$ls->set_max( 4, 5 );
-is( $ls->{xmax}, 4 );
-is( $ls->{ymax}, 5 );
-$ls->set_min( 2, 3 ); # Can't shrink.
-is( $ls->{xmax}, 4 );
-is( $ls->{ymax}, 5 );
+$ls->set_min( -2, -3 ); # set_min
+is( $ls->{xmin}, -2, "set_min sets xmin" );
+is( $ls->{ymin}, -3, "set_min sets ymin" );
+$ls->set_min( -1, -1 ); # can't shrink
+is( $ls->{xmin}, -2, "set_min can't shrink xmin" );
+is( $ls->{ymin}, -3, "set_min can't shrink ymin" );
+$ls->set_max( 4, 5 );   # set_max
+is( $ls->{xmax}, 4, "set_max sets xmax" );
+is( $ls->{ymax}, 5, "set_max sets ymax" );
+$ls->set_max( 2, 3 );   # can't shrink
+is( $ls->{xmax}, 4, "set_max can't shrink xmax" );
+is( $ls->{ymax}, 5, "set_max can't shrink ymax" );
 BEGIN{ $tests += 8; }
 
+
 # out_of_bounds method.
-is($ls->out_of_bounds(-5, -5), 1);
-is($ls->out_of_bounds( 5, -5), 1);
-is($ls->out_of_bounds(-5,  5), 1);
-is($ls->out_of_bounds( 5,  5), 1);
-is($ls->out_of_bounds( 0,  0), 0);
+is( $ls->out_of_bounds(-6,  0), 1, "out_of_bounds < xmin" );
+is( $ls->out_of_bounds( 0, -6), 1, "out_of_bounds < ymin" );
+is( $ls->out_of_bounds( 0,  6), 1, "out_of_bounds > xmax" );
+is( $ls->out_of_bounds( 6,  0), 1, "out_of_bounds > ymax" );
+is( $ls->out_of_bounds( 0,  0), 0, "out_of_bounds in torus" );
 BEGIN{ $tests += 5; }
+
 
 # Enlarge torus.
 $ls->clear;
