@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 04lahey.t 30 2006-04-29 17:43:30Z jquelin $
+# $Id: 04lahey.t 31 2006-04-29 17:51:44Z jquelin $
 #
 
 #------------------------------------------#
@@ -32,54 +32,54 @@ is( $ls->{ymax}, 0, "clear resets ymax" );
 BEGIN { $tests += 4; }
 
 
-# set_min/set_max methods.
+# _set_min/_set_max methods.
 $ls->clear;
-$ls->set_min( -2, -3 ); # set_min
-is( $ls->{xmin}, -2, "set_min sets xmin" );
-is( $ls->{ymin}, -3, "set_min sets ymin" );
-$ls->set_min( -1, -1 ); # can't shrink
-is( $ls->{xmin}, -2, "set_min can't shrink xmin" );
-is( $ls->{ymin}, -3, "set_min can't shrink ymin" );
-$ls->set_max( 4, 5 );   # set_max
-is( $ls->{xmax}, 4, "set_max sets xmax" );
-is( $ls->{ymax}, 5, "set_max sets ymax" );
-$ls->set_max( 2, 3 );   # can't shrink
-is( $ls->{xmax}, 4, "set_max can't shrink xmax" );
-is( $ls->{ymax}, 5, "set_max can't shrink ymax" );
+$ls->_set_min( -2, -3 ); # _set_min
+is( $ls->{xmin}, -2, "_set_min sets xmin" );
+is( $ls->{ymin}, -3, "_set_min sets ymin" );
+$ls->_set_min( -1, -1 ); # can't shrink
+is( $ls->{xmin}, -2, "_set_min can't shrink xmin" );
+is( $ls->{ymin}, -3, "_set_min can't shrink ymin" );
+$ls->_set_max( 4, 5 );   # _set_max
+is( $ls->{xmax}, 4, "_set_max sets xmax" );
+is( $ls->{ymax}, 5, "_set_max sets ymax" );
+$ls->_set_max( 2, 3 );   # can't shrink
+is( $ls->{xmax}, 4, "_set_max can't shrink xmax" );
+is( $ls->{ymax}, 5, "_set_max can't shrink ymax" );
 BEGIN{ $tests += 8; }
 
 
-# out_of_bounds method.
-is( $ls->out_of_bounds(-6,  0), 1, "out_of_bounds < xmin" );
-is( $ls->out_of_bounds( 0, -6), 1, "out_of_bounds < ymin" );
-is( $ls->out_of_bounds( 0,  6), 1, "out_of_bounds > xmax" );
-is( $ls->out_of_bounds( 6,  0), 1, "out_of_bounds > ymax" );
-is( $ls->out_of_bounds( 0,  0), 0, "out_of_bounds in torus" );
+# _out_of_bounds method.
+is( $ls->_out_of_bounds(-6,  0), 1, "_out_of_bounds < xmin" );
+is( $ls->_out_of_bounds( 0, -6), 1, "_out_of_bounds < ymin" );
+is( $ls->_out_of_bounds( 0,  6), 1, "_out_of_bounds > xmax" );
+is( $ls->_out_of_bounds( 6,  0), 1, "_out_of_bounds > ymax" );
+is( $ls->_out_of_bounds( 0,  0), 0, "_out_of_bounds in torus" );
 BEGIN{ $tests += 5; }
 
 
 # enlarge torus.
 $ls->clear;
-$ls->enlarge_y( 3 );
-is( $ls->{xmin}, 0, "enlarge_y >0 does not grow xmin" );
-is( $ls->{ymin}, 0, "enlarge_y >0 does not grow ymin" );
-is( $ls->{xmax}, 0, "enlarge_y >0 does not grow xmax" );
-is( $ls->{ymax}, 3, "enlarge_y >0 does grow ymax" );
-$ls->enlarge_x( 2 );
-is( $ls->{xmin}, 0, "enlarge_x >0 does not grow xmin" );
-is( $ls->{ymin}, 0, "enlarge_x >0 does not grow ymin" );
-is( $ls->{xmax}, 2, "enlarge_x >0 does grow xmax" );
-is( $ls->{ymax}, 3, "enlarge_x >0 does not grow ymax" );
-$ls->enlarge_y( -5 );
-is( $ls->{xmin}, 0,  "enlarge_y <0 does not grow xmin" );
-is( $ls->{ymin}, -5, "enlarge_y <0 does grow ymin" );
-is( $ls->{xmax}, 2,  "enlarge_y <0 does not grow xmax" );
-is( $ls->{ymax}, 3,  "enlarge_y <0 does not grow ymax" );
-$ls->enlarge_x( -4 );
-is( $ls->{xmin}, -4, "enlarge_x <0 does grow xmin" );
-is( $ls->{ymin}, -5, "enlarge_x <0 does not grow ymin" );
-is( $ls->{xmax}, 2,  "enlarge_x <0 does not grow xmax" );
-is( $ls->{ymax}, 3,  "enlarge_x <0 does not grow ymax" );
+$ls->_enlarge_y( 3 );
+is( $ls->{xmin}, 0, "_enlarge_y >0 does not grow xmin" );
+is( $ls->{ymin}, 0, "_enlarge_y >0 does not grow ymin" );
+is( $ls->{xmax}, 0, "_enlarge_y >0 does not grow xmax" );
+is( $ls->{ymax}, 3, "_enlarge_y >0 does grow ymax" );
+$ls->_enlarge_x( 2 );
+is( $ls->{xmin}, 0, "_enlarge_x >0 does not grow xmin" );
+is( $ls->{ymin}, 0, "_enlarge_x >0 does not grow ymin" );
+is( $ls->{xmax}, 2, "_enlarge_x >0 does grow xmax" );
+is( $ls->{ymax}, 3, "_enlarge_x >0 does not grow ymax" );
+$ls->_enlarge_y( -5 );
+is( $ls->{xmin}, 0,  "_enlarge_y <0 does not grow xmin" );
+is( $ls->{ymin}, -5, "_enlarge_y <0 does grow ymin" );
+is( $ls->{xmax}, 2,  "_enlarge_y <0 does not grow xmax" );
+is( $ls->{ymax}, 3,  "_enlarge_y <0 does not grow ymax" );
+$ls->_enlarge_x( -4 );
+is( $ls->{xmin}, -4, "_enlarge_x <0 does grow xmin" );
+is( $ls->{ymin}, -5, "_enlarge_x <0 does not grow ymin" );
+is( $ls->{xmax}, 2,  "_enlarge_x <0 does not grow xmax" );
+is( $ls->{ymax}, 3,  "_enlarge_x <0 does not grow ymax" );
 BEGIN { $tests += 16; }
 
 
@@ -204,7 +204,7 @@ BEGIN { $tests += 3; }
 
 # move ip.
 $ls->clear;   # "positive" playfield.
-$ls->set_max(5, 10);
+$ls->_set_max(5, 10);
 $ip->set_pos( 4, 3 );
 $ip->set_dx( 1 );
 $ip->set_dy( 0 );
@@ -247,8 +247,8 @@ is( $ip->get_cury, 10, "move_ip_forward wraps ymin" );
 BEGIN { $tests += 10 }
 
 $ls->clear;   # "negative" playfield.
-$ls->set_min(-1, -3);
-$ls->set_max(5, 10);
+$ls->_set_min(-1, -3);
+$ls->_set_max(5, 10);
 $ip->set_pos( 4, 3 );
 $ip->set_dx( 1 );
 $ip->set_dy( 0 );
@@ -276,8 +276,8 @@ is( $ip->get_cury, 10, "move_ip_forward wraps ymin" );
 BEGIN { $tests += 6; }
 
 $ls->clear;   # diagonals.
-$ls->set_min(-1, -2);
-$ls->set_max(6, 5);
+$ls->_set_min(-1, -2);
+$ls->_set_max(6, 5);
 $ip->set_pos(0, 0);
 $ip->set_dx(-2);
 $ip->set_dy(-3);
