@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 03ip.t 25 2006-02-17 14:53:49Z jquelin $
+# $Id: 03ip.t 32 2006-04-29 17:53:44Z jquelin $
 #
 
 #----------------------------------#
@@ -24,7 +24,7 @@ $ip = new Language::Befunge::IP;
 ok( $ip->get_id, 1 );
 $ip = new Language::Befunge::IP;
 ok( $ip->get_id, 2 );
-ok( Language::Befunge::IP::get_new_id, 3 );
+ok( Language::Befunge::IP::_get_new_id, 3 );
 BEGIN { $tests += 4 };
 
 # Test accessors.
