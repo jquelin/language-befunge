@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 04lahey.t 31 2006-04-29 17:51:44Z jquelin $
+# $Id: 04lahey.t 33 2006-04-30 13:54:21Z jquelin $
 #
 
 #------------------------------------------#
@@ -12,13 +12,13 @@ use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
 
 my $tests;
-my $ip = new Language::Befunge::IP;
+my $ip = Language::Befunge::IP->new;
 my $href;
 BEGIN { $tests = 0 };
 
 
 # constructor.
-my $ls = new Language::Befunge::LaheySpace;
+my $ls = Language::Befunge::LaheySpace->new;
 isa_ok( $ls, "Language::Befunge::LaheySpace");
 BEGIN { $tests += 1 };
 

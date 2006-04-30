@@ -1,4 +1,4 @@
-# $Id: IP.pm 32 2006-04-29 17:53:44Z jquelin $
+# $Id: IP.pm 33 2006-04-30 13:54:21Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -42,8 +42,7 @@ Create a new Instruction Pointer.
 
 =cut
 sub new {
-    my $proto = shift;
-    my $class = ref($proto) || $proto;
+    my ($class) = @_;
     my $self  = 
       { id           => 0,  
         toss         => [],

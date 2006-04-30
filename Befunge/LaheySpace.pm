@@ -1,4 +1,4 @@
-# $Id: LaheySpace.pm 31 2006-04-29 17:51:44Z jquelin $
+# $Id: LaheySpace.pm 33 2006-04-30 13:54:21Z jquelin $
 #
 # Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -41,8 +41,7 @@ Creates a new Lahey Space.
 
 =cut
 sub new {
-    my $proto = shift;
-    my $class = ref($proto) || $proto;
+    my ($class) = @_;
     my $self  = 
       { xmin   => 0, # the upper-left x-coordinate
         ymin   => 0, # the upper-left y-coordinate

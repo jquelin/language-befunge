@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 03ip.t 32 2006-04-29 17:53:44Z jquelin $
+# $Id: 03ip.t 33 2006-04-30 13:54:21Z jquelin $
 #
 
 #----------------------------------#
@@ -14,15 +14,15 @@ my $tests;
 BEGIN { $tests = 0 };
 
 # Constructor.
-my $ip = new Language::Befunge::IP;
+my $ip = Language::Befunge::IP->new;
 ok( ref($ip), "Language::Befunge::IP");
 BEGIN { $tests += 1 };
 
 # Unique ids.
 ok( $ip->get_id, 0 );
-$ip = new Language::Befunge::IP;
+$ip = Language::Befunge::IP->new;
 ok( $ip->get_id, 1 );
-$ip = new Language::Befunge::IP;
+$ip = Language::Befunge::IP->new;
 ok( $ip->get_id, 2 );
 ok( Language::Befunge::IP::_get_new_id, 3 );
 BEGIN { $tests += 4 };
@@ -284,7 +284,7 @@ ok( $ip->get_dy, -3 );
 BEGIN { $tests += 8 };
 
 # Test cloning.
-$ip = new Language::Befunge::IP;
+$ip = Language::Befunge::IP->new;
 $ip->spush( 1, 5, 6 );
 my $clone = $ip->clone;
 ok( $ip->get_id != $clone->get_id, 1 );
