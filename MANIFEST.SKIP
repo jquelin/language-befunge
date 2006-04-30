@@ -9,6 +9,7 @@ Language-Befunge-.*/.*
 \.tar\.gz$
 ^_build/
 ^blib/
+^cover_db/
 ^tmp/
 ^Build$
 ^Makefile$
