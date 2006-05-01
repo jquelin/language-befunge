@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 40 2006-05-01 17:22:14Z jquelin $
+# $Id: Befunge.pm 42 2006-05-01 17:49:44Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -1192,7 +1192,7 @@ sub op_stdio_in_num {
     my $ip = $self->get_curip;
     my ($in, $nb);
     while ( not defined($nb) ) {
-        $in = $ip->input || <STDIN> while not $in;
+        $in = $ip->get_input || <STDIN> while not $in;
         if ( $in =~ s/^.*?(-?\d+)// ) {
             $nb = $1;
             $nb < -2**31  and $nb = -2**31;
@@ -1200,7 +1200,7 @@ sub op_stdio_in_num {
         } else {
             $in = "";
         }
-        $ip->input( $in );
+        $ip->set_input( $in );
     }
     $ip->spush( $nb );
     $self->debug( "numeric input: pushing $nb\n" ); 
@@ -1215,11 +1215,11 @@ sub op_stdio_in_ascii {
     my $self = shift;
     my $ip = $self->get_curip;
     my $in;
-    $in = $ip->input || <STDIN> while not $in;
+    $in = $ip->get_input || <STDIN> while not $in;
     my $chr = substr $in, 0, 1, "";
     my $ord = ord $chr;
     $ip->spush( $ord );
-    $ip->input( $in );
+    $ip->set_input( $in );
     $self->debug( "ascii input: pushing '$chr' (ord=$ord)\n" ); 
 }
 $meths{'~'} = "op_stdio_in_ascii";
