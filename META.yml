@@ -1,24 +1,8 @@
----
+--- #YAML:1.0
 name: Language-Befunge
-version: 1.10
+version: 2.05
 author:
-  - 'Jerome Quelin <jquelin@cpan.org>'
+  - Jerome Quelin <jquelin@cpan.org>
 abstract: a Befunge-98 interpreter
 license: perl
-requires:
-  Storable: 0
-build_requires:
-  Test::More: 0
-provides:
-  Language::Befunge:
-    file: Befunge.pm
-    version: 1.10
-  Language::Befunge::IP:
-    file: Befunge/IP.pm
-  Language::Befunge::LaheySpace:
-    file: Befunge/LaheySpace.pm
-  Language::Befunge::lib::FOO:
-    file: Befunge/lib/FOO.pm
-  Language::Befunge::lib::HELO:
-    file: Befunge/lib/HELO.pm
-generated_by: Module::Build version 0.2611
+generated_by: Module::Build version 0.2612, without YAML.pm
