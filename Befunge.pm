@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 39 2006-05-01 16:35:22Z jquelin $
+# $Id: Befunge.pm 40 2006-05-01 17:22:14Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -96,7 +96,6 @@ sub new {
         retval   => 0,
         DEBUG    => 0,
         curip    => undef,
-        lastip   => undef,
         ips      => [],
         newips   => [],
         torus    => Language::Befunge::LaheySpace->new,
@@ -142,11 +141,6 @@ wether the interpreter should output debug messages (a boolean)
 
 the current Instruction Pointer processed (a L::B::IP object)
 
-=item lastip:
-
-the last Instruction Pointer, when C<@> or C<q> instructions are
-encountered (a L::B::IP object)
-
 =item ips:
 
 the current set of IPs travelling in the Lahey space (an array
@@ -165,7 +159,7 @@ the current Lahey space (a L::B::LaheySpace object)
 
 =cut
 BEGIN {
-    my @attrs = qw[ file params retval DEBUG curip lastip ips newips torus ];
+    my @attrs = qw[ file params retval DEBUG curip ips newips torus ];
     foreach my $attr ( @attrs ) {
         my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
         $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
@@ -957,7 +951,6 @@ sub op_flow_kill_thread {
     my $self = shift;
     $self->debug( "end of Instruction Pointer\n" );
     $self->get_curip->set_end('@');
-    $self->set_lastip( $self->get_curip );
 }
 $meths{'@'} = "op_flow_kill_thread";
 
@@ -972,7 +965,6 @@ sub op_flow_quit {
     $self->set_ips( [] );
     $self->get_curip->set_end('q');
     $self->set_retval( $self->get_curip->spop );
-    $self->set_lastip( $self->get_curip );
 }
 $meths{'q'} = "op_flow_quit";
 
