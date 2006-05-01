@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 03ip.t 37 2006-04-30 17:52:11Z jquelin $
+# $Id: 03ip.t 38 2006-05-01 07:54:26Z jquelin $
 #
 
 #----------------------------------#
@@ -49,6 +49,9 @@ $ip->set_end( 1 );
 is( $ip->get_end, 1 );
 $ip->set_input( "gnirts" );
 is( $ip->get_input, "gnirts" );
+$ip->set_data({}); # meaningless, only to test accessors
+$ip->set_libs([]); # meaningless, only to test accessors
+$ip->set_ss([]);   # meaningless, only to test accessors
 BEGIN { $tests += 11 };
 
 # Test stack operations.
