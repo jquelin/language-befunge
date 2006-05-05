@@ -1,4 +1,4 @@
-# $Id: LaheySpace.pm 33 2006-04-30 13:54:21Z jquelin $
+# $Id: LaheySpace.pm 48 2006-05-05 15:36:57Z jquelin $
 #
 # Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -73,7 +73,7 @@ sub clear {
 }
 
 
-=head2 store( code, [x, y] )
+=head2 store( code, [vector] )
 
 Store the given code at the specified coordinates. If the coordinates
 are omitted, then the code is stored at the Origin(0, 0) coordinates.
@@ -82,9 +82,14 @@ Return the width and height of the code inserted.
 
 =cut
 sub store {
-    my ($self, $code, $x, $y) = @_;
-    $x ||= 0;
-    $y ||= 0;
+    my ($self, $code, $v) = @_;
+    my ($x, $y);
+    if(defined $v) {
+    		($x, $y) = $v->get_all_components();
+    } else {
+	    $x = $y = 0;
+	    $v = Language::Befunge::Vector->new(2, $x, $y);
+    }
 
     # The torus is an array of arrays of numbers.
     # Each number is the ordinal value of the character
@@ -100,10 +105,11 @@ sub store {
         $maxlen < $len and $maxlen = $len;
     }
     my $maxx = $maxlen + $x - 1 + $self->{xmin};
+    my $max = Language::Befunge::Vector->new(2, $maxx, $maxy);
 
     # Enlarge torus.
-    $self->_set_min( $x, $y );
-    $self->_set_max( $maxx, $maxy );
+    $self->_set_min( $v );
+    $self->_set_max( $max );
 
     # Store code.
     foreach my $j ( 0..$#lines  ) {
@@ -113,10 +119,10 @@ sub store {
         splice @{ $self->{torus}[ $j + $y - $self->{ymin} ] }, $x - $self->{xmin}, $maxlen, @chars;
     }
 
-    return ($maxlen, scalar( @lines ) );
+    return (Language::Befunge::Vector->new(2, $maxlen, scalar( @lines ) ));
 }
 
-=head2 store_binary( code, [x, y] )
+=head2 store_binary( code, [vector] )
 
 Store the given code at the specified coordinates. If the coordinates
 are omitted, then the code is stored at the Origin(0, 0) coordinates.
@@ -129,9 +135,14 @@ incremented.
 
 =cut
 sub store_binary {
-    my ($self, $code, $x, $y) = @_;
-    $x ||= 0;
-    $y ||= 0;
+    my ($self, $code, $v) = @_;
+    my ($x, $y);
+    if(defined $v) {
+    		($x, $y) = $v->get_all_components();
+    } else {
+	    $x = $y = 0;
+	    $v = Language::Befunge::Vector->new(2, $x, $y);
+    }
 
     # The torus is an array of arrays of numbers.
     # Each number is the ordinal value of the character
@@ -142,18 +153,19 @@ sub store_binary {
     my $maxlen = length $code;
     my $maxx = $maxlen + $x - 1 + $self->{xmin};
 
+    my $max = Language::Befunge::Vector->new(2, $maxx, $maxy);
     # Enlarge torus.
-    $self->_set_min( $x, $y );
-    $self->_set_max( $maxx, $maxy );
+    $self->_set_min( $v );
+    $self->_set_max( $max );
 
     # Store code.
     my @chars = map { ord } split //, $code;
     splice @{ $self->{torus}[ $y - $self->{ymin} ] }, $x - $self->{xmin}, $maxlen, @chars;
 
-    return ($maxlen, 1 );
+    return (Language::Befunge::Vector->new(2, $maxlen, 1 ));
 }
 
-=head2 get_char( x, y )
+=head2 get_char( vector )
 
 
 Return the character stored in the torus at the specified location. If
@@ -166,15 +178,14 @@ guarantee is made that the return value is printable.
 
 =cut
 sub get_char {
-	my $self = shift;
-	my ($x,$y) = @_;
-	my $ord = $self->get_value($x,$y);
+	my ($self, $v) = @_;
+	my $ord = $self->get_value($v);
 	# reject invalid ascii
 	return sprintf("<np-0x%x>",$ord) if ($ord < 0 || $ord > 255);
 	return chr($ord);
 }
 
-=head2 get_value( x, y )
+=head2 get_value( vector )
 
 
 Return the number stored in the torus at the specified location. If
@@ -187,7 +198,8 @@ both... Eh, that's Befunge! :o) ).
 
 =cut
 sub get_value {
-    my ($self, $x, $y) = @_;
+    my ($self, $v) = @_;
+    my ($x, $y) = $v->get_all_components;
     my $val = 32;               # Default to space.
 
     if ( $y >= $self->{ymin} and $y <= $self->{ymax} ) {
@@ -204,7 +216,7 @@ sub get_value {
     
 
 
-=head2 set_value( x, y, value )
+=head2 set_value( vector, value )
 
 Write the supplied value in the torus at the specified location.
 
@@ -214,11 +226,12 @@ both... Eh, that's Befunge! :o) ).
 
 =cut
 sub set_value {
-    my ($self, $x, $y, $val) = @_;
+    my ($self, $v, $val) = @_;
 
     # Ensure we can set the value.
-    $self->_set_min( $x, $y );
-    $self->_set_max( $x, $y );
+    $self->_set_min( $v );
+    $self->_set_max( $v );
+    my ($x, $y) = $v->get_all_components();
     $self->{torus}[$y-$self->{ymin}][$x-$self->{xmin}] = $val;
 }
 
@@ -232,15 +245,13 @@ sub move_ip_forward {
     my ($self, $ip) = @_;
 
     # Fetch the current position of the IP.
-    my $x = $ip->get_curx;
-    my $y = $ip->get_cury;
+    my $v = $ip->get_position;
 
-    my ($dx, $dy) = ($ip->get_dx, $ip->get_dy);
+    my $d = $ip->get_delta;
     # Now, let's move the IP.
-    $x += $dx;
-    $y += $dy;
+    $v += $d;
 
-    if($self->_out_of_bounds($x, $y)) {
+    if($self->_out_of_bounds($v)) {
         # Check out-of-bounds. Please note that we're in a
         # Lahey-space, and if we need to wrap, we perform a
         # Lahey-space wrapping. Funge98 says we should walk 
@@ -248,32 +259,33 @@ sub move_ip_forward {
         # other side of LaheySpace, and then continue along
         # the same path.
         do {
-            $x -= $dx;
-            $y -= $dy;
-        } until($self->_out_of_bounds($x, $y));
+            $v -= $d;
+        } until($self->_out_of_bounds($v));
 
         # Now that we've hit the wall, walk back into the
         # valid code range.
-        $x += $dx;
-        $y += $dy;
+        $v += $d;
     }
 
     # Store new position.
-    $ip->set_pos( $x, $y );
+    $ip->set_position( $v );
 }
 
 
-=head2 rectangle( x, y, w, h )
+=head2 rectangle( pos, size )
 
-Return a string containing the data/code in the specified rectangle.
+Return a string containing the data/code in the rectangle defined by
+the supplied vectors.
 
 =cut
 sub rectangle {
-    my ($self, $x, $y, $w, $h) = @_;
+    my ($self, $start, $size) = @_;
+    my ($x, $y) = $start->get_all_components();
+    my ($w, $h) =  $size->get_all_components();
 
     # Ensure we have enough data.
-    $self->_set_min( $x, $y );
-    $self->_set_max( $x+$w, $y+$h );
+    $self->_set_min( $start );
+    $self->_set_max( $start+$size );
 
     # Fetch the data.
     my $data = "";
@@ -328,14 +340,16 @@ sub labels_lookup {
 
 =head1 PRIVATE METHODS
 
-=head2 _set_min( x, y )
+=head2 _set_min( vector )
 
-Set the current minimum coordinates. If the supplied values are bigger
-than the actual minimum, then nothing is done.
+Set the current minimum coordinates. If the supplied vector is bigger
+than the actual minimum (or equal) in all dimensions, then nothing is
+done.
 
 =cut
 sub _set_min {
-    my ($self, $x, $y) = @_;
+    my ($self, $v) = @_;
+    my ($x, $y) = $v->get_all_components();
 
     # Check if we need to enlarge the torus.
     $self->_enlarge_y( $y - $self->{ymin} ) if $y < $self->{ymin};
@@ -343,14 +357,16 @@ sub _set_min {
 }
 
 
-=head2 _set_max( x, y )
+=head2 _set_max( vector )
 
-Set the current maximum coordinates. If the supplied values are smaller
-than the actual maximum, then nothing is done.
+Set the current maximum coordinates. If the supplied vector is smaller
+than the actual maximum (or equal) in all dimensions, then nothing is
+done.
 
 =cut
 sub _set_max {
-    my ($self, $x, $y) = @_;
+    my ($self, $v) = @_;
+    my ($x, $y) = $v->get_all_components();
 
     # Check if we need to enlarge the torus.
     $self->_enlarge_y( $y - $self->{ymax} ) if $y > $self->{ymax};
@@ -414,13 +430,14 @@ sub _enlarge_y {
 }
 
 
-=head2 _out_of_bounds( x, y )
+=head2 _out_of_bounds( vector )
 
 Return true if a location is out of bounds.
 
 =cut
 sub _out_of_bounds {
-    my ($self, $x, $y) = @_;
+    my ($self, $v) = @_;
+    my ($x, $y) = $v->get_all_components();
     return 1 if $x > $self->{xmax};
     return 1 if $x < $self->{xmin};
     return 1 if $y > $self->{ymax};

@@ -1,5 +1,9 @@
 Revision history for Perl extension Language::Befunge.
 
+
+        - new LB::Vector class for abstracting dimension
+          (courtesy of Mark Glines)
+
 2.06 Tue May  2 18:02:12 CEST 2006
         - corrected input error introduced during accessor split
         - migrated 02befunge.t, 10stdio.t and 22lib.t to Test::More
@@ -30,7 +34,7 @@ Revision history for Perl extension Language::Befunge.
 2.01 Fri Feb 17 15:15:43 CET 2006
         - rewritten accessors generation, for another speedup
         - adapted the documentation
-        
+
 2.00 Fri Feb 17 14:48:54 CET 2006
         - splitted accessors for L::B in get_* and set_*, for a small
           speedup. note: this will break your code if you're running
@@ -187,7 +191,7 @@ Revision history for Perl extension Language::Befunge.
         - Some bug fixes in Befunge.pm
         - New test 16string.t -> tests string thingies
         - New test 17stack.t  -> tests stack stuff
-        
+
 0.05 Thu Apr 11 14:25:10 CEST 2002
         - Completed 14flow.t
         - New test 15decis.t -> tests decision making

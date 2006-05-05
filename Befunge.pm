@@ -1,4 +1,4 @@
-# $Id: Befunge.pm 45 2006-05-02 16:04:00Z jquelin $
+# $Id: Befunge.pm 48 2006-05-05 15:36:57Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -192,12 +192,12 @@ sub move_curip {
     my $torus = $self->get_torus;
 
     if ( defined $re ) {
-        my ($origx, $origy) = ($curip->get_curx, $curip->get_cury);
+        my $orig = $curip->get_position;
         # Moving as long as we did not reach the condition.
-        while ( $torus->get_char($curip->get_curx, $curip->get_cury) =~ $re ) {
+        while ( $torus->get_char($curip->get_position) =~ $re ) {
             $torus->move_ip_forward($curip);
             $self->abort("infinite loop")
-                if ( ($curip->get_curx == $origx) && ($curip->get_cury == $origy) );
+                if ( $curip->get_position == $orig );
         }
 
         # We moved one char too far.
@@ -221,9 +221,8 @@ file and coordinate of the offending instruction.
 sub abort {
     my $self = shift;
     my $file = $self->get_file;
-    my $x = $self->get_curip->get_curx;
-    my $y = $self->get_curip->get_cury;
-    croak "$file ($x,$y): ", @_;
+    my $v = $self->get_curip->get_position;
+    croak "$file $v: ", @_;
 }
 
 
@@ -351,13 +350,12 @@ sub process_ip {
     my $ip = $self->get_curip;
 
     # Fetch values for this IP.
-    my $x  = $ip->get_curx;
-    my $y  = $ip->get_cury;
-    my $ord  = $self->get_torus->get_value( $x, $y );
-    my $char = $self->get_torus->get_char( $x, $y );
+    my $v  = $ip->get_position;
+    my $ord  = $self->get_torus->get_value( $v );
+    my $char = $self->get_torus->get_char( $v );
 
     # Cosmetics.
-    $self->debug( "#".$ip->get_id.":($x,$y): $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
+    $self->debug( "#".$ip->get_id.":$v: $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
 
     # Check if we are in string-mode.
     if ( $ip->get_string_mode ) {
@@ -442,7 +440,7 @@ sub op_num_push_number {
 
     # Fetching char.
     my $ip  = $self->get_curip;
-    my $num = hex( chr( $self->get_torus->get_value( $ip->get_curx, $ip->get_cury ) ) );
+    my $num = hex( chr( $self->get_torus->get_value( $ip->get_position ) ) );
 
     # Pushing value.
     $ip->spush( $num );
@@ -487,8 +485,8 @@ sub op_str_fetch_char {
     $self->move_curip;
  
    # .. then fetch value and push it.
-    my $ord = $self->get_torus->get_value( $ip->get_curx, $ip->get_cury );
-    my $chr = $self->get_torus->get_char( $ip->get_curx, $ip->get_cury );
+    my $ord = $self->get_torus->get_value( $ip->get_position );
+    my $chr = $self->get_torus->get_char( $ip->get_position );
     $ip->spush( $ord );
 
     # Cosmetics.
@@ -511,8 +509,8 @@ sub op_str_store_char {
     my $val = $ip->spop;
 
     # Storing value.
-    $self->get_torus->set_value( $ip->get_curx, $ip->get_cury, $val );
-    my $chr = $self->get_torus->get_char( $ip->get_curx, $ip->get_cury );
+    $self->get_torus->set_value( $ip->get_position, $val );
+    my $chr = $self->get_torus->get_char( $ip->get_position );
 
     # Cosmetics.
     $self->debug( "storing value $val (char='$chr')\n" );
@@ -535,7 +533,7 @@ sub op_math_addition {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "adding: $v1+$v2\n" );
     my $res = $v1 + $v2;
 
@@ -557,7 +555,7 @@ sub op_math_substraction {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "substracting: $v1-$v2\n" );
     my $res = $v1 - $v2;
 
@@ -579,7 +577,7 @@ sub op_math_multiplication {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "multiplicating: $v1*$v2\n" );
     my $res = $v1 * $v2;
 
@@ -601,7 +599,7 @@ sub op_math_division {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "dividing: $v1/$v2\n" );
     my $res = $v2 == 0 ? 0 : int($v1 / $v2);
 
@@ -621,7 +619,7 @@ sub op_math_remainder {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "remainder: $v1%$v2\n" );
     my $res = $v2 == 0 ? 0 : int($v1 % $v2);
 
@@ -742,9 +740,9 @@ Hmm, the user seems to know where he wants to go. Let's trust him/her.
 sub op_dir_set_delta {
     my $self = shift;
     my $ip = $self->get_curip;
-    my ($new_dx, $new_dy) = $ip->spop_vec;
-    $self->debug( "setting delta to ($new_dx, $new_dy)\n" );
-    $ip->set_delta( $new_dx, $new_dy );
+    my ($new_d) = $ip->spop_vec;
+    $self->debug( "setting delta to $new_d\n" );
+    $ip->set_delta( $new_d );
 }
 $meths{'x'} = "op_dir_set_delta";
 
@@ -780,7 +778,7 @@ sub op_decis_gt {
     my $ip = $self->get_curip;
 
     # Fetching values.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "comparing $v1 vs $v2\n" );
     $ip->spush( ($v1 > $v2) ? 1 : 0 );
 }
@@ -825,7 +823,7 @@ sub op_decis_cmp {
     my $ip = $self->get_curip;
 
     # Fetching value.
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "comparing $v1 with $v2: straight forward!\n"), return if $v1 == $v2;
 
     my $dir;
@@ -931,7 +929,7 @@ sub op_flow_repeat {
     $kcounter < 0 and $self->abort( "Attempt to repeat ('k') a negative number of times ($kcounter)" );
 
     # Fetch instruction to repeat.
-    my $val = $self->get_torus->get_value( $ip->get_curx, $ip->get_cury );
+    my $val = $self->get_torus->get_value( $ip->get_position );
 
     # Check if we can repeat the instruction.
     $val > 0 and $val < 256 and chr($val) =~ /([ ;])/ and
@@ -1007,7 +1005,7 @@ $meths{':'} = "op_stack_duplicate";
 sub op_stack_swap {
     my $self = shift;
     my $ ip = $self->get_curip;
-    my ($v1, $v2) = $ip->spop_vec;
+    my ($v1, $v2) = $ip->spop_mult(2);
     $self->debug( "swapping $v1 and $v2\n" );
     $ip->spush( $v2 );
     $ip->spush( $v1 );
@@ -1045,13 +1043,11 @@ sub op_block_open {
     $ip->ss_create( $ip->spop );
 
     # Store current storage offset on SOSS.
-    $ip->soss_push( $ip->get_storx );
-    $ip->soss_push( $ip->get_story );
+    $ip->soss_push( $ip->get_storage->get_all_components );
 
     # Set the new Storage Offset.
     $self->move_curip;
-    $ip->set_storx( $ip->get_curx );
-    $ip->set_story( $ip->get_cury );
+    $ip->set_storage( $ip->get_position );
     $ip->dir_reverse;
     $self->move_curip;
     $ip->dir_reverse;
@@ -1072,8 +1068,7 @@ sub op_block_close {
     $self->debug( "block closing\n" );
 
     # Restore Storage offset.
-    $ip->set_story( $ip->soss_pop );
-    $ip->set_storx( $ip->soss_pop );
+    $ip->set_storage( $ip->soss_pop_vec );
 
     # Remove the TOSS.
     $ip->ss_remove( $ip->spop );
@@ -1112,15 +1107,14 @@ sub op_store_get {
     my $ip = $self->get_curip;
 
     # Fetching coordinates.
-    my ($x, $y) = $ip->spop_vec;
-    $x += $ip->get_storx;
-    $y += $ip->get_story;
+    my ($v) = $ip->spop_vec;
+    $v += $ip->get_storage;
 
     # Fetching char.
-    my $val = $self->get_torus->get_value( $x, $y );
+    my $val = $self->get_torus->get_value( $v );
     $ip->spush( $val );
 
-    $self->debug( "fetching value at ($x,$y): pushing $val\n" );
+    $self->debug( "fetching value at $v: pushing $val\n" );
 }
 $meths{'g'} = "op_store_get";
 
@@ -1133,15 +1127,14 @@ sub op_store_put {
     my $ip = $self->get_curip;
 
     # Fetching coordinates.
-    my ($x, $y) = $ip->spop_vec;
-    $x += $ip->get_storx;
-    $y += $ip->get_story;
+    my ($v) = $ip->spop_vec;
+    $v += $ip->get_storage;
 
     # Fetching char.
     my $val = $ip->spop;
-    $self->get_torus->set_value( $x, $y, $val );
+    $self->get_torus->set_value( $v, $val );
 
-    $self->debug( "storing value $val at ($x,$y)\n" );
+    $self->debug( "storing value $val at $v\n" );
 }
 $meths{'p'} = "op_store_put";
 
@@ -1235,12 +1228,11 @@ sub op_stdio_in_file {
     # Fetch arguments.
     my $path = $ip->spop_gnirts;
     my $flag = $ip->spop;
-    my ($xin, $yin) = $ip->spop_vec;
-    $xin += $ip->get_storx;
-    $yin += $ip->get_story;
+    my ($vin) = $ip->spop_vec;
+    $vin += $ip->get_storage;
 
     # Read file.
-    $self->debug( "input file '$path' at ($xin,$yin)\n" );
+    $self->debug( "input file '$path' at $vin\n" );
     open F, "<", $path or $ip->dir_reverse, return;
     my $lines;
     {
@@ -1250,10 +1242,10 @@ sub op_stdio_in_file {
     close F or $ip->dir_reverse, return;
 
     # Store the code and the result vector.
-    my ($wid, $hei) = $flag % 2
-        ? ( $self->get_torus->store_binary( $lines, $xin, $yin ) )
-        : ( $self->get_torus->store( $lines, $xin, $yin ) );
-    $ip->spush( $wid, $hei, $xin, $yin );
+    my ($size) = $flag % 2
+        ? ( $self->get_torus->store_binary( $lines, $vin ) )
+        : ( $self->get_torus->store( $lines, $vin ) );
+    $ip->spush_vec( $size, $vin );
 }
 $meths{'i'} = "op_stdio_in_file";
 
@@ -1268,16 +1260,14 @@ sub op_stdio_out_file {
     # Fetch arguments.
     my $path = $ip->spop_gnirts;
     my $flag = $ip->spop;
-    my ($xin, $yin) = $ip->spop_vec;
-    $xin += $ip->get_storx;
-    $yin += $ip->get_story;
-    my ($hei, $wid) = $ip->spop_vec;
-    my $data = $self->get_torus->rectangle( $xin, $yin, $wid, $hei );
+    my ($vin) = $ip->spop_vec;
+    $vin += $ip->get_storage;
+    my ($size) = $ip->spop_vec;
+    my $data = $self->get_torus->rectangle( $vin, $size );
 
     # Cosmetics.
-    my $x2 = $xin + $wid;
-    my $y2 = $yin + $hei;
-    $self->debug( "output ($xin,$yin)-($x2,$y2) to '$path'\n" );
+    my $vend = $vin + $size;
+    $self->debug( "output $vin-$vend to '$path'\n" );
 
     # Treat the data chunk as text file?
     if ( $flag & 0x1 ) {
@@ -1354,7 +1344,7 @@ sub op_sys_info {
     push @cells, ord( $Config{path_sep} );
 
     # 7. Number of dimensions.
-    push @cells, 2;
+    push @cells, $ip->get_dims;
 
     # 8. Unique IP number.
     push @cells, $ip->get_id;
@@ -1363,15 +1353,15 @@ sub op_sys_info {
     push @cells, 0;
 
     # 10. Position of the curent IP.
-    my @pos = ( $ip->get_curx, $ip->get_cury );
+    my @pos = ( $ip->get_position->get_all_components );
     push @cells, \@pos;
 
     # 11. Delta of the curent IP.
-    my @delta = ( $ip->get_dx, $ip->get_dy );
+    my @delta = ( $ip->get_delta->get_all_components );
     push @cells, \@delta;
 
     # 12. Storage offset of the curent IP.
-    my @stor = ( $ip->get_storx, $ip->get_story );
+    my @stor = ( $ip->get_storage->get_all_components );
     push @cells, \@stor;
 
     # 13. Top-left point.

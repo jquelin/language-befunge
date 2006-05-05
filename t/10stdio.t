@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 10stdio.t 44 2006-05-01 18:29:33Z jquelin $
+# $Id: 10stdio.t 48 2006-05-05 15:36:57Z jquelin $
 #
 
 #----------------------------------#
@@ -57,11 +57,11 @@ is( $out, "%" );
     $fh = select OUT;
     close OUT;
     my $ip = Language::Befunge::IP->new;
-    $ip->set_delta(1,0);
+    $ip->set_delta( Language::Befunge::Vector->new(2,1,0) );
     $ip->spush( 65 );
     $bef->set_curip($ip);
     $bef->op_stdio_out_ascii;
-    is( $ip->get_dx, -1, "output error reverse ip delta" );
+    is( $ip->get_delta, "(-1,0)", "output error reverse ip delta" );
 }
 BEGIN { $tests += 2 };
 
@@ -82,11 +82,11 @@ is( $out, "15 " );
     $fh = select OUT;
     close OUT;
     my $ip = Language::Befunge::IP->new;
-    $ip->set_delta(1,0);
+    $ip->set_delta( Language::Befunge::Vector->new(2,1,0) );
     $ip->spush( 65 );
     $bef->set_curip($ip);
     $bef->op_stdio_out_num;
-    is( $ip->get_dx, -1, "output error reverse ip delta" );
+    is( $ip->get_delta, "(-1,0)", "output error reverse ip delta" );
 }
 BEGIN { $tests += 2 };
 
@@ -129,7 +129,9 @@ v qiv# "t/hello.bf"0        <
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-is( $bef->get_torus->rectangle(6, 9, 71, 1),
+is( $bef->get_torus->rectangle
+    ( Language::Befunge::Vector->new(2, 6, 9),
+      Language::Befunge::Vector->new(2, 71, 1) ),
     qq{v q  ,,,,,,,,,,,,,"hello world!"a <\n>                                 ^} . "\n" );
 is( $out, "" );
 BEGIN { $tests += 2 };
@@ -183,7 +185,7 @@ is( $slurp, "foo!\n\n;-)\n" );
 unlink "t/foo.txt";
 BEGIN { $tests += 5 };
 
-# testing unability to 
+# testing unability to
 
 
 BEGIN { plan tests => $tests };
