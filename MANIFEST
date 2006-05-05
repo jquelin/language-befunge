@@ -13,6 +13,7 @@ Befunge/IP.pm
 Befunge/LaheySpace.pm
 Befunge/lib/FOO.pm
 Befunge/lib/HELO.pm
+Befunge/Vector.pm
 Build.PL
 Changes
 Makefile.PL
@@ -23,6 +24,7 @@ t/01basic.t
 t/02befunge.t
 t/03ip.t
 t/04lahey.t
+t/05vector.t
 t/10stdio.t
 t/11nums.t
 t/12maths.t

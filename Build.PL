@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 # This script writes the Build utility for Language::Befunge
-# $Id: Build.PL 19 2006-02-07 14:38:53Z jquelin $
+# $Id: Build.PL 47 2006-05-05 15:17:28Z jquelin $
 #
 
 use strict;
@@ -21,12 +21,14 @@ my $builder = Module::Build->new
     license           => 'perl',
     dist_author       => 'Jerome Quelin <jquelin@cpan.org>',
     dist_version_from => 'Befunge.pm',
-    build_requires    => { 'Test::More' => 0 },
-    requires          => { 'Storable'   => 0 },
+    build_requires    => { 'Test::More'      => 0 },
+    requires          => { 'Storable'        => 0 },
+    recommends        => { 'Test::Exception' => 0 },
     pm_files          =>
       { 'Befunge.pm'            => 'lib/Language/Befunge.pm',
         'Befunge/IP.pm'         => 'lib/Language/Befunge/IP.pm',
         'Befunge/LaheySpace.pm' => 'lib/Language/Befunge/LaheySpace.pm',
+        'Befunge/Vector.pm'     => 'lib/Language/Befunge/Vector.pm',
         'Befunge/lib/FOO.pm'    => 'lib/Language/Befunge/lib/FOO.pm',
         'Befunge/lib/HELO.pm'   => 'lib/Language/Befunge/lib/HELO.pm',
       },
@@ -63,7 +65,7 @@ EOT
 
     my @tmp;
     foreach my $prg (@programs_to_install) {
-        push @tmp, $prg 
+        push @tmp, $prg
           if $builder->prompt("Do you want to install $prg?", 'y') =~ /^y/i;
     }
     @programs_to_install = @tmp;
