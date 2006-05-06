@@ -1,4 +1,4 @@
-# $Id: LaheySpace.pm 48 2006-05-05 15:36:57Z jquelin $
+# $Id: LaheySpace.pm 50 2006-05-06 13:15:48Z jquelin $
 #
 # Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -105,11 +105,10 @@ sub store {
         $maxlen < $len and $maxlen = $len;
     }
     my $maxx = $maxlen + $x - 1 + $self->{xmin};
-    my $max = Language::Befunge::Vector->new(2, $maxx, $maxy);
 
     # Enlarge torus.
-    $self->_set_min( $v );
-    $self->_set_max( $max );
+    $self->_set_min( $x, $y );
+    $self->_set_max( $maxx, $maxy );
 
     # Store code.
     foreach my $j ( 0..$#lines  ) {
@@ -153,10 +152,9 @@ sub store_binary {
     my $maxlen = length $code;
     my $maxx = $maxlen + $x - 1 + $self->{xmin};
 
-    my $max = Language::Befunge::Vector->new(2, $maxx, $maxy);
     # Enlarge torus.
-    $self->_set_min( $v );
-    $self->_set_max( $max );
+    $self->_set_min( $x, $y );
+    $self->_set_max( $maxx, $maxy );
 
     # Store code.
     my @chars = map { ord } split //, $code;
@@ -227,11 +225,11 @@ both... Eh, that's Befunge! :o) ).
 =cut
 sub set_value {
     my ($self, $v, $val) = @_;
+    my ($x, $y) = $v->get_all_components();
 
     # Ensure we can set the value.
-    $self->_set_min( $v );
-    $self->_set_max( $v );
-    my ($x, $y) = $v->get_all_components();
+    $self->_set_min( $x, $y );
+    $self->_set_max( $x, $y );
     $self->{torus}[$y-$self->{ymin}][$x-$self->{xmin}] = $val;
 }
 
@@ -284,8 +282,8 @@ sub rectangle {
     my ($w, $h) =  $size->get_all_components();
 
     # Ensure we have enough data.
-    $self->_set_min( $start );
-    $self->_set_max( $start+$size );
+    $self->_set_min( $x, $y );
+    $self->_set_max( $x+$w, $y+$h );
 
     # Fetch the data.
     my $data = "";
@@ -340,16 +338,14 @@ sub labels_lookup {
 
 =head1 PRIVATE METHODS
 
-=head2 _set_min( vector )
+=head2 _set_min( x, y )
 
-Set the current minimum coordinates. If the supplied vector is bigger
-than the actual minimum (or equal) in all dimensions, then nothing is
-done.
+Set the current minimum coordinates. If the supplied values are bigger
+than the actual minimum, then nothing is done.
 
 =cut
 sub _set_min {
-    my ($self, $v) = @_;
-    my ($x, $y) = $v->get_all_components();
+    my ($self, $x, $y) = @_;
 
     # Check if we need to enlarge the torus.
     $self->_enlarge_y( $y - $self->{ymin} ) if $y < $self->{ymin};
@@ -357,16 +353,14 @@ sub _set_min {
 }
 
 
-=head2 _set_max( vector )
+=head2 _set_max( x, y )
 
-Set the current maximum coordinates. If the supplied vector is smaller
-than the actual maximum (or equal) in all dimensions, then nothing is
-done.
+Set the current maximum coordinates. If the supplied values are smaller
+than the actual maximum, then nothing is done.
 
 =cut
 sub _set_max {
-    my ($self, $v) = @_;
-    my ($x, $y) = $v->get_all_components();
+    my ($self, $x, $y) = @_;
 
     # Check if we need to enlarge the torus.
     $self->_enlarge_y( $y - $self->{ymax} ) if $y > $self->{ymax};

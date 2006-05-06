@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 04lahey.t 48 2006-05-05 15:36:57Z jquelin $
+# $Id: 04lahey.t 50 2006-05-06 13:15:48Z jquelin $
 #
 
 #------------------------------------------#
@@ -34,16 +34,16 @@ BEGIN { $tests += 4; }
 
 # _set_min/_set_max methods.
 $ls->clear;
-$ls->_set_min(Language::Befunge::Vector->new(2, -2, -3) ); # _set_min
+$ls->_set_min( -2, -3 ); # _set_min
 is( $ls->{xmin}, -2, "_set_min sets xmin" );
 is( $ls->{ymin}, -3, "_set_min sets ymin" );
-$ls->_set_min(Language::Befunge::Vector->new(2, -1, -1) ); # can't shrink
+$ls->_set_min( -1, -1 ); # can't shrink
 is( $ls->{xmin}, -2, "_set_min can't shrink xmin" );
 is( $ls->{ymin}, -3, "_set_min can't shrink ymin" );
-$ls->_set_max(Language::Befunge::Vector->new(2, 4, 5) );   # _set_max
+$ls->_set_max( 4, 5 );   # _set_max
 is( $ls->{xmax}, 4, "_set_max sets xmax" );
 is( $ls->{ymax}, 5, "_set_max sets ymax" );
-$ls->_set_max(Language::Befunge::Vector->new(2, 2, 3) );   # can't shrink
+$ls->_set_max( 2, 3 );   # can't shrink
 is( $ls->{xmax}, 4, "_set_max can't shrink xmax" );
 is( $ls->{ymax}, 5, "_set_max can't shrink ymax" );
 BEGIN{ $tests += 8; }
@@ -286,7 +286,7 @@ BEGIN { $tests += 1; }
 
 # move ip.
 $ls->clear;   # "positive" playfield.
-$ls->_set_max(Language::Befunge::Vector->new(2, 5, 10));
+$ls->_set_max(5, 10);
 $ip->set_position(Language::Befunge::Vector->new(2,  4, 3 ));
 $ip->get_delta->set_component(0, 1 );
 $ip->get_delta->set_component(1, 0 );
@@ -329,8 +329,8 @@ is( $ip->get_position->get_component(1), 10, "move_ip_forward wraps ymin" );
 BEGIN { $tests += 10 }
 
 $ls->clear;   # "negative" playfield.
-$ls->_set_min(Language::Befunge::Vector->new(2, -1, -3));
-$ls->_set_max(Language::Befunge::Vector->new(2, 5, 10));
+$ls->_set_min(-1, -3);
+$ls->_set_max(5, 10);
 $ip->set_position(Language::Befunge::Vector->new(2,  4, 3 ));
 $ip->get_delta->set_component(0, 1 );
 $ip->get_delta->set_component(1, 0 );
@@ -358,8 +358,8 @@ is( $ip->get_position->get_component(1), 10, "move_ip_forward wraps ymin" );
 BEGIN { $tests += 6; }
 
 $ls->clear;   # diagonals.
-$ls->_set_min(Language::Befunge::Vector->new(2, -1, -2));
-$ls->_set_max(Language::Befunge::Vector->new(2, 6, 5));
+$ls->_set_min(-1, -2);
+$ls->_set_max(6, 5);
 $ip->set_position(Language::Befunge::Vector->new(2, 0, 0));
 $ip->get_delta->set_component(0,-2);
 $ip->get_delta->set_component(1,-3);

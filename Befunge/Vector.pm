@@ -1,6 +1,7 @@
 package Language::Befunge::Vector;
 use strict;
 use warnings;
+use integer;
 
 use overload 
 	'-'   => \&vector_subtract,
