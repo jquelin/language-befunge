@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 10stdio.t 48 2006-05-05 15:36:57Z jquelin $
+# $Id: 10stdio.t 52 2006-05-07 10:13:42Z jquelin $
 #
 
 #----------------------------------#
@@ -60,7 +60,7 @@ is( $out, "%" );
     $ip->set_delta( Language::Befunge::Vector->new(2,1,0) );
     $ip->spush( 65 );
     $bef->set_curip($ip);
-    $bef->op_stdio_out_ascii;
+    $bef->get_ops->{","}->($bef);
     is( $ip->get_delta, "(-1,0)", "output error reverse ip delta" );
 }
 BEGIN { $tests += 2 };
@@ -85,7 +85,7 @@ is( $out, "15 " );
     $ip->set_delta( Language::Befunge::Vector->new(2,1,0) );
     $ip->spush( 65 );
     $bef->set_curip($ip);
-    $bef->op_stdio_out_num;
+    $bef->get_ops->{","}->($bef);
     is( $ip->get_delta, "(-1,0)", "output error reverse ip delta" );
 }
 BEGIN { $tests += 2 };
