@@ -4,6 +4,7 @@ Language-Befunge-.*/.*
 ~$
 (^|/)\.#
 \.bak$
+\.jpg$
 \.tar$
 \.tgz$
 \.tar\.gz$
