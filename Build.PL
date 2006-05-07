@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 #
 # This script writes the Build utility for Language::Befunge
-# $Id: Build.PL 47 2006-05-05 15:17:28Z jquelin $
+# $Id: Build.PL 54 2006-05-07 13:33:18Z jquelin $
 #
 
 use strict;
@@ -25,12 +25,15 @@ my $builder = Module::Build->new
     requires          => { 'Storable'        => 0 },
     recommends        => { 'Test::Exception' => 0 },
     pm_files          =>
-      { 'Befunge.pm'            => 'lib/Language/Befunge.pm',
-        'Befunge/IP.pm'         => 'lib/Language/Befunge/IP.pm',
-        'Befunge/LaheySpace.pm' => 'lib/Language/Befunge/LaheySpace.pm',
-        'Befunge/Vector.pm'     => 'lib/Language/Befunge/Vector.pm',
-        'Befunge/lib/FOO.pm'    => 'lib/Language/Befunge/lib/FOO.pm',
-        'Befunge/lib/HELO.pm'   => 'lib/Language/Befunge/lib/HELO.pm',
+      { 'Befunge.pm'               => 'lib/Language/Befunge.pm',
+        'Befunge/Interpreter.pm'   => 'lib/Language/Befunge/Interpreter.pm',
+        'Befunge/IP.pm'            => 'lib/Language/Befunge/IP.pm',
+        'Befunge/LaheySpace.pm'    => 'lib/Language/Befunge/LaheySpace.pm',
+        'Befunge/Ops.pm'           => 'lib/Language/Befunge/Ops.pm',
+        'Befunge/Vector.pm'        => 'lib/Language/Befunge/Vector.pm',
+        'Befunge/lib/FOO.pm'       => 'lib/Language/Befunge/lib/FOO.pm',
+        'Befunge/lib/HELO.pm'      => 'lib/Language/Befunge/lib/HELO.pm',
+        'Befunge/Ops/Befunge98.pm' => 'lib/Language/Befunge/Ops/Befunge98.pm',
       },
     add_to_cleanup    =>
       [ 'Language-Befunge-*', '*~', 't/*~', 'Befunge/*~',
