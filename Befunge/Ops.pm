@@ -456,6 +456,7 @@ sub flow_jump_to {
     $count == 0 and return;
     $count < 0  and $ip->dir_reverse; # We can move backward.
     $lbi->move_curip for (1..abs($count));
+    # don't forget that runloop will advance the ip next time.
     $count < 0  and $lbi->move_curip, $ip->dir_reverse;
 }
 
