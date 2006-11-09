@@ -3,7 +3,7 @@
 # See README in the archive for information on copyright & licensing.
 #
 
-package Language::Befunge::Ops::Befunge98;
+package Language::Befunge::Ops::Unefunge98;
 require 5.006;
 
 use Language::Befunge::Ops;
@@ -35,8 +35,6 @@ sub get_ops_map {
         '%'  => \&Language::Befunge::Ops::math_remainder,
         '>'  => \&Language::Befunge::Ops::dir_go_east,
         '<'  => \&Language::Befunge::Ops::dir_go_west,
-        '^'  => \&Language::Befunge::Ops::dir_go_north,
-        'v'  => \&Language::Befunge::Ops::dir_go_south,
         '?'  => \&Language::Befunge::Ops::dir_go_away,
         '['  => \&Language::Befunge::Ops::dir_turn_left,
         ']'  => \&Language::Befunge::Ops::dir_turn_right,
@@ -104,7 +102,7 @@ sub get_ops_map {
     };
 }
 
-$Language::Befunge::Interpreter::syntaxes{befunge98} = \&get_ops_map;
+$Language::Befunge::Interpreter::syntaxes{unefunge98} = \&get_ops_map;
 1;
 
 __END__

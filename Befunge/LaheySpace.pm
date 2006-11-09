@@ -1,4 +1,4 @@
-# $Id: LaheySpace.pm 50 2006-05-06 13:15:48Z jquelin $
+# $Id: LaheySpace.pm 63 2006-11-09 18:25:26Z jquelin $
 #
 # Copyright (c) 2002-2003 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -12,11 +12,23 @@ require 5.006;
 
 =head1 NAME
 
-Language::Befunge::LaheySpace - a LaheySpace representation.
+Language::Befunge::LaheySpace - a 2-dimensional LaheySpace representation.
 
 
 =head1 SYNOPSIS
 
+	# create a 2-dimensional LaheySpace.
+	my $torus = Language::Befunge::LaheySpace->new();
+	$torus->clear();
+	$torus->store(<<EOF);
+	12345
+	67890
+	EOF
+
+Note you usually don't need to use this module directly.
+B<Language::Befunge::Interpreter> uses it internally, for 2-dimensional
+storage.  For non-2-dimensional storage, see
+B<Language::Befunge::LaheySpace::Generic>.
 
 
 =head1 DESCRIPTION
@@ -78,7 +90,10 @@ sub clear {
 Store the given code at the specified coordinates. If the coordinates
 are omitted, then the code is stored at the Origin(0, 0) coordinates.
 
-Return the width and height of the code inserted.
+Return the size of the code inserted, as a vector.
+
+The code is a string, representing a block of Funge code.  Rows are
+separated by newlines.
 
 =cut
 sub store {
@@ -126,7 +141,7 @@ sub store {
 Store the given code at the specified coordinates. If the coordinates
 are omitted, then the code is stored at the Origin(0, 0) coordinates.
 
-Return the width and height of the code inserted.
+Return the size of the code inserted, as a vector.
 
 This is binary insertion, that is, EOL and FF sequences are stored in
 Funge-space instead of causing the dimension counters to be reset and

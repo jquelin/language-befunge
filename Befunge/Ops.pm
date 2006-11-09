@@ -246,6 +246,26 @@ sub dir_go_south {
 }
 
 
+=item dir_go_high(  )
+
+=cut
+sub dir_go_high {
+    my ($lbi) = @_;
+    $lbi->debug( "going high\n" );
+    $lbi->get_curip->dir_go_high;
+}
+
+
+=item dir_go_low(  )
+
+=cut
+sub dir_go_low {
+    my ($lbi) = @_;
+    $lbi->debug( "going low\n" );
+    $lbi->get_curip->dir_go_low;
+}
+
+
 =item dir_go_away(  )
 
 =cut

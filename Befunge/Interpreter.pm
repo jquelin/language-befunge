@@ -14,40 +14,111 @@ use Carp;     # This module can't explode :o)
 use Config;   # For the 'y' instruction.
 use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
+use Language::Befunge::LaheySpace::Generic;
 use Language::Befunge::Ops::Befunge98;
+use Language::Befunge::Ops::Unefunge98;
+use Language::Befunge::Ops::GenericFunge98;
 
 # Public variables of the module.
 $| = 1;
-
+# the syntaxes hash allows funges to register their ops maps with us.
+our %syntaxes;
 
 =head1 CONSTRUCTOR
 
-=head2 new( [filename] )
+=head2 new( [filename, ] [ Key => Value, ... ] )
 
-Create a new Befunge interpreter. If a filename is provided, then read
-and store the content of the file in the cartesian Lahey space
-topology of the interpreter.
+Create a new Befunge interpreter.  As an optional first argument, you
+can pass it a filename to read Funge code from (default: blank
+torus).  All other arguments are key=>value pairs.  The following
+keys are accepted, with their default values shown:
+
+	Dimensions => 2,
+	Syntax     => 'befunge98',
+	Storage    => 'laheyspace'
 
 =cut
 sub new {
     # Create and bless the object.
     my $class = shift;
+    
+    my $file;
+    # an odd number of arguments means a filename was passed.  (Previous
+    # revs took an optional file argument; this is preserved for reverse
+    # compatibility.)
+    $file = shift if(scalar @_ & 1);
+    my %args = @_;
+    $args{Dimensions} = 2            unless exists($args{Dimensions});
+    $args{Storage}    = 'laheyspace' unless exists($args{Storage});
+
+    if(defined($args{Syntax})) {
+    	# accept values like "4Funge98"
+	    if(lc($args{Syntax}) =~ /^(\d+)funge98$/) {
+	    	$args{Syntax} = 'genericfunge98';
+	    	$args{Dimensions} = $1;
+	    }
+	
+	    # accept "Trefunge98"
+	    elsif(lc($args{Syntax}) eq 'trefunge98') {
+	    	# 3D-and-above Funges have the same instruction sets, for now.
+	    	$args{Syntax} = 'genericfunge98';
+	    	$args{Dimensions} = 3;
+	    }
+	
+	    # accept "Unefunge98"
+	    elsif(lc($args{Syntax}) eq 'unefunge98') {
+	    	$args{Syntax} = 'unefunge98';
+	    	$args{Dimensions} = 1;
+	    }
+    } else {
+    	if($args{Dimensions} == 1) {
+    		$args{Syntax} = 'unefunge98';
+    	}
+    	elsif($args{Dimensions} == 2) {
+    		$args{Syntax} = 'befunge98';
+    	}
+    	else {
+	    	# 3D-and-above Funges have the same instruction sets, for now.
+    		$args{Syntax} = 'genericfunge98';
+    	}
+    }
+
     my $self  =
-      { file     => "STDIN",
+      { dimensions => $args{Dimensions},
+        file     => "STDIN",
         params   => [],
         retval   => 0,
         DEBUG    => 0,
         curip    => undef,
         ips      => [],
         newips   => [],
-        torus    => Language::Befunge::LaheySpace->new,
-        ops      => Language::Befunge::Ops::Befunge98->get_ops_map,
         handprint => 'JQBF98', # the handprint of the interpreter.
-      }; # FIXME: hard-coding befunge98
+      };
     bless $self, $class;
 
+    # TODO: if we're going to have multiple types of storage, we'll need a
+    # registration API for them, and replace this with a hash lookup or
+    # something.  Also, revisit this when wrapping is split into a separate
+    # module from topology.
+    if($args{Storage} eq 'laheyspace') {
+    	if($args{Dimensions} == 2) {
+    		# the 2D-specific LaheySpace is probably faster.
+    		$$self{torus} = Language::Befunge::LaheySpace->new();
+    	} else {
+    		$$self{torus} = Language::Befunge::LaheySpace::Generic->new($args{Dimensions});
+    	}
+    } else {
+	    die "Only laheyspace storages are supported, for the moment.\n";
+    }
+
+    $args{Syntax} = lc($args{Syntax});
+    if(exists($syntaxes{$args{Syntax}})) {
+        $$self{ops} = &{$syntaxes{$args{Syntax}}}();
+    } else {
+	    die "Supported Syntax types: " . join(", ",keys(%syntaxes));
+    }
+
     # Read the file if needed.
-    my $file = shift;
     defined($file) and $self->read_file( $file );
 
     # Return the object.
@@ -64,6 +135,10 @@ exists, which does what you can imagine - and if you can't, then i
 wonder why you are reading this! :-)
 
 =over 4
+
+=item dimensions:
+
+the number of dimensions this interpreter works in.
 
 =item file:
 
@@ -103,7 +178,7 @@ the current Lahey space (a L::B::LaheySpace object)
 
 =cut
 BEGIN {
-    my @attrs = qw[ file params retval DEBUG curip ips newips ops torus handprint ];
+    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops torus handprint ];
     foreach my $attr ( @attrs ) {
         my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
         $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
@@ -252,7 +327,7 @@ sub run_code {
     $self->debug( "\n-= NEW RUN (".$self->get_file.") =-\n" );
 
     # Create the first Instruction Pointer.
-    $self->set_ips( [ Language::Befunge::IP->new ] );
+    $self->set_ips( [ Language::Befunge::IP->new($$self{dimensions}) ] );
     $self->set_retval(0);
 
     # Loop as long as there are IPs.

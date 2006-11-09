@@ -1,4 +1,4 @@
-# $Id: IP.pm 48 2006-05-05 15:36:57Z jquelin $
+# $Id: IP.pm 63 2006-11-09 18:25:26Z jquelin $
 #
 # Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
 # All rights reserved.
@@ -37,14 +37,15 @@ use Storable qw(dclone);
 
 =head1 CONSTRUCTOR
 
-=head2 new(  )
+=head2 new( [dimensions] )
 
-Create a new Instruction Pointer.
+Create a new Instruction Pointer, which operates in a universe of the given
+number of dimensions.  If dimensions is not specified, it defaults to 2.
 
 =cut
 sub new {
-    my ($class) = @_;
-    my $dims = 2; # FIXME: eventually this will be passed in as an argument
+    my ($class, $dims) = @_;
+    $dims = 2 unless defined $dims;
     my $self  =
       { id           => 0,
       	dims         => $dims,
@@ -602,6 +603,32 @@ sub dir_go_south {
     my $self = shift;
     $self->get_delta->zero();
     $self->get_delta->set_component(1, 1);
+}
+
+=item dir_go_high(  )
+
+Implements the C<h> instruction. Force the IP to travel up.
+
+Not valid for Unefunge or Befunge.
+
+=cut
+sub dir_go_high {
+    my $self = shift;
+    $self->get_delta->zero();
+    $self->get_delta->set_component(2, 1);
+}
+
+=item dir_go_low(  )
+
+Implements the C<l> instruction. Force the IP to travel down.
+
+Not valid for Unefunge or Befunge.
+
+=cut
+sub dir_go_low {
+    my $self = shift;
+    $self->get_delta->zero();
+    $self->get_delta->set_component(2, -1);
 }
 
 =item dir_go_away(  )

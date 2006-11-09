@@ -1,5 +1,5 @@
 #-*- cperl -*-
-# $Id: 02befunge.t 41 2006-05-01 17:23:21Z jquelin $
+# $Id: 02befunge.t 63 2006-11-09 18:25:26Z jquelin $
 #
 
 #-----------------------------------#
@@ -111,6 +111,16 @@ BEGIN { $tests += 1 };
 sel;
 $bef->store_code( <<'END_OF_CODE' );
 01+b0p#q1.2 q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+is( $out, "1 2 " );
+BEGIN { $tests += 1 };
+
+# Befunge Interpreter treats High/Low instructions as unknown characters.
+sel;
+$bef->store_code( <<"END_OF_CODE" );
+1#q.2h3.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
