@@ -1,10 +1,10 @@
-# $Id: Befunge.pm 52 2006-05-07 10:13:42Z jquelin $
 #
-# Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
-# All rights reserved.
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the same terms as Perl itself.
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge;
@@ -71,7 +71,7 @@ use Config;   # For the 'y' instruction.
 use Language::Befunge::Interpreter;
 
 # Public variables of the module.
-our $VERSION = '2.06';
+our $VERSION = '2.07';
 $| = 1;
 
 sub new {
@@ -126,23 +126,10 @@ numbers greater than C<0xffffffff>.
 =back
 
 
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
 =head1 ACKNOWLEDGEMENTS
 
 I would like to thank Chris Pressey, creator of Befunge, who gave a
 whole new dimension to both coding and obfuscating.
-
-
-=head1 COPYRIGHT
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
 
 
 =head1 SEE ALSO
@@ -156,5 +143,21 @@ it under the same terms as Perl itself.
 =item L<http://dufflebunk.iwarp.com/JSFunge/spec98.html>
 
 =back
+
+
+=head1 AUTHOR
+
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
 
 =cut

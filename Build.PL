@@ -1,7 +1,11 @@
-#!/usr/bin/env perl
+#!perl
 #
-# This script writes the Build utility for Language::Befunge
-# $Id: Build.PL 54 2006-05-07 13:33:18Z jquelin $
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 use strict;

@@ -1,10 +1,10 @@
-# $Id: IP.pm 63 2006-11-09 18:25:26Z jquelin $
 #
-# Copyright (c) 2002 Jerome Quelin <jquelin@cpan.org>
-# All rights reserved.
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the same terms as Perl itself.
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge::IP;
@@ -91,7 +91,7 @@ exists.
 
 =over 4
 
-=item id:
+=item get_id() / set_id()
 
 the unique ID of the IP (an integer)
 
@@ -112,33 +112,35 @@ the offset of the IP (a vector)
 
 the coordinates of the storage offset of the IP (a vector)
 
-=item data:
+=item get_data() / set_data()
 
 the library private storage space (a hash reference)
 
-=item input:
+=item get_input() / set_input()
 
 the input cache (a string)
 
-=item string_mode:
+=item get_string_mode() / set_string_mode()
 
 the string_mode of the IP (a boolean)
 
-=item end:
+=item get_end() / set_end()
 
 wether the IP should be terminated (a boolean)
 
-=item libs:
+=item get_libs() / set_libs()
 
 the current stack of loaded libraries (an array reference)
 
-=item ss:
+=item get_ss() / set_ss()
 
 the stack of stack of the IP (an array reference)
 
-=item toss:
+=item get_toss() / set_toss()
 
 the current stack (er, TOSS) of the IP (an array reference)
+
+=back
 
 =cut
 BEGIN {
@@ -767,19 +769,22 @@ sub _get_new_id {
 __END__
 
 
+=head1 SEE ALSO
+
+L<Language::Befunge>.
+
+
 =head1 AUTHOR
 
 Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
 
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
 
 =cut
