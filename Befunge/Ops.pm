@@ -1,12 +1,34 @@
 #
 # This file is part of Language::Befunge.
-# See README in the archive for information on copyright & licensing.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge::Ops;
 require 5.006;
 
 use Config;   # For the 'y' instruction.
+
+=head1 NAME
+
+Language::Befunge::Ops - definition of the various operations
+
+
+=head1 DESCRIPTION
+
+This module implements the various befunge operations. Not all those
+operations will be supported by the interpreter though, it will depend
+on the type of befunge chosen.
+
+
+=head1 SUBROUTINES
+
+=head2 Numbers
+
+=over 4
 
 =item num_push_number(  )
 
@@ -35,7 +57,7 @@ sub num_push_number {
 
 =over 4
 
-=item op_str_enter_string_mode(  )
+=item str_enter_string_mode(  )
 
 =cut
 sub str_enter_string_mode {
@@ -1087,6 +1109,10 @@ sub lib_unload {
     }
 }
 
+=item lib_run_instruction( )
+
+=cut
+
 sub lib_run_instruction {
     my ($lbi) = @_;
     my $ip   = $lbi->get_curip;
@@ -1110,6 +1136,33 @@ sub lib_run_instruction {
     $ip->dir_reverse;
 }
 
+=back
+
+=cut
+
 1;
 
 __END__
+
+=head1 SEE ALSO
+
+L<Language::Befunge>
+
+
+=head1 AUTHOR
+
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
+=cut
+

@@ -1,6 +1,10 @@
 #
 # This file is part of Language::Befunge.
-# See README in the archive for information on copyright & licensing.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge::Interpreter;
@@ -41,7 +45,7 @@ keys are accepted, with their default values shown:
 sub new {
     # Create and bless the object.
     my $class = shift;
-    
+
     my $file;
     # an odd number of arguments means a filename was passed.  (Previous
     # revs took an optional file argument; this is preserved for reverse
@@ -57,14 +61,14 @@ sub new {
 	    	$args{Syntax} = 'genericfunge98';
 	    	$args{Dimensions} = $1;
 	    }
-	
+
 	    # accept "Trefunge98"
 	    elsif(lc($args{Syntax}) eq 'trefunge98') {
 	    	# 3D-and-above Funges have the same instruction sets, for now.
 	    	$args{Syntax} = 'genericfunge98';
 	    	$args{Dimensions} = 3;
 	    }
-	
+
 	    # accept "Unefunge98"
 	    elsif(lc($args{Syntax}) eq 'unefunge98') {
 	    	$args{Syntax} = 'unefunge98';
@@ -469,6 +473,17 @@ numbers greater than C<0xffffffff>.
 =back
 
 
+=head1 ACKNOWLEDGEMENTS
+
+I would like to thank Chris Pressey, creator of Befunge, who gave a
+whole new dimension to both coding and obfuscating.
+
+
+=head1 SEE ALSO
+
+L<Language::Befunge>
+
+
 =head1 AUTHOR
 
 Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
@@ -476,28 +491,13 @@ Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
 Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
 
 
-=head1 ACKNOWLEDGEMENTS
+=head1 COPYRIGHT & LICENSE
 
-I would like to thank Chris Pressey, creator of Befunge, who gave a
-whole new dimension to both coding and obfuscating.
-
-
-=head1 COPYRIGHT
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 
-=head1 SEE ALSO
-
-=over 4
-
-=item L<perl>
-
-=item L<http://www.catseye.mb.ca/esoteric/befunge/>
-
-=item L<http://dufflebunk.iwarp.com/JSFunge/spec98.html>
-
-=back
-
 =cut
+

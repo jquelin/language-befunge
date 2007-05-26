@@ -1,6 +1,10 @@
 #
 # This file is part of Language::Befunge.
-# See README in the archive for information on copyright & licensing.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge::Ops::GenericFunge98;
@@ -110,3 +114,48 @@ $Language::Befunge::Interpreter::syntaxes{genericfunge98} = \&get_ops_map;
 1;
 
 __END__
+
+=head1 NAME
+
+Language::Befunge::Ops::GenericBefunge98 - operations supported by a Trifunge-98 interpreter
+
+
+=head1 DESCRIPTION
+
+This module defines the operations supported by a Trifunge-98 interpreter.
+It's used internally when setting up a L::B::Interpreter.
+
+The only subroutine defined is:
+
+=over 4
+
+=item get_ops_map()
+
+return a mapping of the supported letter instructions with the associated
+operations.
+
+=back
+
+
+=head1 SEE ALSO
+
+L<Language::Befunge>
+
+
+=head1 AUTHOR
+
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
+=cut
+

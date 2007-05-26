@@ -1,9 +1,18 @@
+#
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
+#
+
 package Language::Befunge::Vector;
 use strict;
 use warnings;
 use integer;
 
-use overload 
+use overload
 	'-'   => \&vector_subtract,
 	'neg' => \&vector_invert,
 	'+'   => \&vector_add,
@@ -25,7 +34,7 @@ Language::Befunge::Vector - an opaque, N-dimensional vector class.
 
 =head1 DESCRIPTION
 
-This class abstracts normal vector manipulation.  It lets you pass 
+This class abstracts normal vector manipulation.  It lets you pass
 around one argument to your functions, rather than N arguments, one
 per dimension.  This means much of your code doesn't have to care
 how many dimensions you're working with.
@@ -304,3 +313,26 @@ sub vector_inequality {
 }
 
 1;
+
+=head1 SEE ALSO
+
+L<Language::Befunge>
+
+
+=head1 AUTHOR
+
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
+=cut
+

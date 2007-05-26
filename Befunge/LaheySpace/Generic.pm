@@ -1,11 +1,10 @@
-# $Id: LaheySpace.pm,v 1.6 2005/12/02 20:47:33 jquelin Exp $
 #
-# Copyright (c) 2006 Mark Glines <mark@glines.org>
-# Based on LaheySpace.pm, Copyright (c) 2003 Jerome Quelin <jquelin@cpan.org>
-# All rights reserved.
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 #
-# This program is free software; you can redistribute it and/or
-# modify it under the same terms as Perl itself.
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 package Language::Befunge::LaheySpace::Generic;
@@ -165,7 +164,7 @@ sub store {
         }
     }
     _code_store_helper($nd - 1, $v, $coderef, $self->{torus}, $$self{min}, $size);
-    
+
     return $size;
 }
 
@@ -212,7 +211,7 @@ sub store_binary {
     }
     splice(@$torus, $v->get_component(0) - $self->{min}->get_component(0),
         length($code), map { ord } (split //, $code));
-    
+
     return $size;
 }
 
@@ -320,7 +319,7 @@ sub wrap {
 
     # Check out-of-bounds. Please note that we're in a
     # Lahey-space, and if we need to wrap, we perform a
-    # Lahey-space wrapping. Funge98 says we should walk 
+    # Lahey-space wrapping. Funge98 says we should walk
     # our current trajectory in reverse, until we hit the
     # other side of LaheySpace, and then continue along
     # the same path.
@@ -409,7 +408,7 @@ C<Inline::Befunge> (and maybe some extensions).
 sub labels_lookup {
     my $self = shift;
     my $labels = {};
-    
+
     my ($min, $max) = ($$self{min}, $$self{max});
     my $nd = $$self{nd};
     my @directions = ();
@@ -623,19 +622,25 @@ __END__
 None known.  Please inform me if you find one.
 
 
+=head1 SEE ALSO
+
+L<Language::Befunge::LaheySpace>, L<Language::Befunge>.
+
+
 =head1 AUTHOR
 
 Mark Glines, E<lt>infinoid@cpan.orgE<gt>
+Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+
+Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
 
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-
-=head1 SEE ALSO
-
-L<Language::Befunge::LaheySpace>, L<Language::Befunge>.
 
 =cut

@@ -95,20 +95,20 @@ exists.
 
 the unique ID of the IP (an integer)
 
-=item dims:
+=item get_dims()
 
 the number of dimensions this IP operates in (an integer).  This is
 read-only.
 
-=item position:
+=item get_position() / set_position()
 
 the current coordinates of the IP (a vector)
 
-=item delta:
+=item get_delta() / set_delta()
 
 the offset of the IP (a vector)
 
-=item storage:
+=item get_storage() / set_storage()
 
 the coordinates of the storage offset of the IP (a vector)
 
