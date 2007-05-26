@@ -1,6 +1,11 @@
+#!perl
 #
 # This file is part of Language::Befunge.
-# See README in the archive for information on copyright & licensing.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 use Language::Befunge::Ops;
@@ -23,4 +28,4 @@ $v   = Language::Befunge::Vector->new(2,4,4);
 $ip->set_delta( $v );
 $lbi->set_curip( $ip );
 Language::Befunge::Ops::dir_reverse( $lbi );
-is( $ip->get_delta, '(-4,-4)', 'dir_reverse forces a 180° direction change' );
+is( $ip->get_delta, '(-4,-4)', 'dir_reverse forces a 180ï¿½ direction change' );

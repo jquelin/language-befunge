@@ -1,5 +1,11 @@
-#-*- cperl -*-
-# $Id: 04lahey.t,v 1.14 2006/04/30 15:38:46 jquelin Exp $
+#!perl
+#
+# This file is part of Language::Befunge.
+# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the same terms as Perl itself.
+#
 #
 
 #------------------------------------------------------------------#
@@ -183,7 +189,7 @@ EOF
 #  2
 #  1
 #  0     Foo bar baz
-#  1     cameFoo bar baz      
+#  1     cameFoo bar baz
 #  2         camel llama buffy
 #  3
 #  4
@@ -203,7 +209,7 @@ EOF
 #  2
 #  1   Foo bar baz
 #  0   camel llama buffy
-#  1     cameFoo bar baz      
+#  1     cameFoo bar baz
 #  2         camel llama buffy
 #  3
 #  4
@@ -224,8 +230,8 @@ EOF
 #   5432101234567890123456789012345678
 #  2
 #  1   Foo bar baz
-#  0   Foo bar baz       
-#  1   camel llama buffy      
+#  0   Foo bar baz
+#  1   camel llama buffy
 #  2         camel llama buffy
 #  3
 #  4
@@ -479,7 +485,7 @@ BEGIN { $tests += 17 };
 # garbage...
 $ls->clear;
 $ls->store( <<'EOF', Language::Befunge::Vector->new(4, -2, -1, 0, 0 ));
-   ;:foo is foo;1  
+   ;:foo is foo;1
      ;not a label;
 EOF
 $href = $ls->labels_lookup;
@@ -493,7 +499,7 @@ BEGIN { $tests += 5 };
 # double define...
 $ls->clear;
 $ls->store( <<'EOF', Language::Befunge::Vector->new(4, -2, -1, 0, 0 ));
-   ;:foo is foo;1  
+   ;:foo is foo;1
    2;another oof:;
 EOF
 eval { $href = $ls->labels_lookup; };
