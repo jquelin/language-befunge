@@ -140,41 +140,49 @@ wonder why you are reading this! :-)
 
 =over 4
 
-=item dimensions:
-
-the number of dimensions this interpreter works in.
-
-=item file:
-
-the script filename (a string)
-
-=item params:
-
-the parameters of the script (an array reference)
-
-=item retval:
-
-the current return value of the interpreter (an integer)
-
-=item DEBUG:
-
-wether the interpreter should output debug messages (a boolean)
-
-=item curip:
+=item get_curip() / set_curip()
 
 the current Instruction Pointer processed (a L::B::IP object)
 
-=item ips:
+=item get_DEBUG() / set_DEBUG()
+
+wether the interpreter should output debug messages (a boolean)
+
+=item get_dimensions() / set_dimensions()
+
+the number of dimensions this interpreter works in.
+
+=item get_file() / set_file()
+
+the script filename (a string)
+
+=item get_handprint() / set_handprint()
+
+the handprint of the interpreter
+
+=item get_ips() / set_ips()
 
 the current set of IPs travelling in the Lahey space (an array
 reference)
 
-=item newips:
+=item get_newips() / set_newips()
 
 the set of IPs that B<will> travel in the Lahey space B<after> the
 current tick (an array reference)
 
-=item torus:
+=item get_ops() / set_ops()
+
+the current supported operations set.
+
+=item get_params() / set_params()
+
+the parameters of the script (an array reference)
+
+=item get_retval() / set_retval()
+
+the current return value of the interpreter (an integer)
+
+=item get_torus() / set_torus()
 
 the current Lahey space (a L::B::LaheySpace object)
 

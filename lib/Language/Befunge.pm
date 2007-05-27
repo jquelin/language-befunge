@@ -83,6 +83,14 @@ sub new {
 __END__
 
 
+=head1 PUBLIC METHODS
+
+=head2 new( [params] )
+
+Call directly the Language::Befunge::Interpreter constructor. Refer to
+L<Language::Befunge::Interpreter> for more information.
+
+
 =head1 TODO
 
 =over 4
