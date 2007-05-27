@@ -40,10 +40,7 @@ my $builder = Module::Build->new
         'Befunge/Ops/Befunge98.pm' => 'lib/Language/Befunge/Ops/Befunge98.pm',
       },
     add_to_cleanup    =>
-      [ 'Language-Befunge-*', '*~', 't/*~', 'Befunge/*~',
-        'Befunge/doc/*~', 'Befunge/examples/*~','Befunge/lib/*~',
-        'Befunge/bin/*~', 'MANIFEST.bak'
-      ],
+      [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..4 ]
     #recursive_test_files => 1
   );
 
