@@ -1,5 +1,4 @@
 Befunge.pm
-Befunge/bin/jqbf98
 Befunge/doc/bf98-specs.html
 Befunge/doc/instr.txt
 Befunge/doc/library.pod
@@ -20,6 +19,7 @@ Befunge/Ops/Befunge98.pm
 Befunge/Ops/GenericFunge98.pm
 Befunge/Ops/Unefunge98.pm
 Befunge/Vector.pm
+bin/jqbf98
 Build.PL
 Changes
 LICENSE

@@ -54,7 +54,7 @@ WriteMakefile(
     AUTHOR        => 'Jerome Quelin, <jquelin@cpan.org>',
     VERSION_FROM  => 'Befunge.pm',
     ABSTRACT_FROM => 'Befunge.pm',
-    EXE_FILES     => [ map "Befunge/bin/$_", @programs_to_install ],
+    EXE_FILES     => [ map "bin/$_", @programs_to_install ],
     LICENSE       => 'perl',
     PREREQ_PM     => { Storable => 0, 'Test::More' => 0 },
     dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

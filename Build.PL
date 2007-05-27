@@ -79,7 +79,7 @@ EOT
 }
 
 
-$builder->script_files( [ map "Befunge/bin/$_", @programs_to_install ] );
+$builder->script_files( [ map "bin/$_", @programs_to_install ] );
 
 #---
 
