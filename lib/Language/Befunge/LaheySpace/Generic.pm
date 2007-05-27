@@ -9,49 +9,20 @@
 
 package Language::Befunge::LaheySpace::Generic;
 require 5.006;
-
-=head1 NAME
-
-Language::Befunge::LaheySpace::Generic - a generic N-dimensional LaheySpace.
-
-
-=head1 SYNOPSIS
-
-	# create a 3-dimensional LaheySpace.
-	my $torus = Language::Befunge::LaheySpace::Generic->new(3);
-	$torus->clear();
-	$torus->store(<<"EOF");
-	12345
-	67890
-	\fabcde
-	fghij
-	EOF
-
-Note you usually don't need to use this module directly.
-B<Language::Befunge::Interpreter> uses it internally, for non-2-dimensional
-storage.  For 2-dimensional storage, B<Language::Befunge::LaheySpace> is used
-instead, because it is more efficient.
-
-
-=head1 DESCRIPTION
-
-
-=cut
-
-
-# Modules we rely upon.
 use strict;
 use warnings;
-use Carp;     # This module can't explode :o)
+use Carp;
 use Language::Befunge::Vector;
 
-=head1 CONSTRUCTOR
 
-=head2 new( dimensions )
+# -- CONSTRUCTOR
 
-Creates a new Lahey Space.
 
-=cut
+#
+# new( dimensions )
+#
+# Creates a new Lahey Space.
+#
 sub new {
     my $package = shift;
     my $dimensions = shift;
@@ -69,15 +40,13 @@ sub new {
 }
 
 
+# -- PUBLIC METHODS
 
-
-=head1 PUBLIC METHODS
-
-=head2 clear(  )
-
-Clear the torus.
-
-=cut
+#
+# clear(  )
+#
+# Clear the torus.
+#
 sub clear {
     my $self = shift;
     $$self{min} = Language::Befunge::Vector->new_zeroes($$self{nd});
@@ -87,31 +56,31 @@ sub clear {
 }
 
 
-=head2 store( code, [vector] )
-
-Store the given code at the specified vector.  If the coordinates
-are omitted, then the code is stored at the origin (0, 0).
-
-Return the size of the code inserted, as a vector.
-
-The code is a string, representing a block of Funge code.  Rows are
-separated by newlines.  Planes are separated by form feeds.  A complete list of
-separators follows:
-
-	Axis    Delimiter
-	X       (none)
-	Y       \n
-	Z       \f
-	4       \0
-
-The new-line and form-feed delimiters are in the Funge98 spec.  However, there
-is no standardized separator for dimensions above Z.  Currently, dimensions 4
-and above use \0, \0\0, \0\0\0, etc.  These are dangerously ambiguous, but are
-the only way I can think of to retain reverse compatibility.  Suggestions for
-better delimiters are welcome.  (Using XML would be really ugly, I'd prefer not
-to.)
-
-=cut
+#
+# store( code, [vector] )
+#
+# Store the given code at the specified vector.  If the coordinates
+# are omitted, then the code is stored at the origin (0, 0).
+#
+# Return the size of the code inserted, as a vector.
+#
+# The code is a string, representing a block of Funge code.  Rows are
+# separated by newlines.  Planes are separated by form feeds.  A complete list of
+# separators follows:
+#
+# 	Axis    Delimiter
+# 	X       (none)
+# 	Y       \n
+# 	Z       \f
+# 	4       \0
+#
+# The new-line and form-feed delimiters are in the Funge98 spec.  However, there
+# is no standardized separator for dimensions above Z.  Currently, dimensions 4
+# and above use \0, \0\0, \0\0\0, etc.  These are dangerously ambiguous, but are
+# the only way I can think of to retain reverse compatibility.  Suggestions for
+# better delimiters are welcome.  (Using XML would be really ugly, I'd prefer not
+# to.)
+#
 sub store {
     my ($self, $code, $v) = @_;
     my $nd = $$self{nd};
@@ -168,18 +137,19 @@ sub store {
     return $size;
 }
 
-=head2 store_binary( code, [x, y] )
 
-Store the given code at the specified coordinates. If the coordinates
-are omitted, then the code is stored at the Origin(0, 0) coordinates.
-
-Return the size of the code inserted, as a vector.
-
-This is binary insertion, that is, EOL and FF sequences are stored in
-Funge-space instead of causing the dimension counters to be reset and
-incremented.  The data is stored all in one row.
-
-=cut
+#
+# store_binary( code, [vector] )
+#
+# Store the given code at the specified coordinates. If the coordinates
+# are omitted, then the code is stored at the Origin(0, 0) coordinates.
+#
+# Return the size of the code inserted, as a vector.
+#
+# This is binary insertion, that is, EOL and FF sequences are stored in
+# Funge-space instead of causing the dimension counters to be reset and
+# incremented.  The data is stored all in one row.
+#
 sub store_binary {
     my ($self, $code, $v) = @_;
     my $nd = $$self{nd};
@@ -215,18 +185,18 @@ sub store_binary {
     return $size;
 }
 
-=head2 get_char( vector )
 
-
-Return the character stored in the torus at the specified location. If
-the value is not between 0 and 255 (inclusive), get_char will return a
-string that looks like "<np-0x4500>".
-
-B</!\> As in Funge, code and data share the same playfield, the
-character returned can be either an instruction B<or> raw data.  No
-guarantee is made that the return value is printable.
-
-=cut
+#
+# get_char( vector )
+#
+# Return the character stored in the torus at the specified location. If
+# the value is not between 0 and 255 (inclusive), get_char will return a
+# string that looks like "<np-0x4500>".
+#
+# B</!\> As in Funge, code and data share the same playfield, the
+# character returned can be either an instruction B<or> raw data.  No
+# guarantee is made that the return value is printable.
+#
 sub get_char {
     my $self = shift;
     my $v = shift;
@@ -236,17 +206,18 @@ sub get_char {
     return chr($ord);
 }
 
-=head2 get_value( vector )
 
-Return the number stored in the torus at the specified location. If
-the value hasn't yet been set, it defaults to the ordinal value of a
-space (ie, #32).
-
-B</!\> As in Funge, code and data share the same playfield, the
-number returned can be either an instruction B<or> a data (or even
-both... Eh, that's Funge! :o) ).
-
-=cut
+#
+# my $val = get_value( vector )
+#
+# Return the number stored in the torus at the specified location. If
+# the value hasn't yet been set, it defaults to the ordinal value of a
+# space (ie, #32).
+#
+# B</!\> As in Funge, code and data share the same playfield, the
+# number returned can be either an instruction B<or> a data (or even
+# both... Eh, that's Funge! :o) ).
+#
 sub get_value {
     my ($self, $v) = @_;
     my $val;
@@ -263,16 +234,15 @@ sub get_value {
 }
 
 
-
-=head2 set_value( x, y, value )
-
-Write the supplied value in the torus at the specified location.
-
-B</!\> As in Funge, code and data share the same playfield, the
-number stored can be either an instruction B<or> a data (or even
-both... Eh, that's Funge! :o) ).
-
-=cut
+#
+# set_value( vector, value )
+#
+# Write the supplied value in the torus at the specified location.
+#
+# B</!\> As in Funge, code and data share the same playfield, the
+# number stored can be either an instruction B<or> a data (or even
+# both... Eh, that's Funge! :o) ).
+#
 sub set_value {
     my ($self, $v, $val) = @_;
 
@@ -287,11 +257,12 @@ sub set_value {
     $$line[$v->get_component(0) - $$self{min}->get_component(0)] = $val;
 }
 
-=head2 move_ip_forward( ip )
 
-Move the given ip forward, according to its delta.
-
-=cut
+#
+# move_ip_forward( ip )
+#
+# Move the given ip forward, according to its delta.
+#
 sub move_ip_forward {
     my ($self, $ip) = @_;
 
@@ -307,11 +278,11 @@ sub move_ip_forward {
 }
 
 
-=head2 wrap( position, delta )
-
-Handle LaheySpace wrapping, if necessary.
-
-=cut
+#
+# wrap( position, delta )
+#
+# Handle LaheySpace wrapping, if necessary.
+#
 sub wrap {
     my ($self, $position, $delta) = @_;
 
@@ -335,11 +306,11 @@ sub wrap {
 }
 
 
-=head2 rectangle( start, size )
-
-Return a string containing the data/code in the specified rectangle.
-
-=cut
+#
+# my $str = rectangle( start, size )
+#
+# Return a string containing the data/code in the specified rectangle.
+#
 sub rectangle {
     my ($self, $v1, $v2) = @_;
     my $nd = $$self{nd};
@@ -390,21 +361,21 @@ sub rectangle {
 }
 
 
-=head2 labels_lookup(  )
-
-Parse the Lahey space to find sequences such as C<;:(\w[^\s;])[^;]*;>
-and return a hash reference whose keys are the labels and the values
-an anonymous array with two vectors: a vector describing the absolute
-position of the character B<just after> the trailing C<;>, and a
-vector describing the velocity that lead to this label.
-
-This method will only look in the cardinal directions; west, east,
-north, south, up, down and so forth.
-
-This allow to define some labels in the source code, to be used by
-C<Inline::Befunge> (and maybe some extensions).
-
-=cut
+#
+# my %labels = labels_lookup(  )
+#
+# Parse the Lahey space to find sequences such as C<;:(\w[^\s;])[^;]*;>
+# and return a hash reference whose keys are the labels and the values
+# an anonymous array with two vectors: a vector describing the absolute
+# position of the character B<just after> the trailing C<;>, and a
+# vector describing the velocity that lead to this label.
+#
+# This method will only look in the cardinal directions; west, east,
+# north, south, up, down and so forth.
+#
+# This allow to define some labels in the source code, to be used by
+# C<Inline::Befunge> (and maybe some extensions).
+#
 sub labels_lookup {
     my $self = shift;
     my $labels = {};
@@ -437,38 +408,39 @@ sub labels_lookup {
     return $labels;
 }
 
-=head2 get_min()
 
-Returns a Vector object, pointing at the beginning of the torus.
-If nothing has been stored to a negative offset, this Vector will
-point at the origin (0,0).
-
-=cut
+#
+# my $vector = get_min()
+#
+# Returns a Vector object, pointing at the beginning of the torus.
+# If nothing has been stored to a negative offset, this Vector will
+# point at the origin (0,0).
+#
 sub get_min {
 	my $self = shift;
 	return $$self{min}->vector_copy();
 }
 
-=head2 get_max()
 
-Returns a Vector object, pointing at the end of the torus.
-This is usually the largest position which has been written to.
-
-=cut
+#
+# my $vector = get_max()
+#
+# Returns a Vector object, pointing at the end of the torus.
+# This is usually the largest position which has been written to.
+#
 sub get_max {
 	my $self = shift;
 	return $$self{max}->vector_copy();
 }
 
 
-=head1 PRIVATE METHODS
+# -- PRIVATE METHODS
 
-
-=head2 _enlarge( v )
-
-Expand the torus to include the provided point.
-
-=cut
+#
+# _enlarge( v )
+#
+# Expand the torus to include the provided point.
+#
 sub _enlarge {
     my ($self, $v) = @_;
     my $nd = $$self{nd};
@@ -544,11 +516,11 @@ sub _enlarge {
 }
 
 
-=head2 _out_of_bounds( vector )
-
-Return true if a location is out of bounds.
-
-=cut
+#
+# _out_of_bounds( $vector )
+#
+# Return true if a location is out of bounds.
+#
 sub _out_of_bounds {
     my ($self, $v) = @_;
     my ($min, $max) = ($$self{min}, $$self{max});
@@ -556,13 +528,13 @@ sub _out_of_bounds {
 }
 
 
-=head2 _labels_try( start, delta )
-
-Try in the specified direction if the funge space matches a label
-definition. Return undef if it wasn't a label definition, or the name
-of the label if it was a valid label.
-
-=cut
+#
+# _labels_try( $start, $delta )
+#
+# Try in the specified direction if the funge space matches a label
+# definition. Return undef if it wasn't a label definition, or the name
+# of the label if it was a valid label.
+#
 sub _labels_try {
     my ($self, $orig, $delta) = @_;
     my $vector = $orig->vector_copy;
@@ -585,14 +557,13 @@ sub _labels_try {
 }
 
 
-=head2 _rasterize( vector )
-
-Return the next vector in raster order.  To enumerate the entire
-storage area, the caller should pass in $$self{min} the first time,
-and keep looping until the return value == $$self{max}.
-
-=cut
-
+#
+# _rasterize( $vector )
+#
+# Return the next vector in raster order.  To enumerate the entire
+# storage area, the caller should pass in $$self{min} the first time,
+# and keep looping until the return value == $$self{max}.
+#
 sub _rasterize {
     my ($self, $v) = @_;
     $v = $v->vector_copy();
@@ -615,6 +586,188 @@ sub _rasterize {
 
 1;
 __END__
+
+=head1 NAME
+
+Language::Befunge::LaheySpace::Generic - a generic N-dimensional LaheySpace.
+
+
+=head1 SYNOPSIS
+
+    # create a 3-dimensional LaheySpace.
+    my $torus = Language::Befunge::LaheySpace::Generic->new(3);
+    $torus->clear();
+    $torus->store(<<"EOF");
+    12345
+    67890
+    \fabcde
+    fghij
+    EOF
+
+Note you usually don't need to use this module directly.
+B<Language::Befunge::Interpreter> uses it internally, for non-2-dimensional
+storage.  For 2-dimensional storage, B<Language::Befunge::LaheySpace> is used
+instead, because it is more efficient.
+
+
+=head1 DESCRIPTION
+
+This module implements a traditional Lahey space.
+
+
+=head1 CONSTRUCTOR
+
+=head2 new( dimensions )
+
+Creates a new Lahey Space.
+
+
+=head1 PUBLIC METHODS
+
+=head2 clear(  )
+
+Clear the torus.
+
+
+=head2 store( code, [vector] )
+
+Store the given code at the specified vector.  If the coordinates
+are omitted, then the code is stored at the origin (0, 0).
+
+Return the size of the code inserted, as a vector.
+
+The code is a string, representing a block of Funge code.  Rows are
+separated by newlines.  Planes are separated by form feeds.  A complete list of
+separators follows:
+
+    Axis    Delimiter
+    X       (none)
+    Y       \n
+    Z       \f
+    4       \0
+
+The new-line and form-feed delimiters are in the Funge98 spec.  However, there
+is no standardized separator for dimensions above Z.  Currently, dimensions 4
+and above use \0, \0\0, \0\0\0, etc.  These are dangerously ambiguous, but are
+the only way I can think of to retain reverse compatibility.  Suggestions for
+better delimiters are welcome.  (Using XML would be really ugly, I'd prefer not
+to.)
+
+
+=head2 store_binary( code, [vectir] )
+
+Store the given code at the specified coordinates. If the coordinates
+are omitted, then the code is stored at the Origin(0, 0) coordinates.
+
+Return the size of the code inserted, as a vector.
+
+This is binary insertion, that is, EOL and FF sequences are stored in
+Funge-space instead of causing the dimension counters to be reset and
+incremented.  The data is stored all in one row.
+
+
+=head2 get_char( vector )
+
+
+Return the character stored in the torus at the specified location. If
+the value is not between 0 and 255 (inclusive), get_char will return a
+string that looks like "<np-0x4500>".
+
+B</!\> As in Funge, code and data share the same playfield, the
+character returned can be either an instruction B<or> raw data.  No
+guarantee is made that the return value is printable.
+
+
+=head2 get_value( vector )
+
+Return the number stored in the torus at the specified location. If
+the value hasn't yet been set, it defaults to the ordinal value of a
+space (ie, #32).
+
+B</!\> As in Funge, code and data share the same playfield, the
+number returned can be either an instruction B<or> a data (or even
+both... Eh, that's Funge! :o) ).
+
+
+=head2 set_value( vector, value )
+
+Write the supplied value in the torus at the specified location.
+
+B</!\> As in Funge, code and data share the same playfield, the
+number stored can be either an instruction B<or> a data (or even
+both... Eh, that's Funge! :o) ).
+
+
+=head2 move_ip_forward( ip )
+
+Move the given ip forward, according to its delta.
+
+
+=head2 wrap( position, delta )
+
+Handle LaheySpace wrapping, if necessary.
+
+
+=head2 rectangle( start, size )
+
+Return a string containing the data/code in the specified rectangle.
+
+
+=head2 labels_lookup(  )
+
+Parse the Lahey space to find sequences such as C<;:(\w[^\s;])[^;]*;>
+and return a hash reference whose keys are the labels and the values
+an anonymous array with two vectors: a vector describing the absolute
+position of the character B<just after> the trailing C<;>, and a
+vector describing the velocity that lead to this label.
+
+This method will only look in the cardinal directions; west, east,
+north, south, up, down and so forth.
+
+This allow to define some labels in the source code, to be used by
+C<Inline::Befunge> (and maybe some extensions).
+
+=cut
+
+
+=head2 get_min()
+
+Returns a Vector object, pointing at the beginning of the torus.
+If nothing has been stored to a negative offset, this Vector will
+point at the origin (0,0).
+
+
+=head2 get_max()
+
+Returns a Vector object, pointing at the end of the torus.
+This is usually the largest position which has been written to.
+
+
+=head1 PRIVATE METHODS
+
+=head2 _enlarge( v )
+
+Expand the torus to include the provided point.
+
+
+=head2 _out_of_bounds( $vector )
+
+Return true if a location is out of bounds.
+
+
+=head2 _labels_try( start, delta )
+
+Try in the specified direction if the funge space matches a label
+definition. Return undef if it wasn't a label definition, or the name
+of the label if it was a valid label.
+
+
+=head2 _rasterize( vector )
+
+Return the next vector in raster order.  To enumerate the entire
+storage area, the caller should pass in $$self{min} the first time,
+and keep looping until the return value == $$self{max}.
+
 
 
 =head1 BUGS

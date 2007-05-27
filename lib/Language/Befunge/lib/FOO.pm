@@ -9,6 +9,18 @@
 
 package Language::Befunge::lib::FOO;
 
+use strict;
+use warnings;
+
+sub new { return bless {}, shift; }
+
+sub P {
+    print "foo";
+}
+
+1;
+__END__
+
 =head1 NAME
 
 Language::Befunge::IP::lib::FOO - a Befunge extension to print foo
@@ -23,11 +35,6 @@ Language::Befunge::IP::lib::FOO - a Befunge extension to print foo
 This extension is just an example of the Befunge extension mechanism
 of the Language::Befunge interpreter.
 
-=cut
-
-# A little anal retention ;-)
-use strict;
-use warnings;
 
 =head1 FUNCTIONS
 
@@ -35,20 +42,10 @@ use warnings;
 
 Create a FOO instance.
 
-=cut
-sub new { return bless {}, shift; }
 
 =head2 P
 
 Output C<foo>.
-
-=cut
-sub P {
-    print "foo";
-}
-
-1;
-__END__
 
 
 =head1 SEE ALSO

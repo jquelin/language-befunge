@@ -10,6 +10,24 @@
 package Language::Befunge;
 require 5.006;
 
+use strict;
+use warnings;
+
+use Carp;
+use Language::Befunge::Interpreter;
+
+# Public variables of the module.
+our $VERSION = '2.07';
+$| = 1;
+
+sub new {
+    shift;
+    return Language::Befunge::Interpreter->new(@_);
+}
+
+1;
+__END__
+
 =head1 NAME
 
 Language::Befunge - a Befunge-98 interpreter
@@ -60,27 +78,6 @@ this interpreters only handle the character which ordinal value is 10
 is made neither for Microsoft systems (\r\n) nor for Macs (\r).
 
 This module also implements the Concurrent Funge semantics.
-
-=cut
-use strict;
-use warnings;
-
-# Modules we rely upon.
-use Carp;     # This module can't explode :o)
-use Config;   # For the 'y' instruction.
-use Language::Befunge::Interpreter;
-
-# Public variables of the module.
-our $VERSION = '2.07';
-$| = 1;
-
-sub new {
-    shift;
-    return Language::Befunge::Interpreter->new(@_);
-}
-
-1;
-__END__
 
 
 =head1 PUBLIC METHODS

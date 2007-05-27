@@ -9,6 +9,25 @@
 
 package Language::Befunge::lib::HELO;
 
+use strict;
+use warnings;
+
+sub new { return bless {}, shift; }
+
+sub P {
+    print "Hello world!\n";
+}
+
+sub S {
+    my (undef, $interp) = @_;
+    $interp->get_curip->spush( reverse map { ord } split //, "Hello world!\n".chr(0) );
+}
+
+
+1;
+__END__
+
+
 =head1 NAME
 
 Language::Befunge::IP::lib::HELO - a Befunge extension to print Hello world!
@@ -24,11 +43,6 @@ Language::Befunge::IP::lib::HELO - a Befunge extension to print Hello world!
 This extension is just an example of the Befunge extension mechanism
 of the Language::Befunge interpreter.
 
-=cut
-
-# A little anal retention ;-)
-use strict;
-use warnings;
 
 =head1 FUNCTIONS
 
@@ -36,31 +50,15 @@ use warnings;
 
 Create a new HELO instance.
 
-=cut
-sub new { return bless {}, shift; }
 
 =head2 P
 
 Output C<Hello world!\n>.
 
-=cut
-sub P {
-    print "Hello world!\n";
-}
 
 =head2 S
 
 Store the gnirts "Hello world!\n"0 on the TOSS.
-
-=cut
-sub S {
-    my (undef, $interp) = @_;
-    $interp->get_curip->spush( reverse map { ord } split //, "Hello world!\n".chr(0) );
-}
-
-
-1;
-__END__
 
 
 =head1 SEE ALSO

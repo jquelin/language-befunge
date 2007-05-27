@@ -13,8 +13,7 @@ require 5.006;
 use strict;
 use warnings;
 
-# Modules we rely upon.
-use Carp;     # This module can't explode :o)
+use Carp;
 use Config;   # For the 'y' instruction.
 use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
@@ -28,20 +27,22 @@ $| = 1;
 # the syntaxes hash allows funges to register their ops maps with us.
 our %syntaxes;
 
-=head1 CONSTRUCTOR
 
-=head2 new( [filename, ] [ Key => Value, ... ] )
+# -- CONSTRUCTOR
 
-Create a new Befunge interpreter.  As an optional first argument, you
-can pass it a filename to read Funge code from (default: blank
-torus).  All other arguments are key=>value pairs.  The following
-keys are accepted, with their default values shown:
 
-	Dimensions => 2,
-	Syntax     => 'befunge98',
-	Storage    => 'laheyspace'
-
-=cut
+#
+# new( [filename, ] [ Key => Value, ... ] )
+#
+# Create a new Befunge interpreter.  As an optional first argument, you
+# can pass it a filename to read Funge code from (default: blank
+# torus).  All other arguments are key=>value pairs.  The following
+# keys are accepted, with their default values shown:
+#
+# 	Dimensions => 2,
+# 	Syntax     => 'befunge98',
+# 	Storage    => 'laheyspace'
+#
 sub new {
     # Create and bless the object.
     my $class = shift;
@@ -131,6 +132,295 @@ sub new {
 
 
 
+# -- ACCESSORS
+
+# The following is a list of attributes of a Language::Befunge
+# object. For each of them, a method C<get_foobar> and C<set_foobar>
+# exists, which does what you can imagine - and if you can't, then i
+# wonder why you are reading this! :-)
+#
+# get_curip() / set_curip()
+# the current Instruction Pointer processed (a L::B::IP object)
+#
+# get_DEBUG() / set_DEBUG()
+# wether the interpreter should output debug messages (a boolean)
+#
+# get_dimensions() / set_dimensions()
+# the number of dimensions this interpreter works in.
+#
+# get_file() / set_file()
+# the script filename (a string)
+#
+# get_handprint() / set_handprint()
+# the handprint of the interpreter
+#
+# get_ips() / set_ips()
+# the current set of IPs travelling in the Lahey space (an array
+# reference)
+#
+# get_newips() / set_newips()
+# the set of IPs that B<will> travel in the Lahey space B<after> the
+# current tick (an array reference)
+#
+# get_ops() / set_ops()
+# the current supported operations set.
+#
+# get_params() / set_params()
+# the parameters of the script (an array reference)
+#
+# get_retval() / set_retval()
+# the current return value of the interpreter (an integer)
+#
+# get_torus() / set_torus()
+# the current Lahey space (a L::B::LaheySpace object)
+#
+BEGIN {
+    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops torus handprint ];
+    foreach my $attr ( @attrs ) {
+        my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
+        $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
+        eval $code;
+    }
+}
+
+
+# -- PUBLIC METHODS
+
+# - Utilities
+
+
+#
+# move_curip( [regex] )
+#
+# Move the current IP according to its delta on the LaheySpace topology.
+#
+# If a regex ( a C<qr//> object ) is specified, then IP will move as
+# long as the pointed character match the supplied regex.
+#
+# Example: given the code C<;foobar;> (assuming the IP points on the
+# first C<;>) and the regex C<qr/[^;]/>, the IP will move in order to
+# point on the C<r>.
+#
+sub move_curip {
+    my ($self, $re) = @_;
+    my $curip = $self->get_curip;
+    my $torus = $self->get_torus;
+
+    if ( defined $re ) {
+        my $orig = $curip->get_position;
+        # Moving as long as we did not reach the condition.
+        while ( $torus->get_char($curip->get_position) =~ $re ) {
+            $torus->move_ip_forward($curip);
+            $self->abort("infinite loop")
+                if ( $curip->get_position == $orig );
+        }
+
+        # We moved one char too far.
+        $curip->dir_reverse;
+        $torus->move_ip_forward($curip);
+        $curip->dir_reverse;
+
+    } else {
+        # Moving one step beyond...
+        $torus->move_ip_forward($curip);
+    }
+}
+
+
+#
+# abort( reason )
+#
+# Abort the interpreter with the given reason, as well as the current
+# file and coordinate of the offending instruction.
+#
+sub abort {
+    my $self = shift;
+    my $file = $self->get_file;
+    my $v = $self->get_curip->get_position;
+    croak "$file $v: ", @_;
+}
+
+
+#
+# debug( LIST )
+#
+# Issue a warning if the interpreter has DEBUG enabled.
+#
+sub debug {
+    my $self = shift;
+    $self->get_DEBUG or return;
+    warn @_;
+}
+
+
+# - Code and Data Storage
+
+#
+# read_file( filename )
+#
+# Read a file (given as argument) and store its code.
+#
+# Side effect: clear the previous code.
+#
+sub read_file {
+    my ($self, $file) = @_;
+
+    # Fetch the code.
+    my $code;
+    open BF, "<$file" or croak "$!";
+    {
+        local $/; # slurp mode.
+        $code = <BF>;
+    }
+    close BF;
+
+    # Store code.
+    $self->set_file( $file );
+    $self->store_code( $code );
+}
+
+
+#
+# store_code( code )
+#
+# Store the given code in the Lahey space.
+#
+# Side effect: clear the previous code.
+#
+sub store_code {
+    my ($self, $code) = @_;
+    $self->debug( "Storing code\n" );
+    $self->get_torus->clear;
+    $self->get_torus->store( $code );
+}
+
+
+# - Run methods
+
+
+#
+# run_code( [params]  )
+#
+# Run the current code. That is, create a new Instruction Pointer and
+# move it around the code.
+#
+# Return the exit code of the program.
+#
+sub run_code {
+    my $self = shift;
+    $self->set_params( [ @_ ] );
+
+    # Cosmetics.
+    $self->debug( "\n-= NEW RUN (".$self->get_file.") =-\n" );
+
+    # Create the first Instruction Pointer.
+    $self->set_ips( [ Language::Befunge::IP->new($$self{dimensions}) ] );
+    $self->set_retval(0);
+
+    # Loop as long as there are IPs.
+    $self->next_tick while scalar @{ $self->get_ips };
+
+    # Return the exit code.
+    return $self->get_retval;
+}
+
+
+#
+# next_tick(  )
+#
+# Finish the current tick and stop just before the next tick.
+#
+sub next_tick {
+    my $self = shift;
+
+    # Cosmetics.
+    $self->debug( "Tick!\n" );
+
+    # Process the set of IPs.
+    $self->set_newips( [] );
+    $self->process_ip while $self->set_curip( shift @{ $self->get_ips } );
+
+    # Copy the new ips.
+    $self->set_ips( $self->get_newips );
+}
+
+
+#
+# process_ip(  )
+#
+# Process the current ip.
+#
+sub process_ip {
+    my ($self, $continue) = @_;
+    $continue = 1 unless defined $continue;
+    my $ip = $self->get_curip;
+
+    # Fetch values for this IP.
+    my $v  = $ip->get_position;
+    my $ord  = $self->get_torus->get_value( $v );
+    my $char = $self->get_torus->get_char( $v );
+
+    # Cosmetics.
+    $self->debug( "#".$ip->get_id.":$v: $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
+
+    # Check if we are in string-mode.
+    if ( $ip->get_string_mode ) {
+        if ( $char eq '"' ) {
+            # End of string-mode.
+            $self->debug( "leaving string-mode\n" );
+            $ip->set_string_mode(0);
+
+        } elsif ( $char eq ' ' ) {
+            # A serie of spaces, to be treated as one space.
+            $self->debug( "string-mode: pushing char ' '\n" );
+            $self->move_curip( qr/ / );
+            $ip->spush( $ord );
+
+        } else {
+            # A banal character.
+            $self->debug( "string-mode: pushing char '$char'\n" );
+            $ip->spush( $ord );
+        }
+
+    } else {
+        # Not in string-mode.
+        if ( exists $self->get_ops->{$char} ) {
+            # Regular instruction.
+            my $meth = $self->get_ops->{$char};
+            $meth->($self);
+
+        } else {
+            # Not a regular instruction: reflect.
+            $self->debug( "the command value $ord (char='$char') is not implemented.\n");
+            $ip->dir_reverse;
+        }
+    }
+
+    if ($continue) {
+        # Tick done for this IP, let's move it and push it in the
+        # set of non-terminated IPs.
+        $self->move_curip;
+        push @{ $self->get_newips }, $ip unless $ip->get_end;
+    }
+}
+
+
+1;
+__END__
+
+=head1 CONSTRUCTOR
+
+=head2 new( [filename, ] [ Key => Value, ... ] )
+
+Create a new Befunge interpreter.  As an optional first argument, you
+can pass it a filename to read Funge code from (default: blank
+torus).  All other arguments are key=>value pairs.  The following
+keys are accepted, with their default values shown:
+
+    Dimensions => 2,
+    Syntax     => 'befunge98',
+    Storage    => 'laheyspace'
+
 =head1 ACCESSORS
 
 The following is a list of attributes of a Language::Befunge
@@ -188,16 +478,6 @@ the current Lahey space (a L::B::LaheySpace object)
 
 =back
 
-=cut
-BEGIN {
-    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops torus handprint ];
-    foreach my $attr ( @attrs ) {
-        my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
-        $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
-        eval $code;
-    }
-}
-
 
 =head1 PUBLIC METHODS
 
@@ -216,57 +496,17 @@ Example: given the code C<;foobar;> (assuming the IP points on the
 first C<;>) and the regex C<qr/[^;]/>, the IP will move in order to
 point on the C<r>.
 
-=cut
-sub move_curip {
-    my ($self, $re) = @_;
-    my $curip = $self->get_curip;
-    my $torus = $self->get_torus;
-
-    if ( defined $re ) {
-        my $orig = $curip->get_position;
-        # Moving as long as we did not reach the condition.
-        while ( $torus->get_char($curip->get_position) =~ $re ) {
-            $torus->move_ip_forward($curip);
-            $self->abort("infinite loop")
-                if ( $curip->get_position == $orig );
-        }
-
-        # We moved one char too far.
-        $curip->dir_reverse;
-        $torus->move_ip_forward($curip);
-        $curip->dir_reverse;
-
-    } else {
-        # Moving one step beyond...
-        $torus->move_ip_forward($curip);
-    }
-}
-
 
 =item abort( reason )
 
 Abort the interpreter with the given reason, as well as the current
 file and coordinate of the offending instruction.
 
-=cut
-sub abort {
-    my $self = shift;
-    my $file = $self->get_file;
-    my $v = $self->get_curip->get_position;
-    croak "$file $v: ", @_;
-}
-
 
 =item debug( LIST )
 
 Issue a warning if the interpreter has DEBUG enabled.
 
-=cut
-sub debug {
-    my $self = shift;
-    $self->get_DEBUG or return;
-    warn @_;
-}
 
 =back
 
@@ -282,24 +522,6 @@ Read a file (given as argument) and store its code.
 
 Side effect: clear the previous code.
 
-=cut
-sub read_file {
-    my ($self, $file) = @_;
-
-    # Fetch the code.
-    my $code;
-    open BF, "<$file" or croak "$!";
-    {
-        local $/; # slurp mode.
-        $code = <BF>;
-    }
-    close BF;
-
-    # Store code.
-    $self->set_file( $file );
-    $self->store_code( $code );
-}
-
 
 =item store_code( code )
 
@@ -307,13 +529,6 @@ Store the given code in the Lahey space.
 
 Side effect: clear the previous code.
 
-=cut
-sub store_code {
-    my ($self, $code) = @_;
-    $self->debug( "Storing code\n" );
-    $self->get_torus->clear;
-    $self->get_torus->store( $code );
-}
 
 =back
 
@@ -330,112 +545,18 @@ move it around the code.
 
 Return the exit code of the program.
 
-=cut
-sub run_code {
-    my $self = shift;
-    $self->set_params( [ @_ ] );
-
-    # Cosmetics.
-    $self->debug( "\n-= NEW RUN (".$self->get_file.") =-\n" );
-
-    # Create the first Instruction Pointer.
-    $self->set_ips( [ Language::Befunge::IP->new($$self{dimensions}) ] );
-    $self->set_retval(0);
-
-    # Loop as long as there are IPs.
-    $self->next_tick while scalar @{ $self->get_ips };
-
-    # Return the exit code.
-    return $self->get_retval;
-}
-
 
 =item next_tick(  )
 
 Finish the current tick and stop just before the next tick.
-
-=cut
-sub next_tick {
-    my $self = shift;
-
-    # Cosmetics.
-    $self->debug( "Tick!\n" );
-
-    # Process the set of IPs.
-    $self->set_newips( [] );
-    $self->process_ip while $self->set_curip( shift @{ $self->get_ips } );
-
-    # Copy the new ips.
-    $self->set_ips( $self->get_newips );
-}
 
 
 =item process_ip(  )
 
 Process the current ip.
 
-=cut
-sub process_ip {
-    my ($self, $continue) = @_;
-    $continue = 1 unless defined $continue;
-    my $ip = $self->get_curip;
-
-    # Fetch values for this IP.
-    my $v  = $ip->get_position;
-    my $ord  = $self->get_torus->get_value( $v );
-    my $char = $self->get_torus->get_char( $v );
-
-    # Cosmetics.
-    $self->debug( "#".$ip->get_id.":$v: $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
-
-    # Check if we are in string-mode.
-    if ( $ip->get_string_mode ) {
-        if ( $char eq '"' ) {
-            # End of string-mode.
-            $self->debug( "leaving string-mode\n" );
-            $ip->set_string_mode(0);
-
-        } elsif ( $char eq ' ' ) {
-            # A serie of spaces, to be treated as one space.
-            $self->debug( "string-mode: pushing char ' '\n" );
-            $self->move_curip( qr/ / );
-            $ip->spush( $ord );
-
-        } else {
-            # A banal character.
-            $self->debug( "string-mode: pushing char '$char'\n" );
-            $ip->spush( $ord );
-        }
-
-    } else {
-        # Not in string-mode.
-        if ( exists $self->get_ops->{$char} ) {
-            # Regular instruction.
-            my $meth = $self->get_ops->{$char};
-            $meth->($self);
-
-        } else {
-            # Not a regular instruction: reflect.
-            $self->debug( "the command value $ord (char='$char') is not implemented.\n");
-            $ip->dir_reverse;
-        }
-    }
-
-    if ($continue) {
-        # Tick done for this IP, let's move it and push it in the
-        # set of non-terminated IPs.
-        $self->move_curip;
-        push @{ $self->get_newips }, $ip unless $ip->get_end;
-    }
-}
-
 
 =back
-
-=cut
-
-1;
-__END__
 
 
 =head1 TODO
