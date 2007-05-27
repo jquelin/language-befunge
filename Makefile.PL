@@ -15,8 +15,8 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME          => 'Language::Befunge',
     AUTHOR        => 'Jerome Quelin, <jquelin@cpan.org>',
-    VERSION_FROM  => 'Befunge.pm',
-    ABSTRACT_FROM => 'Befunge.pm',
+    VERSION_FROM  => 'lib/Language/Befunge.pm',
+    ABSTRACT_FROM => 'lib/Language/Befunge.pm',
     EXE_FILES     => [ 'bin/jqbf98' ],
     LICENSE       => 'perl',
     PREREQ_PM     => { Storable => 0, 'Test::More' => 0 },
