@@ -29,11 +29,11 @@ sub new {
     croak "Usage: $package->new(\$dimensions)" unless defined $dimensions;
     croak "Usage: $package->new(\$dimensions)" unless $dimensions > 0;
     my $self  = {
-            nd  => $dimensions,
-            min => Language::Befunge::Vector->new_zeroes($dimensions), # upper-left
-            max => Language::Befunge::Vector->new_zeroes($dimensions), # lower-right
+        nd  => $dimensions,
+        min => Language::Befunge::Vector->new_zeroes($dimensions), # upper-left
+        max => Language::Befunge::Vector->new_zeroes($dimensions), # lower-right
         torus => [32],
-      };
+    };
     $$self{torus} = [$$self{torus}] for(1..$dimensions);
     bless $self, $package;
     return $self;
@@ -68,11 +68,11 @@ sub clear {
 # separated by newlines.  Planes are separated by form feeds.  A complete list of
 # separators follows:
 #
-# 	Axis    Delimiter
-# 	X       (none)
-# 	Y       \n
-# 	Z       \f
-# 	4       \0
+#     Axis    Delimiter
+#     X       (none)
+#     Y       \n
+#     Z       \f
+#     4       \0
 #
 # The new-line and form-feed delimiters are in the Funge98 spec.  However, there
 # is no standardized separator for dimensions above Z.  Currently, dimensions 4
@@ -226,7 +226,7 @@ sub get_value {
         # for each dimension, go one level deeper into the array.
         $val = $$self{torus};
         for(my $d = $$self{nd} - 1; defined($val) && ($d > -1); $d--) {
-                $val = $$val[$v->get_component($d) - $$self{min}->get_component($d)];
+            $val = $$val[$v->get_component($d) - $$self{min}->get_component($d)];
         }
     }
     return $val if defined $val;
@@ -302,7 +302,7 @@ sub wrap {
     # valid code range.
     $position += $delta;
 
-	return $position;
+    return $position;
 }
 
 
@@ -389,7 +389,7 @@ sub labels_lookup {
         # greatest point ever written to; otherwise the last column is skipped.
         $max->set_component($dimension, $max->get_component($dimension)+1);
 
-		# build the array of (non-diagonal) vectors
+        # build the array of (non-diagonal) vectors
         my $v1 = Language::Befunge::Vector->new_zeroes($nd);
         my $v2 = $v1->vector_copy();
         $v1->set_component($dimension,-1);
@@ -397,10 +397,10 @@ sub labels_lookup {
         $v2->set_component($dimension, 1);
         push(@directions,$v2);
     }
-
-	R: for(my $this = $min->vector_copy; $this != $max; $this = $self->_rasterize($this)) {
+    
+    R: for(my $this = $min->vector_copy; $this != $max; $this = $self->_rasterize($this)) {
         V: for my $v (@directions) {
-  	        next R unless $self->get_char($this) eq ";";
+            next R unless $self->get_char($this) eq ";";
             my ($label, $loc) = $self->_labels_try( $this, $v );
             next V unless defined($label);
 
@@ -423,8 +423,8 @@ sub labels_lookup {
 # point at the origin (0,0).
 #
 sub get_min {
-	my $self = shift;
-	return $$self{min}->vector_copy();
+    my $self = shift;
+    return $$self{min}->vector_copy();
 }
 
 
@@ -435,8 +435,8 @@ sub get_min {
 # This is usually the largest position which has been written to.
 #
 sub get_max {
-	my $self = shift;
-	return $$self{max}->vector_copy();
+    my $self = shift;
+    return $$self{max}->vector_copy();
 }
 
 
@@ -513,11 +513,11 @@ sub _enlarge {
     }
     $$self{torus} = _enlarge_helper($nd - 1, $v, $$self{torus}, $min, $max);
     for(my $d = $$self{nd} - 1; $d > -1; $d--) {
-            my $n = $v->get_component($d);
-            my $min = $$self{min}->get_component($d);
-            my $max = $$self{max}->get_component($d);
-            $$self{min}->set_component($d,$n) if $n < $min;
-            $$self{max}->set_component($d,$n) if $n > $max;
+        my $n = $v->get_component($d);
+        my $min = $$self{min}->get_component($d);
+        my $max = $$self{max}->get_component($d);
+        $$self{min}->set_component($d,$n) if $n < $min;
+        $$self{max}->set_component($d,$n) if $n > $max;
     }
 }
 
@@ -577,12 +577,12 @@ sub _rasterize {
     my ($min, $max) = ($$self{min}, $$self{max});
     for my $d (0..$nd-1) {
         if($v->get_component($d) > $max->get_component($d)) {
-        	    # wrap to the next highest dimension, continue loop
-        		$v->set_component($d, $min->get_component($d));
+            # wrap to the next highest dimension, continue loop
+            $v->set_component($d, $min->get_component($d));
         } else {
-        	    # still have farther to go in this dimension.
-	        	$v->set_component($d, $v->get_component($d) + 1);
-	        	return $v;
+            # still have farther to go in this dimension.
+            $v->set_component($d, $v->get_component($d) + 1);
+            return $v;
         }
     }
     # ran out of dimensions!
