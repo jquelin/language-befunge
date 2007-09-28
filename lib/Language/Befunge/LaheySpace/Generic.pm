@@ -381,9 +381,15 @@ sub labels_lookup {
     my $labels = {};
 
     my ($min, $max) = ($$self{min}, $$self{max});
+    $max = $max->vector_copy();
     my $nd = $$self{nd};
     my @directions = ();
     foreach my $dimension (0..$nd-1) {
+        # for the loop below, $max actually needs to be the point *after* the
+        # greatest point ever written to; otherwise the last column is skipped.
+        $max->set_component($dimension, $max->get_component($dimension)+1);
+
+		# build the array of (non-diagonal) vectors
         my $v1 = Language::Befunge::Vector->new_zeroes($nd);
         my $v2 = $v1->vector_copy();
         $v1->set_component($dimension,-1);
@@ -570,7 +576,7 @@ sub _rasterize {
     my $nd = $$self{nd};
     my ($min, $max) = ($$self{min}, $$self{max});
     for my $d (0..$nd-1) {
-        if($v->get_component($d) == $max->get_component($d)) {
+        if($v->get_component($d) > $max->get_component($d)) {
         	    # wrap to the next highest dimension, continue loop
         		$v->set_component($d, $min->get_component($d));
         } else {
