@@ -30,8 +30,6 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-load.t
-t/03ip.t
-t/05vector.t
 t/10stdio.t
 t/11nums.t
 t/12maths.t
@@ -47,6 +45,8 @@ t/21concur.t
 t/22lib.t
 t/author/pod-coverage.t
 t/author/pod.t
+t/classes/ip.t
+t/classes/vector.t
 t/exit3.pl
 t/hello.bf
 t/interpreter/befunge.t
