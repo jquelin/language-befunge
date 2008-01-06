@@ -36,5 +36,6 @@ my $builder = Module::Build->new
       [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..4 ]
     #recursive_test_files => 1
   );
+$builder->recursive_test_files(1);
 $builder->create_build_script;
 

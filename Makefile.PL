@@ -25,6 +25,7 @@ WriteMakefile(
     clean         => { FILES => [
                     'Language-Befunge-*',
 					map { ( '*/' x $_ ) . '*~' } 0..4 ] },
+    test          => { TESTS => 't/*.t t/*/*.t' },
 );
 
 
