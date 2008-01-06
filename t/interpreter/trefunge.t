@@ -1,7 +1,7 @@
 #!perl
 #
 # This file is part of Language::Befunge.
-# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+# Copyright (c) 2001-2008 Jerome Quelin, all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the same terms as Perl itself.
@@ -21,7 +21,7 @@ use Test;
 my ($file, $fh);
 my $tests;
 my $out;
-my $unef = Language::Befunge->new( Dimensions => 1 );
+my $tref = Language::Befunge->new( Dimensions => 3 );
 BEGIN { $tests = 0 };
 
 # In order to see what happens...
@@ -46,59 +46,63 @@ sub slurp () {
 
 # Basic constructor.
 sel;
-$unef = Language::Befunge->new( "t/q.bf", Dimensions => 1 );
-$unef->run_code;
+$tref = Language::Befunge->new( "t/q.bf", Dimensions => 3 );
+$tref->run_code;
 $out = slurp;
 ok( $out, "" );
 BEGIN { $tests += 1 };
 
 # Basic reading.
-$unef = Language::Befunge->new( Dimensions => 1 );
+$tref = Language::Befunge->new( Dimensions => 3 );
 sel;
-$unef->read_file( "t/q.bf" );
-$unef->run_code;
+$tref->read_file( "t/q.bf" );
+$tref->run_code;
 $out = slurp;
 ok( $out, "" );
 BEGIN { $tests += 1 };
 
 # Basic storing.
 sel;
-$unef->store_code( <<'END_OF_CODE' );
+$tref->store_code( <<'END_OF_CODE' );
 q
 END_OF_CODE
-$unef->run_code;
+$tref->run_code;
 $out = slurp;
 ok( $out, "" );
 BEGIN { $tests += 1 };
 
 # Interpreter must treat non-characters as if they were an 'r' instruction.
 sel;
-$unef->store_code( <<'END_OF_CODE' );
-01-ap#q1.2 q
+$tref->store_code( <<'END_OF_CODE' );
+01-c00p#q1.2 q
 END_OF_CODE
-$unef->run_code;
+$tref->run_code;
 $out = slurp;
 ok( $out, "1 2 " );
 BEGIN { $tests += 1 };
 
 # Interpreter must treat non-commands as if they were an 'r' instruction.
 sel;
-$unef->store_code( <<'END_OF_CODE' );
-01+ap#q1.2 q
+$tref->store_code( <<'END_OF_CODE' );
+01+c00p#q1.2 q
 END_OF_CODE
-$unef->run_code;
+$tref->run_code;
 $out = slurp;
 ok( $out, "1 2 " );
 BEGIN { $tests += 1 };
 
-# Unefunge Interpreter treats North/South instructions as unknown characters.
+# Interpreter reads trefunge code properly, and operates in 3 dimensions, and
+# knows that vectors are 3 integers.
 sel;
-$unef->store_code( <<"END_OF_CODE" );
-1#q.2^3.q
+$tref->store_code( <<"END_OF_CODE" );
+#v401-11x\n
+ >..q
+\f h>
+  ^3   <
 END_OF_CODE
-$unef->run_code;
+$tref->run_code;
 $out = slurp;
-ok( $out, "1 2 " );
+ok( $out, "3 4 " );
 BEGIN { $tests += 1 };
 
 BEGIN { plan tests => $tests };

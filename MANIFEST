@@ -30,9 +30,6 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-load.t
-t/02befunge.t
-t/02trefunge.t
-t/02unefunge.t
 t/03ip.t
 t/05vector.t
 t/10stdio.t
@@ -52,6 +49,9 @@ t/author/pod-coverage.t
 t/author/pod.t
 t/exit3.pl
 t/hello.bf
+t/interpreter/befunge.t
+t/interpreter/trefunge.t
+t/interpreter/unefunge.t
 t/lahey/generic.t
 t/lahey/lahey.t
 t/ops/block_close.t
