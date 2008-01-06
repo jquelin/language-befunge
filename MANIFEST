@@ -34,8 +34,6 @@ t/02befunge.t
 t/02trefunge.t
 t/02unefunge.t
 t/03ip.t
-t/04lahey-generic.t
-t/04lahey.t
 t/05vector.t
 t/10stdio.t
 t/11nums.t
@@ -54,6 +52,8 @@ t/author/pod-coverage.t
 t/author/pod.t
 t/exit3.pl
 t/hello.bf
+t/lahey/generic.t
+t/lahey/lahey.t
 t/ops/block_close.t
 t/ops/block_open.t
 t/ops/decis_cmp.t
