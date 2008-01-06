@@ -13,26 +13,26 @@ use warnings;
 
 use Module::Build;
 my $builder = Module::Build->new
-  ( module_name       => 'Language::Befunge',
-    license           => 'perl',
-    dist_author       => 'Jerome Quelin <jquelin@cpan.org>',
-    dist_version_from => 'lib/Language/Befunge.pm',
-    build_requires    => {
-        'Storable'       => 0,
-        'Test::More'     => 0,
-        'perl'           => '5.006',
+  ( module_name          => 'Language::Befunge',
+    license              => 'perl',
+    dist_author          => 'Jerome Quelin <jquelin@cpan.org>',
+    dist_version_from    => 'lib/Language/Befunge.pm',
+    build_requires       => {
+        'Storable'            => 0,
+        'Test::More'          => 0,
+        'perl'                => '5.006',
     },
-    requires          => {
-        'Storable'        => 0,
-        'perl'           => '5.006',
+    requires                  => {
+        'Storable'            => 0,
+        'perl'                => '5.006',
     },
-    recommends        => {
+    recommends           => {
         'Test::Exception'     => 0,
         'Test::Pod'           => 0,
         'Test::Pod::Coverage' => 0,
     },
-    script_files      => [ 'bin/jqbf98' ],
-    add_to_cleanup    =>
+    script_files         => [ 'bin/jqbf98' ],
+    add_to_cleanup       =>
       [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..4 ],
     recursive_test_files => 1,
   );
