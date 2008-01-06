@@ -113,8 +113,8 @@ $out = slurp;
 is( $out, "1 " );
 sel; # existant file.
 $bef->store_code( <<'END_OF_CODE' );
-v v i "t/hello.bf"0           <
->     ;vector; 3 6  ;flag; 0  ^
+v v i "t/_resources/hello.bf"0   <
+>     ;vector; 3 6  ;flag; 0     ^
   .
   .
   .
@@ -129,8 +129,8 @@ BEGIN { $tests += 2 };
 # binary file input
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-v qiv# "t/hello.bf"0        <
->     ;vector; 6 9 ;flag; 1 ^
+v qiv# "t/_resources/hello.bf"0  <
+>     ;vector; 6 9 ;flag; 1      ^
     <q ,,,,,,,,,"IO Error"a
 END_OF_CODE
 $bef->run_code;

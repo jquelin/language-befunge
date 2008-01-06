@@ -30,6 +30,9 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-load.t
+t/_resources/exit3.pl
+t/_resources/hello.bf
+t/_resources/q.bf
 t/author/pod-coverage.t
 t/author/pod.t
 t/befunge/a-stdio.t
@@ -47,8 +50,6 @@ t/befunge/l-concur.t
 t/befunge/m-lib.t
 t/classes/ip.t
 t/classes/vector.t
-t/exit3.pl
-t/hello.bf
 t/interpreter/befunge.t
 t/interpreter/trefunge.t
 t/interpreter/unefunge.t
@@ -93,5 +94,4 @@ t/ops/stack_swap.t
 t/ops/str_enter_string_mode.t
 t/ops/str_fetch_char.t
 t/ops/str_store_char.t
-t/q.bf
 TODO

@@ -61,7 +61,7 @@ SKIP: {
 }
 sel; # normal system-ing.
 $bef->store_code( <<'END_OF_CODE' );
-< q . = "perl t/exit3.pl"0
+< q . = "perl t/_resources/exit3.pl"0
 END_OF_CODE
 $bef->run_code;
 $out = slurp;

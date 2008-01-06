@@ -46,7 +46,7 @@ sub slurp () {
 
 # Basic constructor.
 sel;
-$bef = Language::Befunge->new( "t/q.bf" );
+$bef = Language::Befunge->new( "t/_resources/q.bf" );
 $bef->run_code;
 $out = slurp;
 is( $out, "" );
@@ -82,7 +82,7 @@ $bef->set_torus( );
 # Basic reading.
 $bef = Language::Befunge->new;
 sel;
-$bef->read_file( "t/q.bf" );
+$bef->read_file( "t/_resources/q.bf" );
 $bef->run_code;
 $out = slurp;
 is( $out, "" );

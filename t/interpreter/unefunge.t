@@ -46,7 +46,7 @@ sub slurp () {
 
 # Basic constructor.
 sel;
-$unef = Language::Befunge->new( "t/q.bf", Dimensions => 1 );
+$unef = Language::Befunge->new( "t/_resources/q.bf", Dimensions => 1 );
 $unef->run_code;
 $out = slurp;
 ok( $out, "" );
@@ -55,7 +55,7 @@ BEGIN { $tests += 1 };
 # Basic reading.
 $unef = Language::Befunge->new( Dimensions => 1 );
 sel;
-$unef->read_file( "t/q.bf" );
+$unef->read_file( "t/_resources/q.bf" );
 $unef->run_code;
 $out = slurp;
 ok( $out, "" );
