@@ -50,8 +50,8 @@ t/19storg.t
 t/20system.t
 t/21concur.t
 t/22lib.t
-t/90-pod.t
-t/91-pod-coverage.t
+t/author/pod-coverage.t
+t/author/pod.t
 t/exit3.pl
 t/hello.bf
 t/ops/block_close.t
