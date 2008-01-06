@@ -1,19 +1,20 @@
 #!perl
 #
 # This file is part of Language::Befunge.
-# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+# Copyright (c) 2001-2008 Jerome Quelin, all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the same terms as Perl itself.
 #
 #
 
-#---------------------------------------#
-#          Direction changing.          #
-#---------------------------------------#
+#---------------------------------#
+#          Flow control.          #
+#---------------------------------#
 
 use strict;
 use Language::Befunge;
+use Language::Befunge::Vector;
 use POSIX qw! tmpnam !;
 use Test;
 
@@ -45,203 +46,151 @@ sub slurp () {
     return $content;
 }
 
-# Go west.
+# Space is a no-op.
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-<q.a
+   f   f  +     7       +  ,   q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "10 " );
+ok( $out, "%" );
 BEGIN { $tests += 1 };
 
-# Go south.
+# z is a true no-op.
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-v
-a
-.
-q
+zzzfzzzfzz+zzzzz7zzzzzzz+zz,zzzq
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "10 " );
+ok( $out, "%" );
 BEGIN { $tests += 1 };
 
-# Go north.
+# Trampoline.
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-^
-q
-.
-a
+1#2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "10 " );
+ok( $out, "1 " );
 BEGIN { $tests += 1 };
 
-# Go east.
+# Stop.
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-v   > a . q
->   ^
+1.@
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "10 " );
+ok( $out, "1 " );
 BEGIN { $tests += 1 };
 
-# Go away.
+# Comments / Jump over.
 sel;
 $bef->store_code( <<'END_OF_CODE' );
-v    > 2.q
->  #v? 1.q
-     > 3.q
-    >  4.q
+2;this is a comment;1+.@
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, qr/^[1-4] $/ );
+ok( $out, "3 " );
 BEGIN { $tests += 1 };
 
-# Turn left.
-sel; # from west.
+# Jump to.
+sel; # Positive.
 $bef->store_code( <<'END_OF_CODE' );
-v  > 1.q
->  [
-   > 2.q
+2j123..q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "3 0 " );
+sel; # Null.
+$bef->store_code( <<'END_OF_CODE' );
+0j1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
 ok( $out, "1 " );
-sel; # from east.
+sel; # Negative.
 $bef->store_code( <<'END_OF_CODE' );
-v  > 1.q
-<  [
-   > 2.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "2 " );
-sel; # from north.
-$bef->store_code( <<'END_OF_CODE' );
->     v
-  q.2 [ 1.q
+v   q.1 < >06-j2.q
+>         ^
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
 ok( $out, "1 " );
-sel; # from south.
-$bef->store_code( <<'END_OF_CODE' );
->     ^
-  q.2 [ 1.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "2 " );
-BEGIN { $tests += 4 };
+BEGIN { $tests += 3 };
 
-# Turn right.
-sel; # from west.
+# Quit instruction.
+sel;
 $bef->store_code( <<'END_OF_CODE' );
-v  > 1.q
->  ]
-   > 2.q
+af.q
 END_OF_CODE
-$bef->run_code;
+my $rv = $bef->run_code;
 $out = slurp;
-ok( $out, "2 " );
-sel; # from east.
-$bef->store_code( <<'END_OF_CODE' );
-v  > 1.q
-<  ]
-   > 2.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-sel; # from north.
-$bef->store_code( <<'END_OF_CODE' );
->     v
-  q.2 ] 1.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "2 " );
-sel; # from south.
-$bef->store_code( <<'END_OF_CODE' );
->     ^
-  q.2 ] 1.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-BEGIN { $tests += 4 };
-
-# Reverse.
-sel; # from west.
-$bef->store_code( <<'END_OF_CODE' );
->  #vr 2.q
-    >  1.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-sel; # from east.
-$bef->store_code( <<'END_OF_CODE' );
-<  q.2  rv#
-   q.1   <
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-sel; # from north.
-$bef->store_code( <<'END_OF_CODE' );
->     v
-      #
-      > 1.q
-      r
-      > 2.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-sel; # from south.
-$bef->store_code( <<'END_OF_CODE' );
->     ^
-      > 2.q
-      r
-      > 1.q
-      #
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-BEGIN { $tests += 4 };
-
-# Absolute vector.
-sel; # diagonal.
-$bef->store_code( <<'END_OF_CODE' );
-11x
-   1
-    .
-     q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-sel; # diagonal/out-of-bounds.
-$bef->store_code( <<'END_OF_CODE' );
-101-x
-   q
-  .
- 1
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
+ok( $out, "15 " );
+ok( $rv, 10 );
 BEGIN { $tests += 2 };
+
+# Repeat instruction (glurps).
+sel; # normal repeat.
+$bef->store_code( <<'END_OF_CODE' );
+572k.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "7 5 " );
+sel; # null repeat.
+$bef->store_code( <<'END_OF_CODE' );
+0k.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "" );
+sel; # useless repeat.
+$bef->store_code( <<'END_OF_CODE' );
+5kv
+  > 1.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "1 " );
+sel; # repeat negative.
+$bef->store_code( <<'END_OF_CODE' );
+5-kq
+END_OF_CODE
+eval { $bef->run_code; };
+$out = slurp;
+ok( $@, qr/Attempt to repeat \('k'\) a negative number of times \(-5\)/ );
+sel; # repeat forbidden char.
+$bef->store_code( <<'END_OF_CODE' );
+5k;q
+END_OF_CODE
+eval { $bef->run_code; };
+$out = slurp;
+ok( $@, qr/Attempt to repeat \('k'\) a forbidden instruction \(';'\)/ );
+sel; # repeat repeat.
+$bef->store_code( <<'END_OF_CODE' );
+5kkq
+END_OF_CODE
+eval { $bef->run_code; };
+$out = slurp;
+ok( $@, qr/Attempt to repeat \('k'\) a repeat instruction \('k'\)/ );
+sel; # move_curip() short circuits on a dead end
+$bef->store_code( <<'END_OF_CODE' );
+
+END_OF_CODE
+$bef->get_curip->set_position( Language::Befunge::Vector->new_zeroes(2) );
+eval {
+    local $SIG{ALRM} = sub { die "timeout\n" };
+    alarm 10;
+    $bef->move_curip(qr/ /);
+    alarm 0;
+};
+$out = slurp;
+ok( $@, qr/infinite loop/ );
+BEGIN { $tests += 7 };
+
 
 
 BEGIN { plan tests => $tests };

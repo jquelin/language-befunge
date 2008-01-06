@@ -1,16 +1,16 @@
 #!perl
 #
 # This file is part of Language::Befunge.
-# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+# Copyright (c) 2001-2008 Jerome Quelin, all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the same terms as Perl itself.
 #
 #
 
-#---------------------------------------#
-#          Storage operations.          #
-#---------------------------------------#
+#-------------------------------------#
+#          Stack operations.          #
+#-------------------------------------#
 
 use strict;
 use Language::Befunge;
@@ -45,60 +45,66 @@ sub slurp () {
     return $content;
 }
 
-# put instruction.
-sel; # New storage offset.
+# Pop.
+sel; # normal.
 $bef->store_code( <<'END_OF_CODE' );
-0      {  01+a*1+a*8+ 11p v
-    q.2                   <
-         >  1.q
+12345$..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "1 " );
-sel; # Retrieving old storage offset.
+ok( $out, "4 3 " );
+sel; # empty stack.
 $bef->store_code( <<'END_OF_CODE' );
-0      { 22+ 0 } 01+a*1+a*8+ 61p v
- q.2                             <
-      >  1.q
+$..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "1 " );
+ok( $out, "0 0 " );
 BEGIN { $tests += 2 };
 
-# get instruction.
-sel; # New storage offset.
+# Duplicate.
+sel; # normal.
 $bef->store_code( <<'END_OF_CODE' );
-0  ;blah;{  04-0g ,q
+4:..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "a" );
-sel; # Retrieving old storage offset.
+ok( $out, "4 4 " );
+sel; # empty stack.
 $bef->store_code( <<'END_OF_CODE' );
-0  ;blah;  { 22+ 0 } 40g ,q
+:..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "b" );
+ok( $out, "0 0 " );
 BEGIN { $tests += 2 };
 
-# Medley.
-sel; # Positive values.
+# Swap stack.
+sel; # normal.
 $bef->store_code( <<'END_OF_CODE' );
-0  'G14p . 14g ,q
+34\..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 G" );
-sel; # Negative values.
+ok( $out, "3 4 " );
+sel; # empty stack.
 $bef->store_code( <<'END_OF_CODE' );
-0  'f01-04- p . 01-04-g ,q
+3\..q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 f" );
+ok( $out, "0 3 " );
 BEGIN { $tests += 2 };
+
+# Clear stack.
+sel;
+$bef->store_code( <<'END_OF_CODE' );
+12345678"azertyuiop"n..q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "0 0 " );
+BEGIN { $tests += 1 };
 
 BEGIN { plan tests => $tests };
 

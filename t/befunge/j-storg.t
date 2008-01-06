@@ -1,20 +1,19 @@
 #!perl
 #
 # This file is part of Language::Befunge.
-# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+# Copyright (c) 2001-2008 Jerome Quelin, all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the same terms as Perl itself.
 #
 #
 
-#-------------------------------------#
-#          Concurrent Funge.          #
-#-------------------------------------#
+#---------------------------------------#
+#          Storage operations.          #
+#---------------------------------------#
 
 use strict;
 use Language::Befunge;
-use Config;
 use POSIX qw! tmpnam !;
 use Test;
 
@@ -46,70 +45,60 @@ sub slurp () {
     return $content;
 }
 
-# Basic concurrency.
-sel;
+# put instruction.
+sel; # New storage offset.
 $bef->store_code( <<'END_OF_CODE' );
-#vtzz1.@
- >2.@
+0      {  01+a*1+a*8+ 11p v
+    q.2                   <
+         >  1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "2 1 " );
-BEGIN { $tests += 1 };
+ok( $out, "1 " );
+sel; # Retrieving old storage offset.
+$bef->store_code( <<'END_OF_CODE' );
+0      { 22+ 0 } 01+a*1+a*8+ 61p v
+ q.2                             <
+      >  1.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "1 " );
+BEGIN { $tests += 2 };
 
-# q kills all IPs $bef->running.
-sel;
+# get instruction.
+sel; # New storage offset.
 $bef->store_code( <<'END_OF_CODE' );
-#vtq
- >123...@
+0  ;blah;{  04-0g ,q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "" );
-BEGIN { $tests += 1 };
+ok( $out, "a" );
+sel; # Retrieving old storage offset.
+$bef->store_code( <<'END_OF_CODE' );
+0  ;blah;  { 22+ 0 } 40g ,q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "b" );
+BEGIN { $tests += 2 };
 
-# Cloning the stack.
-sel;
+# Medley.
+sel; # Positive values.
 $bef->store_code( <<'END_OF_CODE' );
-123 #vtzz...@
-     >...@
+0  'G14p . 14g ,q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "3 3 2 2 1 1 " );
-BEGIN { $tests += 1 };
-
-# Spaces are one no-op.
-sel;
+ok( $out, "0 G" );
+sel; # Negative values.
 $bef->store_code( <<'END_OF_CODE' );
-#vtzzz2.@
- >         1.@
+0  'f01-04- p . 01-04-g ,q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "1 2 " );
-BEGIN { $tests += 1 };
-
-# Comments are one no-op.
-sel;
-$bef->store_code( <<'END_OF_CODE' );
-#vtzzz2.@
- >;this is a comment;1.@
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 2 " );
-BEGIN { $tests += 1 };
-
-# Repeat instructions are one op.
-sel;
-$bef->store_code( <<'END_OF_CODE' );
-#vtzzzzz2.@
- >1112k..@
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 1 2 1 " );
-BEGIN { $tests += 1 };
+ok( $out, "0 f" );
+BEGIN { $tests += 2 };
 
 BEGIN { plan tests => $tests };
+

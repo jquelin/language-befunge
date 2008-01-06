@@ -1,16 +1,16 @@
 #!perl
 #
 # This file is part of Language::Befunge.
-# Copyright (c) 2001-2007 Jerome Quelin, all rights reserved.
+# Copyright (c) 2001-2008 Jerome Quelin, all rights reserved.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the same terms as Perl itself.
 #
 #
 
-#-------------------------------------------------#
-#          Decision making instructions.          #
-#-------------------------------------------------#
+#---------------------------------------#
+#          Direction changing.          #
+#---------------------------------------#
 
 use strict;
 use Language::Befunge;
@@ -45,157 +45,203 @@ sub slurp () {
     return $content;
 }
 
-# Logical not.
-sel; # true.
+# Go west.
+sel;
 $bef->store_code( <<'END_OF_CODE' );
-a!.q
+<q.a
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 " );
-sel; # negative.
+ok( $out, "10 " );
+BEGIN { $tests += 1 };
+
+# Go south.
+sel;
 $bef->store_code( <<'END_OF_CODE' );
-05-!.q
+v
+a
+.
+q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 " );
-sel; # false.
+ok( $out, "10 " );
+BEGIN { $tests += 1 };
+
+# Go north.
+sel;
 $bef->store_code( <<'END_OF_CODE' );
-0!.q
+^
+q
+.
+a
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "10 " );
+BEGIN { $tests += 1 };
+
+# Go east.
+sel;
+$bef->store_code( <<'END_OF_CODE' );
+v   > a . q
+>   ^
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "10 " );
+BEGIN { $tests += 1 };
+
+# Go away.
+sel;
+$bef->store_code( <<'END_OF_CODE' );
+v    > 2.q
+>  #v? 1.q
+     > 3.q
+    >  4.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, qr/^[1-4] $/ );
+BEGIN { $tests += 1 };
+
+# Turn left.
+sel; # from west.
+$bef->store_code( <<'END_OF_CODE' );
+v  > 1.q
+>  [
+   > 2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
 ok( $out, "1 " );
-BEGIN { $tests += 3 };
-
-# Comparison.
-sel; # greater.
+sel; # from east.
 $bef->store_code( <<'END_OF_CODE' );
-53`.q
+v  > 1.q
+<  [
+   > 2.q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "2 " );
+sel; # from north.
+$bef->store_code( <<'END_OF_CODE' );
+>     v
+  q.2 [ 1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
 ok( $out, "1 " );
-sel; # equal.
+sel; # from south.
 $bef->store_code( <<'END_OF_CODE' );
-55`.q
+>     ^
+  q.2 [ 1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 " );
-sel; # smaller.
-$bef->store_code( <<'END_OF_CODE' );
-35`.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "0 " );
-BEGIN { $tests += 3 };
-
-# Horizontal if.
-sel; # left from north.
-$bef->store_code( <<'END_OF_CODE' );
-1    v
- q.3 _ 4.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "3 " );
-sel; # right from north
-$bef->store_code( <<'END_OF_CODE' );
-0    v
- q.3 _ 4.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "4 " );
-sel; # left from south.
-$bef->store_code( <<'END_OF_CODE' );
-1    ^
- q.3 _ 4.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "3 " );
-sel; # right from south
-$bef->store_code( <<'END_OF_CODE' );
-0    ^
- q.3 _ 4.q
-END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "4 " );
+ok( $out, "2 " );
 BEGIN { $tests += 4 };
 
-# Vertical if.
-sel; # north from left.
+# Turn right.
+sel; # from west.
 $bef->store_code( <<'END_OF_CODE' );
-1 v   >3.q
-  >   |
-      >4.q
+v  > 1.q
+>  ]
+   > 2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "3 " );
-sel; # south from left.
+ok( $out, "2 " );
+sel; # from east.
 $bef->store_code( <<'END_OF_CODE' );
-0 v   >3.q
-  >   |
-      >4.q
+v  > 1.q
+<  ]
+   > 2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "4 " );
-sel; # north from right.
+ok( $out, "1 " );
+sel; # from north.
 $bef->store_code( <<'END_OF_CODE' );
-1 v   >3.q
-  <   |
-      >4.q
+>     v
+  q.2 ] 1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "3 " );
-sel; # south from right.
+ok( $out, "2 " );
+sel; # from south.
 $bef->store_code( <<'END_OF_CODE' );
-0 v   >3.q
-  <   |
-      >4.q
+>     ^
+  q.2 ] 1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "4 " );
+ok( $out, "1 " );
 BEGIN { $tests += 4 };
 
-# Compare (3 branches if).
-sel; # greater.
+# Reverse.
+sel; # from west.
 $bef->store_code( <<'END_OF_CODE' );
-34     v
- q..1  w  01-..q
-       > 0..q
+>  #vr 2.q
+    >  1.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "-1 0 " );
-sel; # equal.
+ok( $out, "1 " );
+sel; # from east.
 $bef->store_code( <<'END_OF_CODE' );
-33     v
- q..1  w  01-..q
-       > 0..q
+<  q.2  rv#
+   q.1   <
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "0 0 " );
-sel; # smaller.
+ok( $out, "1 " );
+sel; # from north.
 $bef->store_code( <<'END_OF_CODE' );
-43     v
- q..1  w  01-..q
-       > 0..q
+>     v
+      #
+      > 1.q
+      r
+      > 2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "1 0 " );
-BEGIN { $tests += 3 };
+ok( $out, "1 " );
+sel; # from south.
+$bef->store_code( <<'END_OF_CODE' );
+>     ^
+      > 2.q
+      r
+      > 1.q
+      #
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "1 " );
+BEGIN { $tests += 4 };
+
+# Absolute vector.
+sel; # diagonal.
+$bef->store_code( <<'END_OF_CODE' );
+11x
+   1
+    .
+     q
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "1 " );
+sel; # diagonal/out-of-bounds.
+$bef->store_code( <<'END_OF_CODE' );
+101-x
+   q
+  .
+ 1
+END_OF_CODE
+$bef->run_code;
+$out = slurp;
+ok( $out, "1 " );
+BEGIN { $tests += 2 };
 
 
 BEGIN { plan tests => $tests };
