@@ -25,7 +25,7 @@ my $ip = Language::Befunge::IP->new;
 
 # CONSTRUCTORS
 # ->new()
-my $v1 = Language::Befunge::Vector->new(3, 2, 1, 0);
+my $v1 = Language::Befunge::Vector->new(2, 1, 0);
 isa_ok($v1,                          "Language::Befunge::Vector");
 is($v1->get_dims,                 3, "three dimensions");
 is($v1->get_component(0),         2, "X is correct");
@@ -46,7 +46,7 @@ is("$v1",    '(0,0,0,0)', "all values are 0");
 # get_dims() has already been tested above...
 
 # vector_invert
-   $v1 = Language::Befunge::Vector->new(2, 5, 6);
+   $v1 = Language::Befunge::Vector->new(5, 6);
 my $v2 = -$v1;
 my $v3 = $v1->vector_invert();
 is($v1->get_component(0), 5,  "X hasn't changed in v1");
@@ -57,7 +57,7 @@ is($v3->get_component(0), -5, "X is the inverse of v1's");
 is($v3->get_component(1), -6, "Y is the inverse of v1's");
 
 # vector_add
-my $v4 = Language::Befunge::Vector->new(2, 1, 1);
+my $v4 = Language::Befunge::Vector->new(1, 1);
 $v2 = $v1 + $v4;
 $v3 = $v1->vector_add($v4);
 is($v1->get_component(0), 5, "X hasn't changed in v1");
@@ -114,29 +114,29 @@ is($v1->get_component(0), 0, "X is now 0");
 is($v1->get_component(1), 0, "Y is now 0");
 
 # bounds_check
-$v1 = Language::Befunge::Vector->new(2, -1, -1);
-$v2 = Language::Befunge::Vector->new(2,  2,  2);
-$v3 = Language::Befunge::Vector->new(2, -1, -2);
+$v1 = Language::Befunge::Vector->new(-1, -1);
+$v2 = Language::Befunge::Vector->new(2,  2);
+$v3 = Language::Befunge::Vector->new(-1, -2);
 ok(!$v3->bounds_check($v1, $v2), "(-1,-2) is out of bounds");
-$v3 = Language::Befunge::Vector->new(2,  0, -1);
+$v3 = Language::Befunge::Vector->new(0, -1);
 ok( $v3->bounds_check($v1, $v2), "(0,-1) is within bounds");
-$v3 = Language::Befunge::Vector->new(2,  2, 2);
+$v3 = Language::Befunge::Vector->new(2, 2);
 ok( $v3->bounds_check($v1, $v2), "(2,2) is within bounds");
-$v3 = Language::Befunge::Vector->new(2,  3, 2);
+$v3 = Language::Befunge::Vector->new(3, 2);
 ok(!$v3->bounds_check($v1, $v2), "(3,2) is out of bounds");
-$v3 = Language::Befunge::Vector->new(2,  -1, -1);
+$v3 = Language::Befunge::Vector->new(-1, -1);
 ok( $v3->bounds_check($v1, $v2), "(-1,-1) is within bounds");
-$v3 = Language::Befunge::Vector->new(2,  23, 0);
+$v3 = Language::Befunge::Vector->new(23, 0);
 ok(!$v3->bounds_check($v1, $v2), "(23,0) is out of bounds");
-$v3 = Language::Befunge::Vector->new(2,  0, 23);
+$v3 = Language::Befunge::Vector->new(0, 23);
 ok(!$v3->bounds_check($v1, $v2), "(0,23) is out of bounds");
 
 # vector_as_string is already tested, above
 
 # vector_equality
-$v1 = Language::Befunge::Vector->new(2, 1, 1);
-$v2 = Language::Befunge::Vector->new(2, 1, 1);
-$v3 = Language::Befunge::Vector->new(2, 1, 2);
+$v1 = Language::Befunge::Vector->new(1, 1);
+$v2 = Language::Befunge::Vector->new(1, 1);
+$v3 = Language::Befunge::Vector->new(1, 2);
 ok(  $v1 == $v2 , "v1 == v2");
 ok(  $v2 == $v1 , "v2 == v1");
 ok(  $v1 == $v1 , "v1 == v1");
@@ -149,9 +149,9 @@ ok(!($v1->vector_equality($v3)), "!(v1 == v3)");
 ok(!($v2->vector_equality($v3)), "!(v2 == v3)");
 
 # vector_inequality
-$v1 = Language::Befunge::Vector->new(2, 1, 1);
-$v2 = Language::Befunge::Vector->new(2, 1, 1);
-$v3 = Language::Befunge::Vector->new(2, 1, 2);
+$v1 = Language::Befunge::Vector->new(1, 1);
+$v2 = Language::Befunge::Vector->new(1, 1);
+$v3 = Language::Befunge::Vector->new(1, 2);
 ok(!($v1 != $v2), "!(v1 != v2)");
 ok(!($v2 != $v1), "!(v2 != v1)");
 ok(!($v1 != $v1), "!(v1 != v1)");
@@ -182,8 +182,8 @@ SKIP: {
 		qr/Usage/, "Vector->new_zeroes needs a defined 'dimensions' argument");
 	throws_ok(sub { Language::Befunge::Vector->new_zeroes(0) },
 		qr/Usage/, "Vector->new_zeroes needs a non-zero 'dimensions' argument");
-	my $tref_v = Language::Befunge::Vector->new(3, 4, 5, 6);
-	my  $bef_v = Language::Befunge::Vector->new(2, 3, 4);
+	my $tref_v = Language::Befunge::Vector->new(4, 5, 6);
+	my  $bef_v = Language::Befunge::Vector->new(3, 4);
 	# vector_subtract
 	throws_ok(sub { my $blah = $tref_v - $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (-)");

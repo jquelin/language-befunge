@@ -104,8 +104,8 @@ sub store {
     my $coderef = _code_split_helper($nd - 1, $code, \@separators, \@sizes);
 
     # Figure out the rectangle size and the end-coordinate (max).
-    my $size = Language::Befunge::Vector->new($nd, @sizes);
-    my $max  = Language::Befunge::Vector->new($nd, map { $_ - 1 } (@sizes));
+    my $size = Language::Befunge::Vector->new(@sizes);
+    my $max  = Language::Befunge::Vector->new(map { $_ - 1 } (@sizes));
     $max += $v;
 
     # Enlarge torus to make sure our new values will fit.
@@ -163,8 +163,8 @@ sub store_binary {
     push(@sizes,1) for(2..$nd);
 
     # Figure out the rectangle size and the end-coordinate (max).
-    my $size = Language::Befunge::Vector->new($nd, @sizes);
-    my $max  = Language::Befunge::Vector->new($nd, map { $_ - 1 } (@sizes));
+    my $size = Language::Befunge::Vector->new(@sizes);
+    my $max  = Language::Befunge::Vector->new(map { $_ - 1 } (@sizes));
     $max += $v;
 
     # Enlarge torus to make sure our new values will fit.

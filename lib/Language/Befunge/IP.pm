@@ -267,7 +267,7 @@ Pop a vector from the stack. Returns a Vector object.
 =cut
 sub spop_vec {
     my $self = shift;
-    return Language::Befunge::Vector->new($self->get_dims, $self->spop_mult($self->get_dims));
+    return Language::Befunge::Vector->new($self->spop_mult($self->get_dims));
 }
 
 =item spop_gnirts(  )
@@ -537,7 +537,7 @@ and the method acts as if it popped a 0.  returns a Vector.
 =cut
 sub soss_pop_vec {
     my $self = shift;
-    return Language::Befunge::Vector->new($self->get_dims, $self->soss_pop_mult($self->get_dims));
+    return Language::Befunge::Vector->new($self->soss_pop_mult($self->get_dims));
 }
 
 =item soss_clear(  )

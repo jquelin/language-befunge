@@ -28,20 +28,19 @@ use overload
 # -- CONSTRUCTORS
 
 #
-# my $v = new( $dimensions, $x, [$y, ...] )
+# my $v = LB::Vector->new( $x [, $y, ...] );
 #
-# Creates a new vector. The first argument is an integer specifying how
-#many dimensions this vector operates in.  The remaining arguments constitute
-#the actual vector data; one integer per dimension.
+# Create a new vector. The arguments are the actual vector data; one
+# integer per dimension.
 #
 sub new {
-	my $package = shift;
-	my $dimensions = shift;
-	my $usage = "Usage: $package->new(\$dimensions, \$x, ...)";
-	croak $usage unless defined $dimensions;
-	croak $usage unless $dimensions > 0;
-	croak $usage unless $dimensions == scalar @_;
-	return bless({dims => $dimensions, v => [@_]}, $package);
+	my $pkg = shift;
+
+    # sanity checks
+	my $usage = "Usage: $pkg->new(\$x, ...)";
+	croak $usage unless scalar(@_) > 0;
+
+    return bless({dims => scalar(@_), v => [@_]}, $pkg);
 }
 
 
@@ -49,7 +48,7 @@ sub new {
 # new_zeroes( dimensions )
 #
 # Creates a new vector, set to the origin (all zeroes).  ->new_zeroes(2) is
-#exactly equivalent to ->new(2, 0, 0).
+#exactly equivalent to ->new(0, 0).
 #
 sub new_zeroes {
 	my $package = shift;
@@ -65,16 +64,20 @@ sub new_zeroes {
 
 # -- PUBLIC METHODS
 
+#- accessors
+
 #
-# my $dims = get_dims(  )
+# my $dims = $vec->nelem;
 #
-# Returns the number of dimensions, an integer.
+# Return the number of dimensions, an integer.
 #
 sub get_dims {
 	my $self = shift;
 	return $$self{dims};
 }
 
+
+#- math ops
 
 #
 # vector_subtract( v2 )
@@ -197,7 +200,7 @@ sub get_component {
 #
 # get_all_components( )
 #
-#     my $v = Language::Befunge::Vector->new(3, 1, 2, 3);
+#     my $v = Language::Befunge::Vector->new(1, 2, 3);
 #     # $v now holds a 3-dimensional vector, <1,2,3>
 #     my @list = $v->get_all_components(); # returns (1, 2, 3)
 #
