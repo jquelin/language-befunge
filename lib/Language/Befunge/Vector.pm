@@ -40,7 +40,10 @@ sub new {
 	my $usage = "Usage: $pkg->new(\$x, ...)";
 	croak $usage unless scalar(@_) > 0;
 
-    return bless({dims => scalar(@_), v => [@_]}, $pkg);
+    # regular LBV object
+    my $self = [@_];
+    bless $self, $pkg;
+	return $self;
 }
 
 
@@ -58,7 +61,7 @@ sub new_zeroes {
 	croak $usage unless $dimensions > 0;
     my @initial;
     push(@initial,0) for(1..$dimensions);
-	return bless({dims => $dimensions, v => [@initial]}, $package);
+	return bless([@initial], $package);
 }
 
 
@@ -73,7 +76,7 @@ sub new_zeroes {
 #
 sub get_dims {
 	my $self = shift;
-	return $$self{dims};
+	return scalar(@$self);
 }
 
 
@@ -92,7 +95,7 @@ sub vector_subtract {
 	croak "uneven dimensions in vector subtraction!" unless $v1->get_dims == $v2->get_dims;
 	my $vr = ref($v1)->new_zeroes($v1->get_dims);
 	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$$vr{v}[$i] = $$v1{v}[$i] - $$v2{v}[$i];
+		$vr->[$i] = $v1->[$i] - $v2->[$i];
 	}
 	return $vr;
 }
@@ -112,7 +115,7 @@ sub vector_invert {
 	my ($v1) = @_;
 	my $rv = ref($v1)->new_zeroes($v1->get_dims);
 	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$$rv{v}[$i] = -$$v1{v}[$i];
+		$rv->[$i] = -$v1->[$i];
 	}
 	return $rv;
 }
@@ -131,7 +134,7 @@ sub vector_add {
 	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
 	my $rv = ref($v1)->new_zeroes($v1->get_dims);
 	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$$rv{v}[$i] = $$v1{v}[$i] + $$v2{v}[$i];
+		$rv->[$i] = $v1->[$i] + $v2->[$i];
 	}
 	return $rv;
 }
@@ -149,7 +152,7 @@ sub vector_add_inplace {
 	my ($v1, $v2) = @_;
 	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
 	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$$v1{v}[$i] += $$v2{v}[$i];
+		$v1->[$i] += $v2->[$i];
 	}
 	return $v1;
 }
@@ -165,7 +168,7 @@ sub vector_add_inplace {
 #
 sub vector_copy {
 	my $v = shift;
-	return bless {dims => $$v{dims}, v => [@{$$v{v}}]}, ref $v;
+	return bless [@$v], ref $v;
 }
 
 
@@ -179,7 +182,7 @@ sub vector_copy {
 sub set_component {
 	my ($self, $d, $data) = @_;
 	croak "No such dimension $d!" unless ($d >= 0 && $self->get_dims > $d);
-	$$self{v}[$d] = $data;
+	$self->[$d] = $data;
 }
 
 
@@ -193,7 +196,7 @@ sub set_component {
 sub get_component {
 	my ($self, $d) = @_;
 	croak "No such dimension $d!" unless ($d >= 0 && $self->get_dims > $d);
-	return $$self{v}[$d];
+	return $self->[$d];
 }
 
 
@@ -208,7 +211,7 @@ sub get_component {
 #
 sub get_all_components {
 	my ($self) = @_;
-	return @{$$self{v}};
+	return @$self;
 }
 
 
@@ -220,7 +223,7 @@ sub get_all_components {
 #
 sub zero {
 	my ($self) = @_;
-	@{$$self{v}} = map { 0 } (1..$self->get_dims);
+    @$self = (0) x $self->get_dims;
 }
 
 
@@ -252,7 +255,7 @@ sub bounds_check {
 #
 sub vector_as_string {
 	my $self = shift;
-	return "(" . join(",",@{$$self{v}}) . ")";
+	return "(" . join(",",@$self) . ")";
 }
 
 
