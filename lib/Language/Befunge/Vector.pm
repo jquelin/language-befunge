@@ -80,6 +80,20 @@ sub get_dims {
 }
 
 
+# - mutators
+
+#
+# $vec->set_component($dim, $value);
+#
+# Set the value for dimension $dim to $value.
+#
+sub set_component {
+    my ($self, $dim, $val) = @_;
+    croak "No such dimension $dim!" unless $dim >= 0 && $self->get_dims > $dim;
+    $self->[$dim] = $val;
+}
+
+
 #- math ops
 
 #
@@ -169,20 +183,6 @@ sub vector_add_inplace {
 sub vector_copy {
 	my $v = shift;
 	return bless [@$v], ref $v;
-}
-
-
-#
-# set_component( dimension, data )
-#
-#      $v->set_component(0, 1); # set X to 1
-#
-# Sets the value for dimension dimension to the value data.
-#
-sub set_component {
-	my ($self, $d, $data) = @_;
-	croak "No such dimension $d!" unless ($d >= 0 && $self->get_dims > $d);
-	$self->[$d] = $data;
 }
 
 
