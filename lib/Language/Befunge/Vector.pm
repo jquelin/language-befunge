@@ -28,7 +28,7 @@ use overload
 # -- CONSTRUCTORS
 
 #
-# my $v = LB::Vector->new( $x [, $y, ...] );
+# my $vec = LB::Vector->new( $x [, $y, ...] );
 #
 # Create a new vector. The arguments are the actual vector data; one
 # integer per dimension.
@@ -48,20 +48,23 @@ sub new {
 
 
 #
-# new_zeroes( dimensions )
+# my $vec = LB::Vector->new_zeroes($dims);
 #
-# Creates a new vector, set to the origin (all zeroes).  ->new_zeroes(2) is
-#exactly equivalent to ->new(0, 0).
+# Create a new vector of dimension $dims, set to the origin (all
+# zeroes). LBV->new_zeroes(2) is exactly equivalent to LBV->new(0, 0).
 #
 sub new_zeroes {
-	my $package = shift;
-	my $dimensions = shift;
-	my $usage = "Usage: $package->new_zeroes(\$dimensions)";
-	croak $usage unless defined $dimensions;
-	croak $usage unless $dimensions > 0;
-    my @initial;
-    push(@initial,0) for(1..$dimensions);
-	return bless([@initial], $package);
+    my ($pkg, $dims) = @_;
+
+    # sanity checks
+	my $usage = "Usage: $pkg->new_zeroes(\$dimensions)";
+	croak $usage unless defined $dims;
+	croak $usage unless $dims > 0;
+
+    # regular LBV object
+    my $self = [ (0) x $dims ];
+    bless $self, $pkg;
+	return $self;
 }
 
 
@@ -291,14 +294,17 @@ __END__
 Language::Befunge::Vector - an opaque, N-dimensional vector class.
 
 
+
 =head1 SYNOPSIS
 
-    my $v1 = Language::Befunge::Vector->new($d, $x, $y, ...);
-    my $v2 = Language::Befunge::Vector->new_zeroes($d);
+    my $v1 = Language::Befunge::Vector->new($x, $y, ...);
+    my $v2 = Language::Befunge::Vector->new_zeroes($dims);
+
+
 
 =head1 DESCRIPTION
 
-This class abstracts normal vector manipulation.  It lets you pass
+This class abstracts normal vector manipulation. It lets you pass
 around one argument to your functions, rather than N arguments, one
 per dimension.  This means much of your code doesn't have to care
 how many dimensions you're working with.
@@ -307,134 +313,110 @@ You can do vector arithmetic, test for equality, or even stringify
 the vector to a string like I<"(1,2,3)">.
 
 
+
 =head1 CONSTRUCTORS
 
-=head2 new( dimensions, x, [y, ...] )
+=head2 my $vec = LB::Vector->new( $x [, $y, ...] )
 
-Creates a new vector.  The first argument is an integer specifying
-how many dimensions this vector operates in.  The remaining arguments
-constitute the actual vector data; one integer per dimension.
+Create a new vector. The arguments are the actual vector data; one
+integer per dimension.
 
 
-=head2 new_zeroes( dimensions )
+=head2 my $vec = LB::Vector->new_zeroes($dims);
 
-Creates a new vector, set to the origin (all zeroes).
-->B<new_zeroes>(2) is exactly equivalent to ->B<new>(2, 0, 0).
+Create a new vector of dimension C<$dims>, set to the origin (all zeroes). C<<
+LBV->new_zeroes(2) >> is exactly equivalent to B<< LBV->new(0,0) >>.
+
+
+=head2 my $vec = $v->copy;
+
+Return a new LBV object, which has the same dimensions and coordinates
+as $v.
+
 
 
 =head1 PUBLIC METHODS
 
-=head2 get_dims(  )
+=head2 my $str = $vec->as_string;
 
-Returns the number of dimensions, an integer.
+Return the stringified form of C<$vec>. For instance, a Befunge vector
+might look like C<(1,2)>.
 
-
-=head2 vector_subtract( v2 )
-
-    $v0 = $v1->vector_subtract($v2);
-    $v0 = $v1 - $v2;
-
-Returns a new Vector object, which is the result of I<v1> minus I<v2>.
+This method is also applied to stringification, ie when one forces
+string context (C<"$vec">).
 
 
-=head2 vector_invert( )
+=head2 my $dims = $vec->get_dims;
 
-    $v1->vector_invert();
-    $v2 = -$v1;
-
-Subtracts I<v1> from the origin.  Effectively, gives the inverse of
-the original vector.  The new vector is the same distance from the
-origin, in the opposite direction.
+Return the number of dimensions, an integer.
 
 
-=head2 vector_add( v2 )
+=head2 my $val = $vec->get_component($dim);
 
-    $v0 = $v1->vector_add($v2);
-    $v0 = $v1 + $v2;
-
-Returns a new Vector object, which is the result of I<v1> plus I<v2>.
+Get the value for dimension C<$dim>.
 
 
-=head2 vector_add_inplace( v2 )
+=head2 my @vals = $vec->get_all_components;
 
-    $v1->vector_add_inplace($v2);
+Get the values for all dimensions, in order from 0..N.
+
+
+=head2 $vec->clear;
+
+Set the vector back to the origin, all 0's.
+
+
+=head2 $vec->set_component($dim, $value);
+
+Set the value for dimension C<$dim> to C<$value>.
+
+
+=head2 my $is_within = $vec->bounds_check($begin, $end);
+
+Check whether C<$vec> is within the box defined by C<$begin> and C<$end>.
+Return 1 if vector is contained within the box, and 0 otherwise.
+
+
+
+=head1 MATHEMATICAL OPERATIONS
+
+=head2 Standard operations
+
+One can do some maths on the vectors. Addition and substraction work as
+expected:
+
+    my $v = $v1 + $v2;
+    my $v = $v1 - $v2;
+
+Either operation return a new LBV object, which is the result of C<$v1>
+plus / minus C<$v2>.
+
+The inversion is also supported:
+    my $v2 = -$v1;
+
+will subtracts C<$v1> from the origin, and effectively, gives the
+inverse of the original vector. The new vector is the same distance from
+the origin, in the opposite direction.
+
+
+=head2 Inplace operations
+
+LBV objects also supports inplace mathematical operations:
+
     $v1 += $v2;
+    $v1 -= $v2;
 
-Adds I<v2> to I<v1>, and stores the result back into I<v1>.
-
-
-=head2 vector_copy( )
-
-    $v0 = $v1->vector_copy();
-    $v0 = $v1;
-
-Returns a new Vector object, which has the same dimensions and
-coordinates as I<v1>.
+effectively adds / substracts C<$v2> to / from C<$v1>, and stores the
+result back into C<$v1>.
 
 
-=head2 set_component( dimension, data )
+=head2 Comparison
 
-    $v->set_component(0, 1); # set X to 1
+Finally, LBV objects can be tested for equality, ie whether two vectors
+both point at the same spot.
 
-Sets the value for dimension I<dimension> to the value I<data>.
-
-
-=head2 get_component( dimension )
-
-    my $x = $v->get_component(0);
-
-Gets the value for dimension I<dimension>.
-
-
-=head2 get_all_components( )
-
-    my $v = Language::Befunge::Vector->new(3, 1, 2, 3);
-    # $v now holds a 3-dimensional vector, <1,2,3>
-    my @list = $v->get_all_components(); # returns (1, 2, 3)
-
-Gets the value for all dimensions, in order from 0..N.
-
-
-=head2 zero( )
-
-Sets the vector back to the origin, all 0's.  See also the
-constructor, B<new_from_origin>, above.
-
-
-=head2 bounds_check( begin, end )
-
-    die "out of bounds"
-        unless $vector->bounds_check($begin, $end);
-
-Checks whether the given I<vector> is within the box defined by
-I<begin> and I<end>.  Returns I<1> if I<vector> is contained within
-the box, and I<0> otherwise.
-
-
-=head2 vector_as_string( )
-
-Returns the stringified form of the vector.  For instance, a Befunge
-vector might look like I<"(1,2)">.
-
-
-=head2 vector_equality( v2 )
-
-    print("Equal!\n") if $v1->vector_equality($v2);
-    print("Equal!\n") if $v1 == $v2;
-
-Checks whether the vectors both point at the same spot.  Returns
-I<1> if they do, I<0> if they don't.
-
-
-=head2 vector_inequality( v2 )
-
-    print("Equal!\n") unless $v1->vector_inequality($v2);
-    print("Equal!\n") unless $v1 != $v2;
-
-Checks whether the vectors point to different spots.  Returns
-I<1> if they don't, I<0> if they do.  Compare B<vector_equality>,
-above.
-
+    print "same"   if $v1 == $v2;
+    print "differ" if $v1 != $v2;
 
 
 =head1 SEE ALSO
