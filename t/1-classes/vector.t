@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 81;
+use Test::More tests => 77;
 
 use Language::Befunge::IP;
 use Language::Befunge::Vector;
@@ -23,7 +23,8 @@ use Language::Befunge::Vector;
 my $ip = Language::Befunge::IP->new;
 my ($v1,$v2,$v3,$v4);
 
-# CONSTRUCTORS
+# -- CONSTRUCTORS
+
 # ->new()
 $v1 = Language::Befunge::Vector->new(2, 1, 0);
 isa_ok($v1,                          "Language::Befunge::Vector");
@@ -41,7 +42,17 @@ is($v1->get_dims, 4,      "four dimensions");
 is("$v1",    '(0,0,0,0)', "all values are 0");
 
 
-# METHODS
+# copy
+$v2 = $v1->copy;
+$v3 = $v1;
+is("$v1", "$v2", "v1 has been copied");
+$v1 += Language::Befunge::Vector->new(1,1,1,1);
+is("$v1", "(1,1,1,1)", "v1 has had 1 added");
+is("$v2", "(0,0,0,0)", "v2 hasn't changed");
+is("$v3", "(0,0,0,0)", "v3 hasn't changed");
+
+
+# -- PUBLIC METHODS
 
 # get_dims() has already been tested above...
 
@@ -69,19 +80,6 @@ $v1 += $v4;
 is("$v1", "(6,7)", "v1 has had 1 added in X/Y");
 is("$v2", "(5,6)", "v2 hasn't changed");
 is("$v4", "(1,1)", "v4 hasn't changed");
-
-# copy()
-$v2 = $v1->copy;
-$v3 = $v1;
-is($v1->get_component(0), $v2->get_component(0), "X has been copied");
-is($v1->get_component(1), $v2->get_component(1), "Y has been copied");
-$v1 += $v4;
-is($v1->get_component(0), 7, "X has had 1 added in v1");
-is($v1->get_component(1), 8, "Y has had 1 added in v1");
-is($v2->get_component(0), 6, "X hasn't changed in v2");
-is($v2->get_component(1), 7, "Y hasn't changed in v2");
-is($v3->get_component(0), 6, "X hasn't changed in v3");
-is($v3->get_component(1), 7, "Y hasn't changed in v3");
 
 # setd
 $v1->set_component(0,1);
