@@ -21,8 +21,7 @@ use overload
 	'neg' => \&_invert,
 	'+='  => \&_add_inplace,
     '-='  => \&_substract_inplace,
-	'=='  => \&vector_equality,
-	'!='  => \&vector_inequality,
+	'<=>' => \&_compare,
 	'""'  => \&vector_as_string;
 
 
@@ -262,38 +261,24 @@ sub vector_as_string {
 	return "(" . join(",",@$self) . ")";
 }
 
+#- comparison
 
 #
-# vector_equality( v2 )
+# my $bool = $v1->_compare($v2);
+# my $bool = $v1 <=> $v2;
 #
-#     print("Equal!\n") if $v1->vector_equality($v2);
-#     print("Equal!\n") if $v1 == $v2;
+# Check whether the vectors both point at the same spot. Return 0 if they
+# do, 1 if they don't.
 #
-# Checks whether the vectors both point at the same spot. Returns 1 if they
-# do, 0 if they don't.
-#
-sub vector_equality {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in bounds check!" unless $v1->get_dims == $v2->get_dims;
-	for(my $d = 0; $d < $v1->get_dims; $d++) {
-		return 0 unless $v1->get_component($d) == $v2->get_component($d);
-	}
-	return 1;
+sub _compare {
+ 	my ($v1, $v2) = @_;
+ 	croak "uneven dimensions in bounds check!" unless $v1->get_dims == $v2->get_dims;
+	for (my $d = 0; $d < $v1->get_dims; $d++) {
+		return 1 if $v1->get_component($d) != $v2->get_component($d);
+ 	}
+	return 0;
 }
 
-
-#
-# vector_inequality( v2 )
-#
-#     print("Equal!\n") unless $v1->vector_inequality($v2);
-#     print("Equal!\n") unless $v1 != $v2;
-#
-# Checks whether the vectors point to different spots. Returns 1 if they
-# don't, 0 if they do.  Compare vector_equality, above.
-#
-sub vector_inequality {
-	return !vector_equality(@_);
-}
 
 1;
 __END__

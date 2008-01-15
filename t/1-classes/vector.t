@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 80;
+use Test::More tests => 70;
 
 use Language::Befunge::IP;
 use Language::Befunge::Vector;
@@ -95,7 +95,7 @@ is($v1->get_component(0),       1, "X is now 1");
 is($v1->get_component(1),       2, "Y is now 2");
 is($v1->vector_as_string, "(1,2)", "setd works");
 
-# getd is tested all over this script.
+# get_component is tested all over this script.
 
 # get_all_components
 my @list = $v1->get_all_components;
@@ -128,7 +128,7 @@ ok(!$v3->bounds_check($v1, $v2), "(0,23) is out of bounds");
 
 # vector_as_string is already tested, above
 
-# vector_equality
+# comparison: equality
 $v1 = Language::Befunge::Vector->new(1, 1);
 $v2 = Language::Befunge::Vector->new(1, 1);
 $v3 = Language::Befunge::Vector->new(1, 2);
@@ -137,13 +137,8 @@ ok(  $v2 == $v1 , "v2 == v1");
 ok(  $v1 == $v1 , "v1 == v1");
 ok(!($v1 == $v3), "!(v1 == v3)");
 ok(!($v2 == $v3), "!(v2 == v3)");
-ok(  $v1->vector_equality($v2) , "v1 == v2");
-ok(  $v2->vector_equality($v1) , "v2 == v1");
-ok(  $v1->vector_equality($v1) , "v1 == v1");
-ok(!($v1->vector_equality($v3)), "!(v1 == v3)");
-ok(!($v2->vector_equality($v3)), "!(v2 == v3)");
 
-# vector_inequality
+# comparison: inequality
 $v1 = Language::Befunge::Vector->new(1, 1);
 $v2 = Language::Befunge::Vector->new(1, 1);
 $v3 = Language::Befunge::Vector->new(1, 2);
@@ -152,11 +147,6 @@ ok(!($v2 != $v1), "!(v2 != v1)");
 ok(!($v1 != $v1), "!(v1 != v1)");
 ok( ($v1 != $v3), "v1 != v3");
 ok( ($v2 != $v3), "v2 != v3");
-ok(!($v1->vector_inequality($v2)), "!(v1 != v2)");
-ok(!($v2->vector_inequality($v1)), "!(v2 != v1)");
-ok(!($v1->vector_inequality($v1)), "!(v1 != v1)");
-ok( ($v1->vector_inequality($v3)), "v1 != v3");
-ok( ($v2->vector_inequality($v3)), "v2 != v3");
 
 # finally, test all the possible ways to die
 SKIP: {
@@ -179,19 +169,19 @@ SKIP: {
 	# addition
 	throws_ok(sub { my $blah = $tref_v + $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (+)");
-	# vector_add_inplace
+	# inplace addition
 	throws_ok(sub { $tref_v += $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (+=)");
-	# setd
+	# set_component
 	throws_ok(sub { $tref_v->set_component(3, 0) },
-		qr/No such dimension/, "setd takes dimension range 0..2 for 3d");
+		qr/No such dimension/, "set_component takes dimension range 0..2 for 3d");
 	throws_ok(sub { $bef_v->set_component(-1, 0) },
-		qr/No such dimension/, "setd takes dimension range 0..1 for 2d");
-	# getd
+		qr/No such dimension/, "set_component takes dimension range 0..1 for 2d");
+	# get_component
 	throws_ok(sub { $tref_v->get_component(3) },
-		qr/No such dimension/, "getd takes dimension range 0..2 for 3d");
+		qr/No such dimension/, "get_component takes dimension range 0..2 for 3d");
 	throws_ok(sub { $bef_v->get_component(-1) },
-		qr/No such dimension/, "getd takes dimension range 0..1 for 2d");
+		qr/No such dimension/, "get_component takes dimension range 0..1 for 2d");
 	# bounds_check
 	throws_ok(sub { $tref_v->bounds_check($v1, $v2) },
 		qr/uneven dimensions/, "bounds check catches wrong dimension in first arg");
@@ -199,10 +189,10 @@ SKIP: {
 		qr/uneven dimensions/, "bounds check catches wrong dimension in second arg");
 	throws_ok(sub { $v1->bounds_check($v2, $tref_v) },
 		qr/uneven dimensions/, "bounds check catches wrong dimension in third arg");
-	# vector_equality
+	# comparison: equality
 	throws_ok(sub { $tref_v == $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (==)");
-	# vector_inequality
+	# comparison: inequality
 	throws_ok(sub { $tref_v != $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (!=)");
 }
