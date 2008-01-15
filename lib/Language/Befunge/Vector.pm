@@ -106,6 +106,17 @@ sub get_all_components {
 # - mutators
 
 #
+# $vec->clear;
+#
+# Set the vector back to the origin, all 0's.
+#
+sub clear {
+    my ($self) = @_;
+    @$self = (0) x $self->get_dims;
+}
+
+
+#
 # $vec->set_component($dim, $value);
 #
 # Set the value for dimension $dim to $value.
@@ -206,18 +217,6 @@ sub vector_add_inplace {
 sub vector_copy {
 	my $v = shift;
 	return bless [@$v], ref $v;
-}
-
-
-#
-# zero( )
-#
-# Sets the vector back to the origin, all 0's. See also the constructor,
-# new_from_origin, above.
-#
-sub zero {
-	my ($self) = @_;
-    @$self = (0) x $self->get_dims;
 }
 
 

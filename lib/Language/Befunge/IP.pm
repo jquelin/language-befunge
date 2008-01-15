@@ -566,7 +566,7 @@ Implements the C<E<gt>> instruction. Force the IP to travel east.
 =cut
 sub dir_go_east {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(0, 1);
 }
 
@@ -577,7 +577,7 @@ Implements the C<E<lt>> instruction. Force the IP to travel west.
 =cut
 sub dir_go_west {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(0, -1);
 }
 
@@ -590,7 +590,7 @@ Not valid for Unefunge.
 =cut
 sub dir_go_north {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(1, -1);
 }
 
@@ -603,7 +603,7 @@ Not valid for Unefunge.
 =cut
 sub dir_go_south {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(1, 1);
 }
 
@@ -616,7 +616,7 @@ Not valid for Unefunge or Befunge.
 =cut
 sub dir_go_high {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(2, 1);
 }
 
@@ -629,7 +629,7 @@ Not valid for Unefunge or Befunge.
 =cut
 sub dir_go_low {
     my $self = shift;
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     $self->get_delta->set_component(2, -1);
 }
 
@@ -644,7 +644,7 @@ sub dir_go_away {
     my $self = shift;
     my $nd = $self->get_dims;
     my $dim = (0..$nd-1)[int(rand $nd)];
-    $self->get_delta->zero();
+    $self->get_delta->clear;
     my $value = (-1, 1)[int(rand 2)];
     $self->get_delta->set_component($dim, $value);
 }

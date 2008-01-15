@@ -108,8 +108,8 @@ is(scalar @list, 2, "get_all_components returned 2 elements");
 is($list[0], 1, "X is 1");
 is($list[1], 2, "Y is 2");
 
-# zero
-$v1->zero();
+# clear()
+$v1->clear();
 is($v1->get_component(0), 0, "X is now 0");
 is($v1->get_component(1), 0, "Y is now 0");
 
