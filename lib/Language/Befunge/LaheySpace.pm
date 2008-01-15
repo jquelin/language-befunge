@@ -103,7 +103,7 @@ sub store {
     		($x, $y) = $v->get_all_components();
     } else {
 	    $x = $y = 0;
-	    $v = Language::Befunge::Vector->new(2, $x, $y);
+	    $v = Language::Befunge::Vector->new($x, $y);
     }
 
     # The torus is an array of arrays of numbers.
@@ -133,7 +133,7 @@ sub store {
         splice @{ $self->{torus}[ $j + $y - $self->{ymin} ] }, $x - $self->{xmin}, $maxlen, @chars;
     }
 
-    return (Language::Befunge::Vector->new(2, $maxlen, scalar( @lines ) ));
+    return (Language::Befunge::Vector->new($maxlen, scalar( @lines ) ));
 }
 
 =head2 store_binary( code, [vector] )
@@ -155,7 +155,7 @@ sub store_binary {
     		($x, $y) = $v->get_all_components();
     } else {
 	    $x = $y = 0;
-	    $v = Language::Befunge::Vector->new(2, $x, $y);
+	    $v = Language::Befunge::Vector->new($x, $y);
     }
 
     # The torus is an array of arrays of numbers.
@@ -175,7 +175,7 @@ sub store_binary {
     my @chars = map { ord } split //, $code;
     splice @{ $self->{torus}[ $y - $self->{ymin} ] }, $x - $self->{xmin}, $maxlen, @chars;
 
-    return (Language::Befunge::Vector->new(2, $maxlen, 1 ));
+    return (Language::Befunge::Vector->new($maxlen, 1 ));
 }
 
 =head2 get_char( vector )
