@@ -16,9 +16,9 @@ use Carp;
 
 use overload
 	'='   => \&copy,
+	'+'   => \&_add,
 	'-'   => \&_substract,
 	'neg' => \&vector_invert,
-	'+'   => \&vector_add,
 	'+='  => \&vector_add_inplace,
 	'=='  => \&vector_equality,
 	'!='  => \&vector_inequality,
@@ -140,14 +140,32 @@ sub set_component {
 }
 
 
+# -- PRIVATE METHODS
+
 #- math ops
+
+#
+# my $vec = $v1->_add($v2);
+# my $vec = $v1 + $v2;
+#
+# Return a new LBV object, which is the result of $v1 plus $v2.
+#
+sub _add {
+	my ($v1, $v2) = @_;
+	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
+	my $rv = ref($v1)->new_zeroes($v1->get_dims);
+	for (my $i = 0; $i < $v1->get_dims; $i++) {
+		$rv->[$i] = $v1->[$i] + $v2->[$i];
+	}
+	return $rv;
+}
+
 
 #
 # my $vec = $v1->_substract($v2);
 # my $vec = $v1 - $v2;
 #
-# Return a new LBV::PurePerl object, which is the result of $v1 minus
-# $v2.
+# Return a new LBV object, which is the result of $v1 minus $v2.
 #
 sub _substract {
     my ($v1, $v2) = @_;
@@ -175,25 +193,6 @@ sub vector_invert {
 	my $rv = ref($v1)->new_zeroes($v1->get_dims);
 	for(my $i = 0; $i < $v1->get_dims; $i++) {
 		$rv->[$i] = -$v1->[$i];
-	}
-	return $rv;
-}
-
-
-#
-# vector_add( v2 )
-#
-#     $v0 = $v1->vector_add($v2);
-#     $v0 = $v1 + $v2;
-#
-# Returns a new Vector object, which is the result of v1 plus v2.
-#
-sub vector_add {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
-	my $rv = ref($v1)->new_zeroes($v1->get_dims);
-	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$rv->[$i] = $v1->[$i] + $v2->[$i];
 	}
 	return $rv;
 }

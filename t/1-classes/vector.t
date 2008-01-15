@@ -56,18 +56,15 @@ is($v2->get_component(1), -6, "Y is the inverse of v1's");
 is($v3->get_component(0), -5, "X is the inverse of v1's");
 is($v3->get_component(1), -6, "Y is the inverse of v1's");
 
-# vector_add
+# addition
 my $v4 = Language::Befunge::Vector->new(1, 1);
 $v2 = $v1 + $v4;
-$v3 = $v1->vector_add($v4);
 is($v1->get_component(0), 5, "X hasn't changed in v1");
 is($v1->get_component(1), 6, "Y hasn't changed in v1");
 is($v4->get_component(0), 1, "X hasn't changed in v4");
 is($v4->get_component(1), 1, "Y hasn't changed in v4");
 is($v2->get_component(0), 6, "X is v1's X plus v4's X");
 is($v2->get_component(1), 7, "Y is v1's Y plus v4's Y");
-is($v3->get_component(0), 6, "X is v1's X plus v4's X");
-is($v3->get_component(1), 7, "Y is v1's Y plus v4's Y");
 
 # vector_add_inplace
 $v2 = $v1->copy;
@@ -187,7 +184,7 @@ SKIP: {
 	# substraction
 	throws_ok(sub { my $blah = $tref_v - $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (-)");
-	# vector_add
+	# addition
 	throws_ok(sub { my $blah = $tref_v + $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (+)");
 	# vector_add_inplace
