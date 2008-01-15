@@ -33,7 +33,7 @@ is($v1->get_dims,                 3, "three dimensions");
 is($v1->get_component(0),         2, "X is correct");
 is($v1->get_component(1),         1, "Y is correct");
 is($v1->get_component(2),         0, "Z is correct");
-is($v1->vector_as_string, '(2,1,0)', "stringifies back to (2,1,0)");
+is($v1->as_string,        '(2,1,0)', "stringifies back to (2,1,0)");
 is("$v1",                 '(2,1,0)', "overloaded stringify back to (2,1,0)");
 
 # new_zeroes()
@@ -69,7 +69,7 @@ is($list[1], 1, "Y is 1");
 is($list[2], 1, "Z is 1");
 is($list[3], 1, "T is 1");
 
-# vector_as_string is already tested, below
+# as_string() is already tested above.
 
 #- mutators
 
@@ -83,7 +83,7 @@ $v1->set_component(0,3);
 $v1->set_component(1,2);
 is($v1->get_component(0),           3, "X is now 1");
 is($v1->get_component(1),           2, "Y is now 2");
-is($v1->vector_as_string, "(3,2,0,0)", "set_component() works");
+is($v1->as_string,        "(3,2,0,0)", "set_component() works");
 
 #- other methods
 

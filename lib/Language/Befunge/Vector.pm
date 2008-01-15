@@ -22,7 +22,7 @@ use overload
 	'+='  => \&_add_inplace,
     '-='  => \&_substract_inplace,
 	'<=>' => \&_compare,
-	'""'  => \&vector_as_string;
+	'""'  => \&as_string;
 
 
 # -- CONSTRUCTORS
@@ -80,6 +80,20 @@ sub copy {
 # -- PUBLIC METHODS
 
 #- accessors
+
+
+#
+# my $str = $vec->as_string;
+# my $str = "$vec";
+#
+# Return the stringified form of $vec. For instance, a Befunge vector
+# might look like "(1,2)".
+#
+sub as_string {
+	my $self = shift;
+	return "(" . join(",",@$self) . ")";
+}
+
 
 #
 # my $dims = $vec->get_dims;
@@ -249,16 +263,6 @@ sub _substract_inplace {
 	return $v1;
 }
 
-
-#
-# vector_as_string( )
-#
-# Returns the stringified form of the vector.  For instance, a Befunge vector might look like "(1,2)".
-#
-sub vector_as_string {
-	my $self = shift;
-	return "(" . join(",",@$self) . ")";
-}
 
 #- comparison
 
