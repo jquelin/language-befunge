@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 77;
+use Test::More tests => 80;
 
 use Language::Befunge::IP;
 use Language::Befunge::Vector;
@@ -79,6 +79,13 @@ $v2 = $v1->copy;
 $v1 += $v4;
 is("$v1", "(6,7)", "v1 has had 1 added in X/Y");
 is("$v2", "(5,6)", "v2 hasn't changed");
+is("$v4", "(1,1)", "v4 hasn't changed");
+
+# inplace substraction
+$v3 = $v1->copy;
+$v3 -= $v4;
+is("$v3", "(5,6)", "v3 has had 1 substracted in X/Y");
+is("$v1", "(6,7)", "v1 hasn't changed");
 is("$v4", "(1,1)", "v4 hasn't changed");
 
 # setd

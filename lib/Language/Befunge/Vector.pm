@@ -20,6 +20,7 @@ use overload
 	'-'   => \&_substract,
 	'neg' => \&_invert,
 	'+='  => \&_add_inplace,
+    '-='  => \&_substract_inplace,
 	'=='  => \&vector_equality,
 	'!='  => \&vector_inequality,
 	'""'  => \&vector_as_string;
@@ -211,6 +212,22 @@ sub _add_inplace {
         $v1->[$i] += $v2->[$i];
     }
     return $v1;
+}
+
+
+#
+# $v1->_substract_inplace($v2);
+# $v1 -= $v2;
+#
+# Substract $v2 to $v1, and stores the result back into $v1.
+#
+sub _substract_inplace {
+	my ($v1, $v2) = @_;
+	croak "uneven dimensions in vector substraction!" unless $v1->get_dims == $v2->get_dims;
+	for (my $i = 0; $i < $v1->get_dims; $i++) {
+		$v1->[$i] -= $v2->[$i];
+	}
+	return $v1;
 }
 
 
