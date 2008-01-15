@@ -18,7 +18,7 @@ use overload
 	'='   => \&copy,
 	'+'   => \&_add,
 	'-'   => \&_substract,
-	'neg' => \&vector_invert,
+	'neg' => \&_invert,
 	'+='  => \&vector_add_inplace,
 	'=='  => \&vector_equality,
 	'!='  => \&vector_inequality,
@@ -178,23 +178,22 @@ sub _substract {
 }
 
 
+ 
 #
-# vector_invert( )
+# my $v2 = $v1->_invert;
+# my $v2 = -$v1;
 #
-#     $v1->vector_invert();
-#     $v2 = -$v1;
+# Subtract $v1 from the origin. Effectively, gives the inverse of the
+# original vector. The new vector is the same distance from the origin,
+# in the opposite direction.
 #
-# Subtracts v1 from the origin. Effectively, gives the inverse of the
-# original vector.  The new vector is the same distance from the origin,
-#in the opposite direction.
-#
-sub vector_invert {
-	my ($v1) = @_;
-	my $rv = ref($v1)->new_zeroes($v1->get_dims);
-	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$rv->[$i] = -$v1->[$i];
-	}
-	return $rv;
+sub _invert {
+    my ($v1) = @_;
+    my $rv = ref($v1)->new_zeroes($v1->get_dims);
+    for (my $i = 0; $i < $v1->get_dims; $i++) {
+        $rv->[$i] = -$v1->[$i];
+    }
+    return $rv;
 }
 
 

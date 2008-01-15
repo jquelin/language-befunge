@@ -691,7 +691,7 @@ is, multiply the IP's delta by -1.
 =cut
 sub dir_reverse {
     my $self = shift;
-    $self->set_delta($self->get_delta->vector_invert());
+    $self->set_delta(-$self->get_delta);
 }
 
 =back
