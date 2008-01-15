@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 91;
+use Test::More tests => 86;
 
 use Language::Befunge::IP;
 use Language::Befunge::Vector;
@@ -168,12 +168,6 @@ SKIP: {
 	# new
 	throws_ok(sub { Language::Befunge::Vector->new() },
 		qr/Usage/, "Vector->new needs a defined 'dimensions' argument");
-	throws_ok(sub { Language::Befunge::Vector->new(0) },
-		qr/Usage/, "Vector->new needs a non-zero 'dimensions' argument");
-	throws_ok(sub { Language::Befunge::Vector->new(1) },
-		qr/Usage/, "Vector->new checks the number of args it got");
-	throws_ok(sub { Language::Befunge::Vector->new(1, 2, 3) },
-		qr/Usage/, "Vector->new checks the number of args it got");
 	# new_zeroes
 	throws_ok(sub { Language::Befunge::Vector->new_zeroes() },
 		qr/Usage/, "Vector->new_zeroes needs a defined 'dimensions' argument");
