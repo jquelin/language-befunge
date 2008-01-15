@@ -15,11 +15,11 @@ use integer;
 use Carp;
 
 use overload
+	'='   => \&copy,
 	'-'   => \&vector_subtract,
 	'neg' => \&vector_invert,
 	'+'   => \&vector_add,
 	'+='  => \&vector_add_inplace,
-	'='   => \&vector_copy,
 	'=='  => \&vector_equality,
 	'!='  => \&vector_inequality,
 	'""'  => \&vector_as_string;
@@ -62,6 +62,18 @@ sub new_zeroes {
     my @initial;
     push(@initial,0) for(1..$dimensions);
 	return bless([@initial], $package);
+}
+
+
+#
+# my $vec = $v->copy;
+#
+# Return a new LBV object, which has the same dimensions and coordinates
+# as $v.
+#
+sub copy {
+    my $vec = shift;
+    return bless [@$vec], ref $vec;
 }
 
 
@@ -203,20 +215,6 @@ sub vector_add_inplace {
 		$v1->[$i] += $v2->[$i];
 	}
 	return $v1;
-}
-
-
-#
-# vector_copy( )
-#
-#     $v0 = $v1->vector_copy();
-#     $v0 = $v1;
-#
-# Returns a new Vector object, which has the same dimensions and coordinates as v1.
-#
-sub vector_copy {
-	my $v = shift;
-	return bless [@$v], ref $v;
 }
 
 

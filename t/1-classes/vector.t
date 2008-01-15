@@ -70,7 +70,7 @@ is($v3->get_component(0), 6, "X is v1's X plus v4's X");
 is($v3->get_component(1), 7, "Y is v1's Y plus v4's Y");
 
 # vector_add_inplace
-$v2 = $v1->vector_copy();
+$v2 = $v1->copy;
 $v1 += $v4;
 $v2->vector_add_inplace($v4);
 is($v1->get_component(0), 6, "X has had 1 added in v1");
@@ -80,8 +80,8 @@ is($v2->get_component(1), 7, "Y has had 1 added in v2");
 is($v4->get_component(0), 1, "X hasn't changed in v4");
 is($v4->get_component(1), 1, "Y hasn't changed in v4");
 
-# vector_copy
-$v2 = $v1->vector_copy();
+# copy()
+$v2 = $v1->copy;
 $v3 = $v1;
 is($v1->get_component(0), $v2->get_component(0), "X has been copied");
 is($v1->get_component(1), $v2->get_component(1), "Y has been copied");
