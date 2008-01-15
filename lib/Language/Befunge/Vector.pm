@@ -140,6 +140,26 @@ sub set_component {
 }
 
 
+#
+# other methods
+#
+# my $is_within = $vec->bounds_check($begin, $end);
+#
+# Check whether $vec is within the box defined by $begin and $end.
+# Return 1 if vector is contained within the box, and 0 otherwise.
+#
+sub bounds_check {
+	my ($vchk, $begin, $end) = @_;
+	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $begin->get_dims;
+	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $end->get_dims;
+	for (my $d = 0; $d < $vchk->get_dims; $d++) {
+		return 0 if $vchk->get_component($d) < $begin->get_component($d);
+		return 0 if $vchk->get_component($d) >   $end->get_component($d);
+	}
+	return 1;
+}
+
+
 # -- PRIVATE METHODS
 
 #- math ops
@@ -227,27 +247,6 @@ sub _substract_inplace {
 		$v1->[$i] -= $v2->[$i];
 	}
 	return $v1;
-}
-
-
-#
-# bounds_check( begin, end )
-#
-#     die "out of bounds"
-#         unless $vector->bounds_check($begin, $end);
-#
-# Checks whether the given vector is within the box defined by begin and end.
-# Returns 1 if vector is contained within the box, and 0 otherwise.
-#
-sub bounds_check {
-	my ($vchk, $begin, $end) = @_;
-	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $begin->get_dims;
-	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $end->get_dims;
-	for(my $d = 0; $d < $vchk->get_dims; $d++) {
-		return 0 if $vchk->get_component($d) < $begin->get_component($d);
-		return 0 if $vchk->get_component($d) >   $end->get_component($d);
-	}
-	return 1;
 }
 
 
