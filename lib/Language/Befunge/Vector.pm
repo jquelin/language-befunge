@@ -19,7 +19,7 @@ use overload
 	'+'   => \&_add,
 	'-'   => \&_substract,
 	'neg' => \&_invert,
-	'+='  => \&vector_add_inplace,
+	'+='  => \&_add_inplace,
 	'=='  => \&vector_equality,
 	'!='  => \&vector_inequality,
 	'""'  => \&vector_as_string;
@@ -197,21 +197,20 @@ sub _invert {
 }
 
 
+#- inplace math ops
+
 #
-# vector_add_inplace( v2 )
+# $v1->_add_inplace($v2);
+# $v1 += $v2;
 #
-#      $v1->vector_add_inplace($v2);
-#      $v1 += $v2;
 #
-# Adds v2 to v1, and stores the result back into v1.
-#
-sub vector_add_inplace {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
-	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$v1->[$i] += $v2->[$i];
-	}
-	return $v1;
+sub _add_inplace {
+    my ($v1, $v2) = @_;
+    croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
+    for (my $i = 0; $i < $v1->get_dims; $i++) {
+        $v1->[$i] += $v2->[$i];
+    }
+    return $v1;
 }
 
 
