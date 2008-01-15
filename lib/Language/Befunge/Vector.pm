@@ -70,13 +70,25 @@ sub new_zeroes {
 #- accessors
 
 #
-# my $dims = $vec->nelem;
+# my $dims = $vec->get_dims;
 #
 # Return the number of dimensions, an integer.
 #
 sub get_dims {
 	my $self = shift;
 	return scalar(@$self);
+}
+
+
+#
+# my $val = $vec->get_component($dim);
+#
+# Get the value for dimension $dim.
+#
+sub get_component {
+    my ($self, $dim) = @_;
+    croak "No such dimension $dim!" unless $dim >= 0 && $self->get_dims > $dim;
+    return $self->[$dim];
 }
 
 
@@ -183,20 +195,6 @@ sub vector_add_inplace {
 sub vector_copy {
 	my $v = shift;
 	return bless [@$v], ref $v;
-}
-
-
-#
-# get_component( dimension )
-#
-#      my $x = $v->get_component(0);
-#
-# Gets the value for dimension dimension.
-#
-sub get_component {
-	my ($self, $d) = @_;
-	croak "No such dimension $d!" unless ($d >= 0 && $self->get_dims > $d);
-	return $self->[$d];
 }
 
 
