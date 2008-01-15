@@ -184,7 +184,7 @@ SKIP: {
 		qr/Usage/, "Vector->new_zeroes needs a non-zero 'dimensions' argument");
 	my $tref_v = Language::Befunge::Vector->new(4, 5, 6);
 	my  $bef_v = Language::Befunge::Vector->new(3, 4);
-	# vector_subtract
+	# substraction
 	throws_ok(sub { my $blah = $tref_v - $bef_v },
 		qr/uneven dimensions/, "misaligned vector arithmetic (-)");
 	# vector_add

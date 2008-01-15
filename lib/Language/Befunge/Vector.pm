@@ -16,7 +16,7 @@ use Carp;
 
 use overload
 	'='   => \&copy,
-	'-'   => \&vector_subtract,
+	'-'   => \&_substract,
 	'neg' => \&vector_invert,
 	'+'   => \&vector_add,
 	'+='  => \&vector_add_inplace,
@@ -143,21 +143,20 @@ sub set_component {
 #- math ops
 
 #
-# vector_subtract( v2 )
+# my $vec = $v1->_substract($v2);
+# my $vec = $v1 - $v2;
 #
-#     $v0 = $v1->vector_subtract($v2);
-#     $v0 = $v1 - $v2;
+# Return a new LBV::PurePerl object, which is the result of $v1 minus
+# $v2.
 #
-# Returns a new Vector object, which is the result of v1 minus v2.
-#
-sub vector_subtract {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in vector subtraction!" unless $v1->get_dims == $v2->get_dims;
-	my $vr = ref($v1)->new_zeroes($v1->get_dims);
-	for(my $i = 0; $i < $v1->get_dims; $i++) {
-		$vr->[$i] = $v1->[$i] - $v2->[$i];
-	}
-	return $vr;
+sub _substract {
+    my ($v1, $v2) = @_;
+    croak "uneven dimensions in vector subtraction!" unless $v1->get_dims == $v2->get_dims;
+    my $rv = ref($v1)->new_zeroes($v1->get_dims);
+    for (my $i=0; $i<$v1->get_dims; $i++) {
+        $rv->[$i] = $v1->[$i] - $v2->[$i];
+    }
+    return $rv;
 }
 
 
