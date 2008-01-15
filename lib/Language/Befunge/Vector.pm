@@ -92,6 +92,17 @@ sub get_component {
 }
 
 
+#
+# my @vals = $vec->get_all_components;
+#
+# Get the values for all dimensions, in order from 0..N.
+#
+sub get_all_components {
+    my ($self) = @_;
+    return @$self;
+}
+
+
 # - mutators
 
 #
@@ -195,21 +206,6 @@ sub vector_add_inplace {
 sub vector_copy {
 	my $v = shift;
 	return bless [@$v], ref $v;
-}
-
-
-#
-# get_all_components( )
-#
-#     my $v = Language::Befunge::Vector->new(1, 2, 3);
-#     # $v now holds a 3-dimensional vector, <1,2,3>
-#     my @list = $v->get_all_components(); # returns (1, 2, 3)
-#
-# Gets the value for all dimensions, in order from 0..N.
-#
-sub get_all_components {
-	my ($self) = @_;
-	return @$self;
 }
 
 
