@@ -24,6 +24,26 @@ use overload
 	'<=>' => \&_compare,
 	'""'  => \&as_string;
 
+# try to load speed-up LBV
+eval 'use Language::Befunge::Vector::XS';
+if ( defined $Language::Befunge::Vector::XS::VERSION ) {
+    my @subs = qw[
+        new new_zeroes copy
+        as_string get_dims get_component get_all_components
+        clear set_component
+        bounds_check
+        _add _substract _invert
+        _add_inplace _substract_inplace
+        _compare
+    ];
+    foreach my $sub ( @subs ) {
+        no strict 'refs';
+        no warnings 'redefine';
+        my $lbvxs_sub = "Language::Befunge::Vector::XS::$sub";
+        *$sub = \&$lbvxs_sub;
+    }
+}
+
 
 # -- CONSTRUCTORS
 
@@ -157,8 +177,8 @@ sub set_component {
 }
 
 
-#
-# other methods
+#- other methods
+
 #
 # my $is_within = $vec->bounds_check($begin, $end);
 #
