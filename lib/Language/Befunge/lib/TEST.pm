@@ -12,7 +12,8 @@ sub new { return bless {}, shift; }
 # num -
 sub P {
     my ( $self, $interp ) = @_;
-    $Tester->plan( tests => $interp->get_curip()->spop() );
+    my $tests = $interp->get_curip()->spop();
+    $Tester->plan( $tests ? ( tests => $tests ) : 'no_plan' );
 }
 
 # O = ok()
@@ -54,6 +55,9 @@ Create a new TEST instance.
 =head2 P
 
 Pops a number off the TOSS, and use it for the plan.
+
+If the number is zero, then the number of tests run is listed at the
+end of the test script (i.e. C<no_plan>).
 
 =head2 O
 
