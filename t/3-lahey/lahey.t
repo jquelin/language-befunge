@@ -128,6 +128,27 @@ BEGIN { $tests += 4 };
 
 
 # store method.
+# crlf / lf / cr
+$ls->clear;
+$ls->store( <<'EOF' );
+Foo bar baz
+camel llama buffy
+EOF
+is( $ls->{ymax}, 1,  "store grows ymax if needed" );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, "store stores everything" );
+is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, "^M not counted" );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, "^M is eol" );
+BEGIN { $tests += 4; }
+# crlf / lf / cr
+$ls->clear;
+$ls->store( <<'EOF' );
+Foo bar bazcamel llama buffy
+EOF
+is( $ls->{ymax}, 1,  "store grows ymax if needed" );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, "store stores everything" );
+is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, "^M not counted" );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, "^M is eol" );
+BEGIN { $tests += 4; }
 $ls->clear;
 $ls->store( <<'EOF' );
 Foo bar baz

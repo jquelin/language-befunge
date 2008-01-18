@@ -110,7 +110,9 @@ sub store {
     # Each number is the ordinal value of the character
     # held in this cell.
 
-    my @lines = split $/, $code;
+    $code =~ s/\r\n/\n/g;
+    $code =~ s/\r/\n/g;
+    my @lines = split /\n/, $code;
 
     # Fetch min/max values.
     my $maxy = $#lines + $y - $self->{ymin};
