@@ -1128,7 +1128,10 @@ sub lib_run_instruction {
     foreach my $obj ( @{ $ip->get_libs } ) {
         # Try the loaded libraries in order.
         eval "\$obj->$char(\$lbi)";
-        next if $@; # Uh, this wasn't the good one.
+        if( $@ ) {
+            $lbi->debug( ref($obj) . "->$char failed: $@" );
+            next;
+        }
 
         # We manage to get a library.
         $lbi->debug( "library semantics processed by ".ref($obj)."\n" );
