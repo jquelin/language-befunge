@@ -28,6 +28,17 @@ sub O {
     $Tester->ok( $ok, $msg );
 }
 
+# I = is()
+# 0gnirts expected got -
+sub I {
+    my ( $self, $interp ) = @_;
+    my $ip = $interp->get_curip();
+
+    my ( $got, $expected ) = ( $ip->spop(), $ip->spop() );
+    my $msg = $ip->spop_gnirts();
+    $Tester->is_eq( $got, $expected, $msg );
+}
+
 'ok';
 
 __END__
@@ -40,6 +51,7 @@ Language::Befunge::IP::lib::TEST - a Befunge extension to run tests
 
     P - plan
     O - ok
+    I - is
 
 =head1 DESCRIPTION
 
@@ -64,6 +76,12 @@ end of the test script (i.e. C<no_plan>).
 Pop a value and a message off the TOSS.
 
 If the value is zero, outputs a C<not ok>, otherwise a C<ok>.
+
+=head2 I
+
+Pop two values and a message off the TOSS.
+
+If the two values are equel, the test passes, otherwise it fails.
 
 =head1 SEE ALSO
 
