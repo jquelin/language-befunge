@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 168;
+use Test::More tests => 176;
 
 use Language::Befunge::IP;
 use Language::Befunge::LaheySpace::Generic;
@@ -154,6 +154,24 @@ is( $ls->get_char(Language::Befunge::Vector->new( 2, 2, 2, 2)), 'A', "store stil
 
 
 # store method.
+# crlf / lf / cr
+$ls->clear;
+$ls->store( <<'EOF' );
+Foo bar baz
+camel llama buffy
+EOF
+is( $ls->{max}->get_component(1), 1,  '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0,0,0,0)),  70, '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new(11,0,0,0)),  32, '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0,1,0,0)),  99, '\r\n eol supported' );
+$ls->clear;
+$ls->store( <<'EOF' );
+Foo bar bazcamel llama buffy
+EOF
+is( $ls->{max}->get_component(1), 1,  '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0,0,0,0)),  70, '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new(11,0,0,0)),  32, '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0,1,0,0)),  99, '\r eol supported' );
 $ls->clear;
 $ls->store( <<'EOF' );
 Foo bar baz

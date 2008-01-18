@@ -134,20 +134,19 @@ $ls->store( <<'EOF' );
 Foo bar baz
 camel llama buffy
 EOF
-is( $ls->{ymax}, 1,  "store grows ymax if needed" );
-is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, "store stores everything" );
-is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, "^M not counted" );
-is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, "^M is eol" );
+is( $ls->{ymax}, 1,  '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, '\r\n eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, '\r\n eol supported' );
 BEGIN { $tests += 4; }
-# crlf / lf / cr
 $ls->clear;
 $ls->store( <<'EOF' );
 Foo bar bazcamel llama buffy
 EOF
-is( $ls->{ymax}, 1,  "store grows ymax if needed" );
-is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, "store stores everything" );
-is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, "^M not counted" );
-is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, "^M is eol" );
+is( $ls->{ymax}, 1,  '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 0)),  70, '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new(11, 0)),  32, '\r eol supported' );
+is( $ls->get_value(Language::Befunge::Vector->new( 0, 1)),  99, '\r eol supported' );
 BEGIN { $tests += 4; }
 $ls->clear;
 $ls->store( <<'EOF' );

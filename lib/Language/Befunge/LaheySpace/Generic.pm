@@ -86,6 +86,10 @@ sub store {
     my $nd = $$self{nd};
     $v = Language::Befunge::Vector->new_zeroes($$self{nd}) unless defined $v;
 
+    # support for any eol convention
+    $code =~ s/\r\n/\n/g;
+    $code =~ s/\r/\n/g;
+
     # The torus is a tree of arrays of numbers.
     # The tree is N levels deep, where N is the number of dimensions.
     # Each number is the ordinal value of the character held in this cell.

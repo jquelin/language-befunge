@@ -110,6 +110,7 @@ sub store {
     # Each number is the ordinal value of the character
     # held in this cell.
 
+    # support for any eol convention
     $code =~ s/\r\n/\n/g;
     $code =~ s/\r/\n/g;
     my @lines = split /\n/, $code;
