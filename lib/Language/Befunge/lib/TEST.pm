@@ -89,7 +89,7 @@ L<Language::Befunge>.
 
 =head1 AUTHOR
 
-Philippe Bruhat (BooK) - C<< <book@cpan.org>> >.
+Philippe Bruhat (BooK) - C<< <book@cpan.org> >>.
 
 =head1 COPYRIGHT
 
