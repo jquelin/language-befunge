@@ -10,32 +10,6 @@
 package Language::Befunge::LaheySpace;
 require 5.006;
 
-=head1 NAME
-
-Language::Befunge::LaheySpace - a 2-dimensional LaheySpace representation.
-
-
-=head1 SYNOPSIS
-
-	# create a 2-dimensional LaheySpace.
-	my $torus = Language::Befunge::LaheySpace->new();
-	$torus->clear();
-	$torus->store(<<EOF);
-	12345
-	67890
-	EOF
-
-Note you usually don't need to use this module directly.
-B<Language::Befunge::Interpreter> uses it internally, for 2-dimensional
-storage.  For non-2-dimensional storage, see
-B<Language::Befunge::LaheySpace::Generic>.
-
-
-=head1 DESCRIPTION
-
-
-=cut
-
 
 # Modules we rely upon.
 use strict;
@@ -44,14 +18,6 @@ use integer;
 use Carp;     # This module can't explode :o)
 
 
-
-=head1 CONSTRUCTOR
-
-=head2 new(  )
-
-Creates a new Lahey Space.
-
-=cut
 sub new {
     my ($class) = @_;
     my $self  =
@@ -68,13 +34,8 @@ sub new {
 
 
 
-=head1 PUBLIC METHODS
+#-- PUBLIC METHODS
 
-=head2 clear(  )
-
-Clear the torus.
-
-=cut
 sub clear {
     my $self = shift;
     $self->{xmin} = 0;
@@ -85,17 +46,6 @@ sub clear {
 }
 
 
-=head2 store( code, [vector] )
-
-Store the given code at the specified coordinates. If the coordinates
-are omitted, then the code is stored at the Origin(0, 0) coordinates.
-
-Return the size of the code inserted, as a vector.
-
-The code is a string, representing a block of Funge code.  Rows are
-separated by newlines.
-
-=cut
 sub store {
     my ($self, $code, $v) = @_;
     my ($x, $y);
@@ -139,18 +89,6 @@ sub store {
     return (Language::Befunge::Vector->new($maxlen, scalar( @lines ) ));
 }
 
-=head2 store_binary( code, [vector] )
-
-Store the given code at the specified coordinates. If the coordinates
-are omitted, then the code is stored at the Origin(0, 0) coordinates.
-
-Return the size of the code inserted, as a vector.
-
-This is binary insertion, that is, EOL and FF sequences are stored in
-Funge-space instead of causing the dimension counters to be reset and
-incremented.
-
-=cut
 sub store_binary {
     my ($self, $code, $v) = @_;
     my ($x, $y);
@@ -181,18 +119,6 @@ sub store_binary {
     return (Language::Befunge::Vector->new($maxlen, 1 ));
 }
 
-=head2 get_char( vector )
-
-
-Return the character stored in the torus at the specified location. If
-the value is not between 0 and 255 (inclusive), get_char will return a
-string that looks like "<np-0x4500>".
-
-B</!\> As in Befunge, code and data share the same playfield, the
-character returned can be either an instruction B<or> raw data.  No
-guarantee is made that the return value is printable.
-
-=cut
 sub get_char {
 	my ($self, $v) = @_;
 	my $ord = $self->get_value($v);
@@ -201,18 +127,6 @@ sub get_char {
 	return chr($ord);
 }
 
-=head2 get_value( vector )
-
-
-Return the number stored in the torus at the specified location. If
-the value hasn't yet been set, it defaults to the ordinal value of a
-space (ie, #32).
-
-B</!\> As in Befunge, code and data share the same playfield, the
-number returned can be either an instruction B<or> a data (or even
-both... Eh, that's Befunge! :o) ).
-
-=cut
 sub get_value {
     my ($self, $v) = @_;
     my ($x, $y) = $v->get_all_components;
@@ -231,15 +145,6 @@ sub get_value {
 }
 
 
-=head2 set_value( vector, value )
-
-Write the supplied value in the torus at the specified location.
-
-B</!\> As in Befunge, code and data share the same playfield, the
-number stored can be either an instruction B<or> a data (or even
-both... Eh, that's Befunge! :o) ).
-
-=cut
 sub set_value {
     my ($self, $v, $val) = @_;
     my ($x, $y) = $v->get_all_components();
@@ -250,12 +155,6 @@ sub set_value {
     $self->{torus}[$y-$self->{ymin}][$x-$self->{xmin}] = $val;
 }
 
-
-=head2 move_ip_forward( ip )
-
-Move the given ip forward, according to its delta.
-
-=cut
 sub move_ip_forward {
     my ($self, $ip) = @_;
 
@@ -287,12 +186,6 @@ sub move_ip_forward {
 }
 
 
-=head2 rectangle( pos, size )
-
-Return a string containing the data/code in the rectangle defined by
-the supplied vectors.
-
-=cut
 sub rectangle {
     my ($self, $start, $size) = @_;
     my ($x, $y) = $start->get_all_components();
@@ -315,20 +208,6 @@ sub rectangle {
 }
 
 
-=head2 labels_lookup(  )
-
-Parse the Lahey space to find sequences such as C<;:(\w[^\s;])[^;]*;>
-and return a hash reference whose keys are the labels and the values
-an anonymous array with four values: a vector describing the absolute
-position of the character B<just after> the trailing C<;>, and a
-vector describing the velocity that lead to this label.
-
-This method will only look in the four cardinal directions.
-
-This allow to define some labels in the source code, to be used by
-C<Inline::Befunge> (and maybe some exstensions).
-
-=cut
 sub labels_lookup {
     my $self = shift;
     my $labels = {};
@@ -353,14 +232,6 @@ sub labels_lookup {
 }
 
 
-=head1 PRIVATE METHODS
-
-=head2 _set_min( x, y )
-
-Set the current minimum coordinates. If the supplied values are bigger
-than the actual minimum, then nothing is done.
-
-=cut
 sub _set_min {
     my ($self, $x, $y) = @_;
 
@@ -370,12 +241,6 @@ sub _set_min {
 }
 
 
-=head2 _set_max( x, y )
-
-Set the current maximum coordinates. If the supplied values are smaller
-than the actual maximum, then nothing is done.
-
-=cut
 sub _set_max {
     my ($self, $x, $y) = @_;
 
@@ -385,13 +250,6 @@ sub _set_max {
 }
 
 
-=head2 _enlarge_x( dx )
-
-Enlarge the torus on its x coordinate. If the delta is positive, add
-columns after the last column; if negative, before the first column;
-if nul, nothing is done.
-
-=cut
 sub _enlarge_x {
     my ($self, $delta) = @_;
 
@@ -408,13 +266,6 @@ sub _enlarge_x {
 }
 
 
-=head2 _enlarge_y( dy )
-
-Enlarge the torus on its y coordinate. If the delta is positive, add
-lines after the last one; if negative, before the first line; if nul,
-nothing is done.
-
-=cut
 sub _enlarge_y {
     my ($self, $delta) = @_;
 
@@ -441,11 +292,6 @@ sub _enlarge_y {
 }
 
 
-=head2 _out_of_bounds( vector )
-
-Return true if a location is out of bounds.
-
-=cut
 sub _out_of_bounds {
     my ($self, $v) = @_;
     my ($x, $y) = $v->get_all_components();
@@ -457,13 +303,6 @@ sub _out_of_bounds {
 }
 
 
-=head2 _labels_try( x, y, dx, dy )
-
-Try in the specified direction if the funge space matches a label
-definition. Return undef if it wasn't a label definition, or the name
-of the label if it was a valid label.
-
-=cut
 sub _labels_try {
     my ($self, $x, $y, $dx, $dy) = @_;
     my $comment = "";
@@ -486,6 +325,181 @@ sub _labels_try {
 
 1;
 __END__
+
+
+=head1 NAME
+
+Language::Befunge::LaheySpace - a 2-dimensional LaheySpace representation.
+
+
+=head1 SYNOPSIS
+
+	# create a 2-dimensional LaheySpace.
+	my $torus = Language::Befunge::LaheySpace->new();
+	$torus->clear();
+	$torus->store(<<EOF);
+	12345
+	67890
+	EOF
+
+Note you usually don't need to use this module directly.
+B<Language::Befunge::Interpreter> uses it internally, for 2-dimensional
+storage.  For non-2-dimensional storage, see
+B<Language::Befunge::LaheySpace::Generic>.
+
+
+=head1 DESCRIPTION
+
+
+
+=head1 CONSTRUCTOR
+
+=head2 new(  )
+
+Creates a new Lahey Space.
+
+
+=head1 PUBLIC METHODS
+
+=head2 clear(  )
+
+Clear the torus.
+
+
+
+=head2 store( code, [vector] )
+
+Store the given code at the specified coordinates. If the coordinates
+are omitted, then the code is stored at the Origin(0, 0) coordinates.
+
+Return the size of the code inserted, as a vector.
+
+The code is a string, representing a block of Funge code.  Rows are
+separated by newlines.
+
+
+
+=head2 store_binary( code, [vector] )
+
+Store the given code at the specified coordinates. If the coordinates
+are omitted, then the code is stored at the Origin(0, 0) coordinates.
+
+Return the size of the code inserted, as a vector.
+
+This is binary insertion, that is, EOL and FF sequences are stored in
+Funge-space instead of causing the dimension counters to be reset and
+incremented.
+
+
+
+=head2 get_char( vector )
+
+
+Return the character stored in the torus at the specified location. If
+the value is not between 0 and 255 (inclusive), get_char will return a
+string that looks like "<np-0x4500>".
+
+B</!\> As in Befunge, code and data share the same playfield, the
+character returned can be either an instruction B<or> raw data.  No
+guarantee is made that the return value is printable.
+
+
+
+=head2 get_value( vector )
+
+
+Return the number stored in the torus at the specified location. If
+the value hasn't yet been set, it defaults to the ordinal value of a
+space (ie, #32).
+
+B</!\> As in Befunge, code and data share the same playfield, the
+number returned can be either an instruction B<or> a data (or even
+both... Eh, that's Befunge! :o) ).
+
+
+
+=head2 set_value( vector, value )
+
+Write the supplied value in the torus at the specified location.
+
+B</!\> As in Befunge, code and data share the same playfield, the
+number stored can be either an instruction B<or> a data (or even
+both... Eh, that's Befunge! :o) ).
+
+
+
+=head2 move_ip_forward( ip )
+
+Move the given ip forward, according to its delta.
+
+
+
+=head2 rectangle( pos, size )
+
+Return a string containing the data/code in the rectangle defined by
+the supplied vectors.
+
+
+
+=head2 labels_lookup(  )
+
+Parse the Lahey space to find sequences such as C<;:(\w[^\s;])[^;]*;>
+and return a hash reference whose keys are the labels and the values
+an anonymous array with four values: a vector describing the absolute
+position of the character B<just after> the trailing C<;>, and a
+vector describing the velocity that lead to this label.
+
+This method will only look in the four cardinal directions.
+
+This allow to define some labels in the source code, to be used by
+C<Inline::Befunge> (and maybe some exstensions).
+
+
+
+=head1 PRIVATE METHODS
+
+=head2 _set_min( x, y )
+
+Set the current minimum coordinates. If the supplied values are bigger
+than the actual minimum, then nothing is done.
+
+
+
+=head2 _set_max( x, y )
+
+Set the current maximum coordinates. If the supplied values are smaller
+than the actual maximum, then nothing is done.
+
+
+
+=head2 _enlarge_x( dx )
+
+Enlarge the torus on its x coordinate. If the delta is positive, add
+columns after the last column; if negative, before the first column;
+if nul, nothing is done.
+
+
+
+=head2 _enlarge_y( dy )
+
+Enlarge the torus on its y coordinate. If the delta is positive, add
+lines after the last one; if negative, before the first line; if nul,
+nothing is done.
+
+
+
+=head2 _out_of_bounds( vector )
+
+Return true if a location is out of bounds.
+
+
+
+=head2 _labels_try( x, y, dx, dy )
+
+Try in the specified direction if the funge space matches a label
+definition. Return undef if it wasn't a label definition, or the name
+of the label if it was a valid label.
+
 
 
 =head1 BUGS
@@ -513,4 +527,6 @@ This program is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 
+
 =cut
+
