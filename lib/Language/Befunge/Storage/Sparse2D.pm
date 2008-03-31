@@ -15,7 +15,7 @@ use warnings;
 use Carp;
 use Language::Befunge::Vector;
 
-use base qw{ Class::Accessor };
+use base qw{ Class::Accessor Language::Befunge::Storage };
 __PACKAGE__->mk_accessors( qw{ _storage _xmin _xmax _ymin _ymax } );
 
 
