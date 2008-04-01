@@ -11,9 +11,10 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 BEGIN { use_ok( 'Language::Befunge' ); }
 diag( "Testing Language::Befunge $Language::Befunge::VERSION, Perl $], $^X" );
+BEGIN { use_ok( 'Language::Befunge::Storage::Sparse2D' ); }
 
 exit;
