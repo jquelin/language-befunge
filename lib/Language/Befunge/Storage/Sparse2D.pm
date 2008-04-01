@@ -59,40 +59,6 @@ sub clear {
 
 
 #
-# my $size = $storage->store( $code [, $position] );
-#
-# Store the given $code at the specified $position (defaulting to the
-# origin coordinates).
-#
-# Return the size of the code inserted, as a vector.
-#
-# The code is a string, representing a block of Funge code. Rows are
-# separated by newlines.
-#
-sub store {
-    my ($self, $code, $position) = @_;
-
-    my $offset = $position || LBV->new(0,0);
-    my $dy     = LBV->new(0,1);
-
-    # support for any eol convention
-    $code =~ s/\r\n/\n/g;
-    $code =~ s/\r/\n/g;
-    my @lines = split /\n/, $code;
-
-    # store data
-    my $maxlen = 0;
-    foreach my $line ( @lines ) {
-        $maxlen = length($line) if $maxlen < length($line);
-        $self->store_binary( $line, $offset );
-        $offset += $dy;
-    }
-
-    return LBV->new($maxlen, scalar(@lines));
-}
-
-
-#
 # my $size = $storage->store_binary( $code [, $position] );
 #
 # Store the given $code at the specified $position (defaulting to the
@@ -134,6 +100,39 @@ sub store_binary {
 
 
 #
+# my $size = $storage->store( $code [, $position] );
+#
+# Store the given $code at the specified $position (defaulting to the
+# origin coordinates).
+#
+# Return the size of the code inserted, as a vector.
+#
+# The code is a string, representing a block of Funge code. Rows are
+# separated by newlines.
+#
+sub store {
+    my ($self, $code, $position) = @_;
+
+    my $offset = $position || LBV->new(0,0);
+    my $dy     = LBV->new(0,1);
+
+    # support for any eol convention
+    $code =~ s/\r\n/\n/g;
+    $code =~ s/\r/\n/g;
+    my @lines = split /\n/, $code;
+
+    # store data
+    my $maxlen = 0;
+    foreach my $line ( @lines ) {
+        $maxlen = length($line) if $maxlen < length($line);
+        $self->store_binary( $line, $offset );
+        $offset += $dy;
+    }
+
+    return LBV->new($maxlen, scalar(@lines));
+}
+
+
 # $storage->set_value( $offset, $value );
 #
 # Write the supplied $value in the storage at the specified $offset.
@@ -146,7 +145,7 @@ sub set_value {
     my ($self, $v, $val) = @_;
     my ($x, $y) = $v->get_all_components();
 
-    # Ensure we can set the value.
+    # ensure we can set the value.
     $self->_xmin($x) if $self->_xmin > $x;
     $self->_xmax($x) if $self->_xmax < $x;
     $self->_ymin($y) if $self->_ymin > $y;
@@ -385,17 +384,6 @@ Create a new LBS object.
 Clear the storage.
 
 
-=item my $size = $storage->store( $code [, $position] );
-
-Store the given $code at the specified $position (defaulting to the
-origin coordinates).
-
-Return the size of the code inserted, as a vector.
-
-The code is a string, representing a block of Funge code. Rows are
-separated by newlines.
-
-
 =item my $size = $storage->store_binary( $code [, $position] );
 
 Store the given C<$code> at the specified C<$position> (defaulting to
@@ -406,6 +394,17 @@ Return the size of the code inserted, as a vector.
 The code is a string, representing a block of Funge code. This is binary
 insertion, that is, EOL sequences are stored in Funge-space instead of
 causing the dimension counters to be resetted and incremented.
+
+
+=item my $size = $storage->store( $code [, $position] );
+
+Store the given $code at the specified $position (defaulting to the
+origin coordinates).
+
+Return the size of the code inserted, as a vector.
+
+The code is a string, representing a block of Funge code. Rows are
+separated by newlines.
 
 
 =item $storage->set_value( $offset, $value );
