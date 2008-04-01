@@ -14,9 +14,12 @@ use warnings;
 
 use Carp;
 use Language::Befunge::Vector;
+use Readonly;
 
 use base qw{ Class::Accessor Language::Befunge::Storage };
 __PACKAGE__->mk_accessors( qw{ _storage _xmin _xmax _ymin _ymax } );
+
+Readonly my $SPACE => ' ';
 
 
 # -- CONSTRUCTOR
@@ -116,17 +119,17 @@ sub store_binary {
 
     # store data
     foreach my $chr ( split //, $code ) {
-        $href->{"$x,$y"} = ord $chr;
+        $href->{"$x,$y"} = ord $chr
+            unless $chr eq $SPACE; # spaces do not overwrite - cf befunge specs
         $x++;
     }
 
     # enlarge max values if needed
-    my $len = length $code;
     $x--; # one step too far
     $self->_xmax($x) if $self->_xmax < $x;
     $self->_ymax($y) if $self->_ymax < $y;
 
-    return Language::Befunge::Vector->new($len, 1);
+    return Language::Befunge::Vector->new(length $code, 1);
 }
 
 
@@ -211,8 +214,9 @@ sub get_char {
 sub get_value {
     my ($self, $v) = @_;
     my ($x, $y) = $v->get_all_components;
-    return exists $self->_storage->{"$x,$y"}
-        ? $self->_storage->{"$x,$y"}
+    my $href    = $self->_storage;
+    return exists $href->{"$x,$y"}
+        ? $href->{"$x,$y"}
         : 32;
 }
 
