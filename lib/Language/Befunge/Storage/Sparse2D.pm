@@ -162,7 +162,7 @@ sub set_value {
 #
 sub min {
     my ($self) = @_;
-    return Language::Befunge::Vector->new( $self->_xmin, $self->_ymin);
+    return Language::Befunge::Vector->new($self->_xmin, $self->_ymin);
 }
 
 
@@ -171,9 +171,9 @@ sub min {
 #
 # Return a LBV pointing to the upper bounds of the storage.
 #
-sub min {
+sub max {
     my ($self) = @_;
-    return Language::Befunge::Vector->new( $self->_xmin, $self->_ymin);
+    return Language::Befunge::Vector->new($self->_xmax, $self->_ymax);
 }
 
 
