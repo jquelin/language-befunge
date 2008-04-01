@@ -70,10 +70,7 @@ sub store {
     my ($self, $code, $position) = @_;
 
     my $offset = $position || Language::Befunge::Vector->new(0,0);
-    my $x      = $offset->get_component(0);
-    my $y      = $offset->get_component(1);
     my $dy     = Language::Befunge::Vector->new(0,1);
-    my $href   = $self->_storage;
 
     # support for any eol convention
     $code =~ s/\r\n/\n/g;
@@ -113,6 +110,10 @@ sub store_binary {
     my $y      = $offset->get_component(1);
     my $href   = $self->_storage;
 
+    # enlarge min values if needed
+    $self->_xmin($x) if $self->_xmin > $x;
+    $self->_ymin($y) if $self->_ymin > $y;
+
     # store data
     foreach my $chr ( split //, $code ) {
         $href->{"$x,$y"} = ord $chr;
@@ -121,9 +122,7 @@ sub store_binary {
 
     # enlarge min/max values if needed
     my $len = length $code;
-    $self->_xmin($x)      if $self->_xmin > $x;
     $self->_xmax($x+$len) if $self->_xmax < $x + $len;
-    $self->_ymin($y)      if $self->_ymin > $y;
     $self->_ymax($y)      if $self->_ymax < $y;
 
     return Language::Befunge::Vector->new($len, 1);
