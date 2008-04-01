@@ -122,7 +122,7 @@ sub store_binary {
     # enlarge min/max values if needed
     my $len = length $code;
     $self->_xmin($x)      if $self->_xmin > $x;
-    $self->_xmax($x+$len) if $self->_xmax < $x + maxlen;
+    $self->_xmax($x+$len) if $self->_xmax < $x + $len;
     $self->_ymin($y)      if $self->_ymin > $y;
     $self->_ymax($y)      if $self->_ymax < $y;
 
