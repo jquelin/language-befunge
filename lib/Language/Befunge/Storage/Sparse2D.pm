@@ -234,8 +234,8 @@ sub rectangle {
 
     # retrieve data
     my @lines = ();
-    foreach my $j ( $y .. $y+$h ) {
-        my $line = join '', map { $self->get_char( LBV->new($_,$j) ) } $x .. $x+$w;
+    foreach my $j ( $y .. $y+$h-1 ) {
+        my $line = join '', map { $self->get_char( LBV->new($_,$j) ) } $x .. $x+$w-1;
         push @lines, $line;
     }
 
