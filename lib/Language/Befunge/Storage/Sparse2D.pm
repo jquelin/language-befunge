@@ -213,10 +213,7 @@ sub get_value {
 #
 sub get_char {
 	my ($self, $v) = @_;
-	my $ord = $self->get_value($v);
-	# reject invalid ascii
-	return sprintf("<np-0x%x>",$ord) if ($ord < 0 || $ord > 255);
-	return chr($ord);
+    return pack 'U', $self->get_value($v);
 }
 
 
