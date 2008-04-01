@@ -120,10 +120,11 @@ sub store_binary {
         $x++;
     }
 
-    # enlarge min/max values if needed
+    # enlarge max values if needed
     my $len = length $code;
-    $self->_xmax($x+$len) if $self->_xmax < $x + $len;
-    $self->_ymax($y)      if $self->_ymax < $y;
+    $x--; # one step too far
+    $self->_xmax($x) if $self->_xmax < $x;
+    $self->_ymax($y) if $self->_ymax < $y;
 
     return Language::Befunge::Vector->new($len, 1);
 }
