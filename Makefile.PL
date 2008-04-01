@@ -20,7 +20,10 @@ WriteMakefile(
     ABSTRACT_FROM => 'lib/Language/Befunge.pm',
     EXE_FILES     => [ 'bin/jqbf98' ],
     LICENSE       => 'perl',
-    PREREQ_PM     => { Storable => 0, 'Test::More' => 0 },
+    PREREQ_PM     => {
+        'aliased'    => '0.22',
+        'Storable'   => 0,
+        'Test::More' => 0 },
     dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean         => { FILES => [
                     'Language-Befunge-*',

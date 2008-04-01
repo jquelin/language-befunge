@@ -18,13 +18,15 @@ my $builder = Module::Build->new
     dist_author          => 'Jerome Quelin <jquelin@cpan.org>',
     dist_version_from    => 'lib/Language/Befunge.pm',
     build_requires       => {
+        'perl'                => '5.006',
+        'aliased'             => '0.22',
         'Storable'            => 0,
         'Test::More'          => 0,
-        'perl'                => '5.006',
     },
     requires                  => {
-        'Storable'            => 0,
         'perl'                => '5.006',
+        'aliased'             => '0.22',
+        'Storable'            => 0,
     },
     recommends           => {
         'Language::Befunge::Vector::XS' => '0.2.2',
