@@ -13,7 +13,7 @@ use strict;
 use warnings;
 
 use Carp;
-use Language::Befunge::Vector;
+use aliased 'Language::Befunge::Vector' => 'LBV';
 use Readonly;
 
 use base qw{ Class::Accessor Language::Befunge::Storage };
@@ -72,8 +72,8 @@ sub clear {
 sub store {
     my ($self, $code, $position) = @_;
 
-    my $offset = $position || Language::Befunge::Vector->new(0,0);
-    my $dy     = Language::Befunge::Vector->new(0,1);
+    my $offset = $position || LBV->new(0,0);
+    my $dy     = LBV->new(0,1);
 
     # support for any eol convention
     $code =~ s/\r\n/\n/g;
@@ -88,7 +88,7 @@ sub store {
         $offset += $dy;
     }
 
-    return Language::Befunge::Vector->new($maxlen, scalar(@lines));
+    return LBV->new($maxlen, scalar(@lines));
 }
 
 
@@ -108,7 +108,7 @@ sub store {
 sub store_binary {
     my ($self, $code, $position) = @_;
 
-    my $offset = $position || Language::Befunge::Vector->new(0,0);
+    my $offset = $position || LBV->new(0,0);
     my $x      = $offset->get_component(0);
     my $y      = $offset->get_component(1);
     my $href   = $self->_storage;
@@ -129,7 +129,7 @@ sub store_binary {
     $self->_xmax($x) if $self->_xmax < $x;
     $self->_ymax($y) if $self->_ymax < $y;
 
-    return Language::Befunge::Vector->new(length $code, 1);
+    return LBV->new(length $code, 1);
 }
 
 
@@ -165,7 +165,7 @@ sub set_value {
 #
 sub min {
     my ($self) = @_;
-    return Language::Befunge::Vector->new($self->_xmin, $self->_ymin);
+    return LBV->new($self->_xmin, $self->_ymin);
 }
 
 
@@ -176,7 +176,7 @@ sub min {
 #
 sub max {
     my ($self) = @_;
-    return Language::Befunge::Vector->new($self->_xmax, $self->_ymax);
+    return LBV->new($self->_xmax, $self->_ymax);
 }
 
 
@@ -318,7 +318,7 @@ sub _labels_try {
         $x = $xmax if $xmin > $x;
         $y = $ymin if $ymax < $y;
         $y = $ymax if $ymin > $y;
-        my $vec = Language::Befunge::Vector->new($x,$y);
+        my $vec = LBV->new($x,$y);
         $comment .= $self->get_value($vec);
     } while ( $comment !~ /;.$/ );
 
