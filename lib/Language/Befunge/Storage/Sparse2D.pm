@@ -233,13 +233,13 @@ sub rectangle {
     my ($w, $h) =  $size->get_all_components();
 
     # retrieve data
-    my $data = '';
+    my @lines = ();
     foreach my $j ( $y .. $y+$h ) {
-        my $line = join '', map { $self->get_char($_,$j) } $x .. $x+$w;
-        $data .= "$line\n";
+        my $line = join '', map { $self->get_char( LBV->new($_,$j) ) } $x .. $x+$w;
+        push @lines, $line;
     }
 
-    return $data;
+    return join "\n", @lines;
 }
 
 
