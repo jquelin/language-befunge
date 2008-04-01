@@ -180,26 +180,6 @@ sub max {
 
 
 #
-# my $chr = $storage->get_char( $offset );
-#
-# Return the character stored in the torus at the specified $offset. If
-# the value is not between 0 and 255 (inclusive), get_char will return a
-# string that looks like "<np-0x4500>".
-#
-# /!\ As in Befunge, code and data share the same playfield, the
-# character returned can be either an instruction or raw data. No
-# guarantee is made that the return value is printable.
-#
-sub get_char {
-	my ($self, $v) = @_;
-	my $ord = $self->get_value($v);
-	# reject invalid ascii
-	return sprintf("<np-0x%x>",$ord) if ($ord < 0 || $ord > 255);
-	return chr($ord);
-}
-
-
-#
 # my $val = $storage->get_value( $offset );
 #
 # Return the number stored in the torus at the specified $offset. If
@@ -217,6 +197,26 @@ sub get_value {
     return exists $href->{"$x,$y"}
         ? $href->{"$x,$y"}
         : 32;
+}
+
+
+#
+# my $chr = $storage->get_char( $offset );
+#
+# Return the character stored in the torus at the specified $offset. If
+# the value is not between 0 and 255 (inclusive), get_char will return a
+# string that looks like "<np-0x4500>".
+#
+# /!\ As in Befunge, code and data share the same playfield, the
+# character returned can be either an instruction or raw data. No
+# guarantee is made that the return value is printable.
+#
+sub get_char {
+	my ($self, $v) = @_;
+	my $ord = $self->get_value($v);
+	# reject invalid ascii
+	return sprintf("<np-0x%x>",$ord) if ($ord < 0 || $ord > 255);
+	return chr($ord);
 }
 
 
@@ -436,17 +436,6 @@ Return a LBV pointing to the lower bounds of the storage.
 Return a LBV pointing to the upper bounds of the storage.
 
 
-=item my $chr = $storage->get_char( $offset )
-
-Return the character stored in the torus at the specified C<$offset>. If
-the value is not between 0 and 255 (inclusive), get_char will return a
-string that looks like C<< <np-0x4500> >>.
-
-B</!\> As in Befunge, code and data share the same playfield, the
-character returned can be either an instruction B<or> raw data. No
-guarantee is made that the return value is printable.
-
-
 =item my $val = $storage->get_value( $offset );
 
 Return the number stored in the torus at the specified C<$offset>. If
@@ -456,6 +445,17 @@ space (ie, #32).
 B</!\> As in Befunge, code and data share the same playfield, the number
 returned can be either an instruction B<or> raw data (or even both... Eh,
 that's Befunge! :o) ).
+
+
+=item my $chr = $storage->get_char( $offset )
+
+Return the character stored in the torus at the specified C<$offset>. If
+the value is not between 0 and 255 (inclusive), get_char will return a
+string that looks like C<< <np-0x4500> >>.
+
+B</!\> As in Befunge, code and data share the same playfield, the
+character returned can be either an instruction B<or> raw data. No
+guarantee is made that the return value is printable.
 
 
 =item my $str = $storage->rectangle( $pos, $size );
