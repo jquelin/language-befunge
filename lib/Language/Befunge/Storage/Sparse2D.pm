@@ -266,11 +266,10 @@ sub labels_lookup {
     my $xmax = $self->_xmax;
     my $ymin = $self->_ymin;
     my $ymax = $self->_ymax;
-    my $storage = $self->_storage;
 
-  Y: foreach my $y ( $ymin .. $ymax ) {
-      X: foreach my $x ( $xmin .. $xmax ) {
-            next X unless $storage->{"$x,$y"} == ord(";");
+    Y: foreach my $y ( $ymin .. $ymax ) {
+        X: foreach my $x ( $xmin .. $xmax ) {
+            next X unless $self->get_value(LBV->new($x,$y)) eq ord(';');
             # found a semicolon, let's try...
             VEC: foreach my $vec ( [1,0], [-1,0], [0,1], [0,-1] ) {
                 my ($label, $labx, $laby) = $self->_labels_try( $x, $y, @$vec );
@@ -315,7 +314,7 @@ sub _labels_try {
         $y = $ymin if $ymax < $y;
         $y = $ymax if $ymin > $y;
         my $vec = LBV->new($x,$y);
-        $comment .= $self->get_value($vec);
+        $comment .= $self->get_char($vec);
     } while ( $comment !~ /;.$/ );
 
     # check if the comment matches the pattern.
