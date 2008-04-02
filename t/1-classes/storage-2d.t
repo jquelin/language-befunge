@@ -256,7 +256,7 @@ is($s->get_char($v), 'A', 'get_char() return correct character');
 is($s->get_char(LBV->new(3,2)), ' ', 'get_char() defaults to space');
 # utf8 char
 $s->set_value($v, 9786); # smiley face
-is($s->get_char($v), "\x{263A}", 'get_char() return correct character');
+is($s->get_char($v), chr(9786), 'get_char() return correct character');
 
 
 #- rectangle()
