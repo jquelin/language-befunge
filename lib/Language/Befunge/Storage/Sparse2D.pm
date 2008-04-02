@@ -489,13 +489,6 @@ C<Inline::Befunge> (and maybe some exstensions).
 
 
 
-=head1 BUGS
-
-The funge-space representation (a 2-D array) is incredibly wasteful.
-Given the difficulty of writing large befunge programs, this should
-not be noticeable.
-
-
 =head1 SEE ALSO
 
 L<Language::Befunge>.
@@ -503,7 +496,7 @@ L<Language::Befunge>.
 
 =head1 AUTHOR
 
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
+Jerome Quelin, C<< <jquelin@cpan.org> >>
 
 
 =head1 COPYRIGHT & LICENSE
