@@ -16,7 +16,7 @@ use Carp;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use Readonly;
 
-use base qw{ Class::Accessor Language::Befunge::Storage };
+use base qw{ Class::Accessor::Fast Language::Befunge::Storage };
 __PACKAGE__->mk_accessors( qw{ _storage _xmin _xmax _ymin _ymax } );
 
 Readonly my $SPACE => ' ';
@@ -484,6 +484,12 @@ since we're only using cardinal directions)
 This allow to define some labels in the source code, to be used by
 C<Inline::Befunge> (and maybe some exstensions).
 
+
+=begin pod_coverage
+
+=item LBV - alias for Language::Befunge::Vector
+
+=end pod_coverage
 
 =back
 
