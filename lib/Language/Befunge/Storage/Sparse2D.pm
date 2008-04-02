@@ -213,7 +213,7 @@ sub get_value {
 #
 sub get_char {
 	my ($self, $v) = @_;
-    return pack 'U', $self->get_value($v);
+    return chr $self->get_value($v);
 }
 
 
