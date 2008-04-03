@@ -75,10 +75,6 @@ BEGIN { $tests += 1 };
 BEGIN { $tests += 3 };
 
 
-# useless tests for unused accessor - in order for coverage to be complete.
-$bef->set_torus( );
-
-
 # Basic reading.
 $bef = Language::Befunge->new;
 sel;

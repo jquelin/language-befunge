@@ -22,6 +22,14 @@ use Language::Befunge::Ops::Befunge98;
 use Language::Befunge::Ops::Unefunge98;
 use Language::Befunge::Ops::GenericFunge98;
 
+# FIXME: should be required at runtime
+use Language::Befunge::Storage::Sparse2D;
+use Language::Befunge::Wrapping::LaheySpace;
+#/FIXME
+
+use base qw{ Class::Accessor::Fast };
+__PACKAGE__->mk_accessors( qw{ storage _wrapping } );
+
 # Public variables of the module.
 $| = 1;
 # the syntaxes hash allows funges to register their ops maps with us.
@@ -108,9 +116,9 @@ sub new {
     if($args{Storage} eq 'laheyspace') {
     	if($args{Dimensions} == 2) {
     		# the 2D-specific LaheySpace is probably faster.
-    		$$self{torus} = Language::Befunge::LaheySpace->new();
+            $$self{torus} = Language::Befunge::LaheySpace->new();
     	} else {
-    		$$self{torus} = Language::Befunge::LaheySpace::Generic->new($args{Dimensions});
+            $$self{torus} = Language::Befunge::LaheySpace::Generic->new($args{Dimensions});
     	}
     } else {
 	    die "Only laheyspace storages are supported, for the moment.\n";
@@ -122,6 +130,11 @@ sub new {
     } else {
 	    die "Supported Syntax types: " . join(", ",keys(%syntaxes));
     }
+
+    # FIXME: taking only 2D case into account by now
+    $self->storage  ( Language::Befunge::Storage::Sparse2D->new    );
+    $self->_wrapping( Language::Befunge::Wrapping::LaheySpace->new );
+    #/FIXME
 
     # Read the file if needed.
     defined($file) and $self->read_file( $file );
@@ -171,11 +184,8 @@ sub new {
 # get_retval() / set_retval()
 # the current return value of the interpreter (an integer)
 #
-# get_torus() / set_torus()
-# the current Lahey space (a L::B::LaheySpace object)
-#
 BEGIN {
-    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops torus handprint ];
+    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops handprint ];
     foreach my $attr ( @attrs ) {
         my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
         $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
@@ -190,39 +200,38 @@ BEGIN {
 
 
 #
-# move_curip( [regex] )
+# move_ip( $ip [,regex] )
 #
-# Move the current IP according to its delta on the LaheySpace topology.
+# Move $ip according to its delta on the storage.
 #
-# If a regex ( a C<qr//> object ) is specified, then IP will move as
+# If a regex ( a C<qr//> object ) is specified, then $ip will move as
 # long as the pointed character match the supplied regex.
 #
 # Example: given the code C<;foobar;> (assuming the IP points on the
 # first C<;>) and the regex C<qr/[^;]/>, the IP will move in order to
 # point on the C<r>.
 #
-sub move_curip {
-    my ($self, $re) = @_;
-    my $curip = $self->get_curip;
-    my $torus = $self->get_torus;
+sub move_ip {
+    my ($self, $ip, $re) = @_;
+    my $storage = $self->storage;
 
     if ( defined $re ) {
-        my $orig = $curip->get_position;
-        # Moving as long as we did not reach the condition.
-        while ( $torus->get_char($curip->get_position) =~ $re ) {
-            $torus->move_ip_forward($curip);
+        my $orig = $ip->get_position;
+        # moving as long as we did not reach the condition.
+        while ( $storage->get_char($ip->get_position) =~ $re ) {
+            $self->_move_ip_forward($ip);
             $self->abort("infinite loop")
-                if ( $curip->get_position == $orig );
+                if $ip->get_position == $orig;
         }
 
-        # We moved one char too far.
-        $curip->dir_reverse;
-        $torus->move_ip_forward($curip);
-        $curip->dir_reverse;
+        # we moved one char too far.
+        $ip->dir_reverse;
+        $self->_move_ip_forward($ip);
+        $ip->dir_reverse;
 
     } else {
-        # Moving one step beyond...
-        $torus->move_ip_forward($curip);
+        # moving one step beyond...
+        $self->_move_ip_forward($ip);
     }
 }
 
@@ -290,8 +299,8 @@ sub read_file {
 sub store_code {
     my ($self, $code) = @_;
     $self->debug( "Storing code\n" );
-    $self->get_torus->clear;
-    $self->get_torus->store( $code );
+    $self->storage->clear;
+    $self->storage->store( $code );
 }
 
 
@@ -357,8 +366,8 @@ sub process_ip {
 
     # Fetch values for this IP.
     my $v  = $ip->get_position;
-    my $ord  = $self->get_torus->get_value( $v );
-    my $char = $self->get_torus->get_char( $v );
+    my $ord  = $self->storage->get_value( $v );
+    my $char = $self->storage->get_char( $v );
 
     # Cosmetics.
     $self->debug( "#".$ip->get_id.":$v: $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
@@ -373,7 +382,7 @@ sub process_ip {
         } elsif ( $char eq ' ' ) {
             # A serie of spaces, to be treated as one space.
             $self->debug( "string-mode: pushing char ' '\n" );
-            $self->move_curip( qr/ / );
+            $self->move_ip( $ip, qr/ / );
             $ip->spush( $ord );
 
         } else {
@@ -399,8 +408,38 @@ sub process_ip {
     if ($continue) {
         # Tick done for this IP, let's move it and push it in the
         # set of non-terminated IPs.
-        $self->move_curip;
+        $self->move_ip( $self->get_curip );
         push @{ $self->get_newips }, $ip unless $ip->get_end;
+    }
+}
+
+#-- PRIVATE METHODS
+
+
+#
+# $lbi->_move_ip_forward( $ip );
+#
+# move $ip one step further, according to its velocity. if $ip gets out
+# of bounds, then a wrapping is performed (according to current
+# interpreter wrapping implementation) on the ip.
+#
+sub _move_ip_forward {
+    my ($self, $ip) = @_;
+    my $storage = $self->storage;
+
+    # fetch the current position of the ip.
+    my $v = $ip->get_position;
+    my $d = $ip->get_delta;
+
+    # now, let's move the ip.
+    $v += $d;
+
+    if ( $v->bounds_check($storage->min, $storage->max) ) {
+        # within bounds - store new position.
+        $ip->set_position( $v );
+    } else {
+        # wrap needed - this will update the position.
+        $self->_wrapping->wrap( $storage, $ip );
     }
 }
 
@@ -472,10 +511,6 @@ the parameters of the script (an array reference)
 
 the current return value of the interpreter (an integer)
 
-=item get_torus() / set_torus()
-
-the current Lahey space (a L::B::LaheySpace object)
-
 =back
 
 
@@ -485,11 +520,11 @@ the current Lahey space (a L::B::LaheySpace object)
 
 =over 4
 
-=item move_curip( [regex] )
+=item move_ip( $ip [, $regex] )
 
-Move the current IP according to its delta on the LaheySpace topology.
+Move the C<$ip> according to its delta on the storage.
 
-If a regex ( a C<qr//> object ) is specified, then IP will move as
+If C<$regex> ( a C<qr//> object ) is specified, then C<$ip> will move as
 long as the pointed character match the supplied regex.
 
 Example: given the code C<;foobar;> (assuming the IP points on the
