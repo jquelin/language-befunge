@@ -7,7 +7,7 @@
 #
 #
 
-package Language::Befunge::Storage::Sparse2D;
+package Language::Befunge::Storage::2D::Sparse;
 
 use strict;
 use warnings;
@@ -25,7 +25,7 @@ Readonly my $SPACE => ' ';
 # -- CONSTRUCTOR
 
 #
-# my $storage = LBS::Sparse2D->new;
+# my $storage = LBS::2D::Sparse->new;
 #
 # Create a new storage.
 #
@@ -327,12 +327,12 @@ __END__
 
 =head1 NAME
 
-LBS::Sparse2D - a 2D storage, using sparse hash
+LBS::2D::Sparse - a 2D storage, using sparse hash
 
 
 =head1 SYNOPSIS
 
-	my $storage = Language::Befunge::Storage::Sparse2D->new;
+	my $storage = Language::Befunge::Storage::2D::Sparse->new;
 	$storage->clear;
 	$storage->store(<<EOF);
 	12345
@@ -360,7 +360,7 @@ funge specs.
 
 =over 4
 
-=item my $storage = LBS::Sparse2D->new;
+=item my $storage = LBS::2D::Sparse->new;
 
 Create a new LBS object.
 
