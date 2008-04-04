@@ -36,7 +36,7 @@ my $builder = Module::Build->new
     },
     script_files         => [ 'bin/jqbf98' ],
     add_to_cleanup       =>
-      [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..4 ],
+      [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..5 ],
     recursive_test_files => 1,
   );
 $builder->create_build_script;
