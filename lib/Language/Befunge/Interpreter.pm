@@ -78,6 +78,12 @@ sub new {
             $opts->{storage}  = $lbs . '2D::Sparse';
             $opts->{wrapping} = $lbw . 'LaheySpace';
         }
+        when ('trefunge98') {
+            $opts->{dims}     = 3;
+            $opts->{ops}      = $lbo . 'GenericFunge98';
+            $opts->{storage}  = $lbs . 'Generic::AoA';
+            $opts->{wrapping} = $lbw . 'LaheySpace';
+        }
         default { croak "syntax '$opts->{syntax}' not recognized." }
     }
 
