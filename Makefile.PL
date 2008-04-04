@@ -8,7 +8,7 @@
 #
 #
 
-BEGIN { require 5.006; }
+BEGIN { require 5.010; }
 use strict;
 use warnings;
 
@@ -21,9 +21,12 @@ WriteMakefile(
     EXE_FILES     => [ 'bin/jqbf98' ],
     LICENSE       => 'perl',
     PREREQ_PM     => {
-        'aliased'    => '0.22',
-        'Storable'   => 0,
-        'Test::More' => 0 },
+        'aliased'               => '0.22',
+        'Class::Accessor::Fast' => 0,
+        'Storable'              => 0,
+        'Test::More'            => 0,
+        'UNIVERSAL::require'    => 0,
+    }
     dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean         => { FILES => [
                     'Language-Befunge-*',
