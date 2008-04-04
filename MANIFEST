@@ -16,15 +16,16 @@ lib/Language/Befunge/doc/library.pod
 lib/Language/Befunge/doc/wrap.jpg
 lib/Language/Befunge/Interpreter.pm
 lib/Language/Befunge/IP.pm
-lib/Language/Befunge/LaheySpace.pm
-lib/Language/Befunge/LaheySpace/Generic.pm
 lib/Language/Befunge/lib/FOO.pm
 lib/Language/Befunge/lib/HELO.pm
 lib/Language/Befunge/Ops.pm
 lib/Language/Befunge/Ops/Befunge98.pm
 lib/Language/Befunge/Ops/GenericFunge98.pm
 lib/Language/Befunge/Ops/Unefunge98.pm
+lib/Language/Befunge/Storage/2D/Sparse.pm
+lib/Language/Befunge/Storage/Generic/AoA.pm
 lib/Language/Befunge/Vector.pm
+lib/Language/Befunge/Wrapping/LaheySpace.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
@@ -32,7 +33,9 @@ META.yml
 README
 t/0-load.t
 t/1-classes/ip.t
+t/1-classes/storage-2d.t
 t/1-classes/vector.t
+t/1-classes/wrapping-lahey.t
 t/2-ops/block_close.t
 t/2-ops/block_open.t
 t/2-ops/decis_cmp.t
