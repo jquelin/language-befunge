@@ -15,17 +15,10 @@ use warnings;
 
 use Carp;
 use Language::Befunge::IP;
-use Language::Befunge::LaheySpace;
-use Language::Befunge::LaheySpace::Generic;
 use Language::Befunge::Ops::Befunge98;
 use Language::Befunge::Ops::Unefunge98;
 use Language::Befunge::Ops::GenericFunge98;
 use UNIVERSAL::require;
-
-# FIXME: should be required at runtime
-use Language::Befunge::Storage::2D::Sparse;
-use Language::Befunge::Wrapping::LaheySpace;
-#/FIXME
 
 use base qw{ Class::Accessor::Fast };
 __PACKAGE__->mk_accessors( qw{ storage _wrapping } );
