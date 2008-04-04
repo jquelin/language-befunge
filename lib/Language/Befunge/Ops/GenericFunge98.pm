@@ -114,7 +114,6 @@ sub get_ops_map {
     };
 }
 
-$Language::Befunge::Interpreter::syntaxes{genericfunge98} = \&get_ops_map;
 1;
 
 __END__

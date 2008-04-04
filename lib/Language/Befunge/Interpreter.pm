@@ -25,8 +25,6 @@ __PACKAGE__->mk_accessors( qw{ storage _wrapping } );
 
 # Public variables of the module.
 $| = 1;
-# the syntaxes hash allows funges to register their ops maps with us.
-our %syntaxes;
 
 
 # -- CONSTRUCTOR
@@ -159,11 +157,12 @@ sub new {
 =cut
 
     # FIXME: taking only 2D case into account by now
+    $opts->{ops}->use;
     $opts->{storage}->use;
     $opts->{wrapping}->use;
-    $self->storage  ( $opts->{storage}->new( $opts->{dims} )    );
+    $self->{ops} = $opts->{ops}->get_ops_map;
+    $self->storage  ( $opts->{storage}->new( $opts->{dims} ) );
     $self->_wrapping( $opts->{wrapping}->new );
-    $self->{ops} = $syntaxes{ $opts->{syntax} }->();
     #/FIXME
 
     # Read the file if needed.
