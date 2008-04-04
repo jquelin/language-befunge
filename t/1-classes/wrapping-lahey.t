@@ -18,7 +18,7 @@ use warnings;
 use Test::More tests => 12;
 
 use Language::Befunge::IP;
-use Language::Befunge::Storage::Sparse2D;
+use Language::Befunge::Storage::2D::Sparse;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use Language::Befunge::Wrapping::LaheySpace;
 
@@ -40,7 +40,7 @@ can_ok($w, 'wrap');
 
 #- wrap()
 # main cardinal directions
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 $s->set_value( LBV->new(5,10), 32 );
 # east
 $ip->set_position( LBV->new(6,3) );
@@ -84,7 +84,7 @@ $w->wrap($s,$ip);
 is($ip->get_position, '(2,7)', 'wrap() wraps ymin (big north delta)');
 
 # diagonals
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 $s->set_value( LBV->new(-1,-2), 32 );
 $s->set_value( LBV->new( 6, 5), 32 );
 $ip->set_position( LBV->new(1,-3) );

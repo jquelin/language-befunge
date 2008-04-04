@@ -15,7 +15,7 @@ use Test::More tests => 3;
 
 BEGIN { use_ok( 'Language::Befunge' ); }
 diag( "Testing Language::Befunge $Language::Befunge::VERSION, Perl $], $^X" );
-BEGIN { use_ok( 'Language::Befunge::Storage::Sparse2D' ); }
+BEGIN { use_ok( 'Language::Befunge::Storage::2D::Sparse' ); }
 BEGIN { use_ok( 'Language::Befunge::Wrapping::LaheySpace' ); }
 
 exit;

@@ -17,7 +17,7 @@ use warnings;
 
 use Test::More tests => 106;
 
-use Language::Befunge::Storage::Sparse2D;
+use Language::Befunge::Storage::2D::Sparse;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use List::Util qw{ max };
 
@@ -35,9 +35,9 @@ my $str2 = 'camel llama'; my $lstr2 = length $str2;
 #-- constructor
 
 #- new()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 isa_ok($s, 'Language::Befunge::Storage');
-isa_ok($s, 'Language::Befunge::Storage::Sparse2D');
+isa_ok($s, 'Language::Befunge::Storage::2D::Sparse');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
 
@@ -45,7 +45,7 @@ is($s->max, '(0,0)', 'new() initializes storage');
 #-- storage update
 
 # clear()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new( 2, 2));
 $s->clear;
@@ -55,7 +55,7 @@ is($s->get_value(LBV->new(2,2)), 32, 'clear() clears previous data');
 
 
 #- store_binary()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 
 # basic store_binary(), defaulting to origin
 $s->store_binary( $str1 );
@@ -136,7 +136,7 @@ is($v, "($l,1)", 'store_binary() does not treat \r as special');
 
 
 #- store()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 
 # basic store(), defaulting to origin
 $s->store( $str1 );
@@ -216,7 +216,7 @@ is($v, "($l,2)", 'store() supports \r eol');
 
 
 #- set_value()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 # set_value() grows storage
 $s->set_value(LBV->new(8,4), 65);
 is($s->min, '(0,0)', 'set_value() does not grow min bounds if not needed');
@@ -242,13 +242,13 @@ is($s->get_value($v), 32, 'set_value() overwrites even with space values');
 
 #- get_value() already tested plenty of time
 # just need to test default value
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 is($s->get_value(LBV->new(3,4)), 32, 'get_value() defaults to space');
 
 
 #- get_char()
 # basics
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 $v = LBV->new(8,4);
 $s->set_value($v, 65);
 is($s->get_char($v), 'A', 'get_char() return correct character');
@@ -260,7 +260,7 @@ is($s->get_char($v), chr(9786), 'get_char() return correct character');
 
 
 #- rectangle()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new(-1,-1));
 $s->store($str1, LBV->new( 0, 0));
@@ -286,7 +286,7 @@ is($s->rectangle(LBV->new(0,0),LBV->new(0,5)), "\n"x4, 'rectangle() with no widt
 #-- misc methods
 
 # labels_lookup()
-$s = Language::Befunge::Storage::Sparse2D->new;
+$s = Language::Befunge::Storage::2D::Sparse->new;
 # four directions.
 $s->clear;
 $s->store( <<'EOF', LBV->new(-2, -1 ));
