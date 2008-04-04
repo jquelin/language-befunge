@@ -3,6 +3,7 @@ Revision history for Language::Befunge.
 High-level changelog
 ====================
 
+4.0x    LB:LS split in LBS/LBW
 3.0x    multidims, multiops possibilities
 2.0x    optimizing + test coverage
 1.2x    real LaheySpace support
@@ -15,6 +16,17 @@ High-level changelog
 
 Low-level changelog
 ===================
+
+ - split LB::LaheySpace in LB::Storage and LB::Wrapping
+ - first storage implementations:
+    . LBS:2D:Sparse     2-dims, sparse hash
+    . LBS:Generic:AoA   n-dims, array of arrays
+ - first wrapping implementations:
+    . LBW:LaheySpace    funge98 wrapping
+ - LBI->new params stricter / easier
+ - requiring perl 5.10
+
+**
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency
