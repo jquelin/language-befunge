@@ -61,7 +61,7 @@ sub new {
     $opts           //= { syntax => $default };
     $opts->{syntax} //= $default;
 
-    # create whatever set of objects needed, depending on the wanted syntax.
+    # select the classes to use, depending on the wanted syntax.
     my $lbo = 'Language::Befunge::Ops::';
     my $lbs = 'Language::Befunge::Storage::';
     my $lbw = 'Language::Befunge::Wrapping::';
@@ -84,101 +84,41 @@ sub new {
             $opts->{storage}  = $lbs . 'Generic::AoA';
             $opts->{wrapping} = $lbw . 'LaheySpace';
         }
+        when (/(\d+)funge98$/) { # accept values like "4funge98"
+            $opts->{dims}     = $1;
+            $opts->{ops}      = $lbo . 'GenericFunge98';
+            $opts->{storage}  = $lbs . 'Generic::AoA';
+            $opts->{wrapping} = $lbw . 'LaheySpace';
+        }
         default { croak "syntax '$opts->{syntax}' not recognized." }
     }
 
-=pod
-
-    #my $file;
-    # an odd number of arguments means a filename was passed.  (Previous
-    # revs took an optional file argument; this is preserved for reverse
-    # compatibility.)
-    #$file = shift if(scalar @_ & 1);
-    my %args = @_;
-    $args{Dimensions} = 2            unless exists($args{Dimensions});
-    $args{Storage}    = 'laheyspace' unless exists($args{Storage});
-
-    if(defined($args{Syntax})) {
-    	# accept values like "4Funge98"
-	    if(lc($args{Syntax}) =~ /^(\d+)funge98$/) {
-	    	$args{Syntax} = 'genericfunge98';
-	    	$args{Dimensions} = $1;
-	    }
-
-	    # accept "Trefunge98"
-	    elsif(lc($args{Syntax}) eq 'trefunge98') {
-	    	# 3D-and-above Funges have the same instruction sets, for now.
-	    	$args{Syntax} = 'genericfunge98';
-	    	$args{Dimensions} = 3;
-	    }
-
-    } else {
-    	if($args{Dimensions} == 1) {
-    		$args{Syntax} = 'unefunge98';
-    	}
-    	elsif($args{Dimensions} == 2) {
-    		$args{Syntax} = 'befunge98';
-    	}
-    	else {
-	    	# 3D-and-above Funges have the same instruction sets, for now.
-    		$args{Syntax} = 'genericfunge98';
-    	}
-    }
-
-=cut
-
-    my $self  =
-      { dimensions => $opts->{dims},
-        file     => "STDIN",
-        params   => [],
-        retval   => 0,
-        DEBUG    => 0,
-        curip    => undef,
-        ips      => [],
-        newips   => [],
-        handprint => 'JQBF98', # the handprint of the interpreter.
-      };
-    bless $self, $class;
-
-=pod
-
-    # TODO: if we're going to have multiple types of storage, we'll need a
-    # registration API for them, and replace this with a hash lookup or
-    # something.  Also, revisit this when wrapping is split into a separate
-    # module from topology.
-    if($args{Storage} eq 'laheyspace') {
-    	if($args{Dimensions} == 2) {
-    		# the 2D-specific LaheySpace is probably faster.
-            $$self{torus} = Language::Befunge::LaheySpace->new();
-    	} else {
-            $$self{torus} = Language::Befunge::LaheySpace::Generic->new($args{Dimensions});
-    	}
-    } else {
-	    die "Only laheyspace storages are supported, for the moment.\n";
-    }
-
-    $args{Syntax} = lc($args{Syntax});
-    if(exists($syntaxes{$args{Syntax}})) {
-        $$self{ops} = &{$syntaxes{$args{Syntax}}}();
-    } else {
-	    die "Supported Syntax types: " . join(", ",keys(%syntaxes));
-    }
-
-=cut
-
-    # FIXME: taking only 2D case into account by now
+    # load the classes (through UNIVERSAL::require)
     $opts->{ops}->use;
     $opts->{storage}->use;
     $opts->{wrapping}->use;
-    $self->{ops} = $opts->{ops}->get_ops_map;
-    $self->storage  ( $opts->{storage}->new( $opts->{dims} ) );
-    $self->_wrapping( $opts->{wrapping}->new );
-    #/FIXME
 
-    # Read the file if needed.
+    # create the object
+    my $self  = {
+        dimensions => $opts->{dims},
+        storage    => $opts->{storage}->new( $opts->{dims} ),
+        file       => "STDIN",
+        params     => [],
+        retval     => 0,
+        DEBUG      => 0,
+        curip      => undef,
+        ops        => $opts->{ops}->get_ops_map,
+        ips        => [],
+        newips     => [],
+        handprint  => 'JQBF98', # the official handprint
+        _wrapping  => $opts->{wrapping}->new,
+      };
+    bless $self, $class;
+
+    # read the file if needed.
     defined($opts->{file}) and $self->read_file( $opts->{file} );
 
-    # Return the object.
+    # return the object.
     return $self;
 }
 
