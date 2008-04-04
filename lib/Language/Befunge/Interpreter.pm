@@ -62,12 +62,21 @@ sub new {
     $opts->{syntax} //= $default;
 
     # create whatever set of objects needed, depending on the wanted syntax.
+    my $lbo = 'Language::Befunge::Ops::';
+    my $lbs = 'Language::Befunge::Storage::';
+    my $lbw = 'Language::Befunge::Wrapping::';
     given ( $opts->{syntax} ) {
+        when ('unefunge98') {
+            $opts->{dims}     = 1;
+            $opts->{ops}      = $lbo . 'Unefunge98';
+            $opts->{storage}  = $lbs . 'Generic::AoA';
+            $opts->{wrapping} = $lbw . 'LaheySpace';
+        }
         when ('befunge98') {
             $opts->{dims}     = 2;
-            $opts->{ops}      = 'Language::Befunge::Ops::Befunge98';
-            $opts->{storage}  = 'Language::Befunge::Storage::2D::Sparse';
-            $opts->{wrapping} = 'Language::Befunge::Wrapping::LaheySpace';
+            $opts->{ops}      = $lbo . 'Befunge98';
+            $opts->{storage}  = $lbs . '2D::Sparse';
+            $opts->{wrapping} = $lbw . 'LaheySpace';
         }
         default { croak "syntax '$opts->{syntax}' not recognized." }
     }
@@ -97,11 +106,6 @@ sub new {
 	    	$args{Dimensions} = 3;
 	    }
 
-	    # accept "Unefunge98"
-	    elsif(lc($args{Syntax}) eq 'unefunge98') {
-	    	$args{Syntax} = 'unefunge98';
-	    	$args{Dimensions} = 1;
-	    }
     } else {
     	if($args{Dimensions} == 1) {
     		$args{Syntax} = 'unefunge98';
