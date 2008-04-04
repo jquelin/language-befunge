@@ -15,9 +15,6 @@ use warnings;
 
 use Carp;
 use Language::Befunge::IP;
-use Language::Befunge::Ops::Befunge98;
-use Language::Befunge::Ops::Unefunge98;
-use Language::Befunge::Ops::GenericFunge98;
 use UNIVERSAL::require;
 
 use base qw{ Class::Accessor::Fast };
