@@ -8,22 +8,22 @@
 #
 
 package Language::Befunge::Interpreter;
-require 5.006;
+use 5.010;
 
 use strict;
 use warnings;
 
 use Carp;
-use Config;   # For the 'y' instruction.
 use Language::Befunge::IP;
 use Language::Befunge::LaheySpace;
 use Language::Befunge::LaheySpace::Generic;
 use Language::Befunge::Ops::Befunge98;
 use Language::Befunge::Ops::Unefunge98;
 use Language::Befunge::Ops::GenericFunge98;
+use UNIVERSAL::require;
 
 # FIXME: should be required at runtime
-use Language::Befunge::Storage::Sparse2D;
+use Language::Befunge::Storage::2D::Sparse;
 use Language::Befunge::Wrapping::LaheySpace;
 #/FIXME
 
@@ -40,26 +40,54 @@ our %syntaxes;
 
 
 #
-# new( [filename, ] [ Key => Value, ... ] )
+# my $interpreter = LBI->new( $opts )
 #
-# Create a new Befunge interpreter.  As an optional first argument, you
-# can pass it a filename to read Funge code from (default: blank
-# torus).  All other arguments are key=>value pairs.  The following
-# keys are accepted, with their default values shown:
+# Create a new funge interpreter. One can pass some options as a hash
+# reference, with the following keys:
+#  - file:    the filename to read funge code from (default: blank storage)
+#  - syntax:  the tunings set (default: 'befunge98')
 #
-# 	Dimensions => 2,
-# 	Syntax     => 'befunge98',
-# 	Storage    => 'laheyspace'
+# Depending on the value of syntax will change the interpreter
+# internals: set of allowed ops, storage implementation, wrapping. The
+# following values are recognized for 'syntax' (with in order: the
+# number of dimensions, the set of operation loaded, the storage
+# implementation and the wrapping implementation):
+#
+#  - befunge98: 2, LBO:Befunge98, LBS:2D:Sparse, LBW:LaheySpace
+#
+#
+# If none of those values suit your needs, you can pass the value
+# 'custom' and in that case you're responsible for also giving
+# appropriate values for the keys 'dims', 'ops', 'storage', 'wrapping'.
+# Note that those values will be ignored for all syntax values beside
+# 'custom'.
 #
 sub new {
-    # Create and bless the object.
-    my $class = shift;
+    my ($class, $opts) = @_;
 
-    my $file;
+    # default set of options.
+    my $default = 'befunge98';
+    $opts           //= { syntax => $default };
+    $opts->{syntax} //= $default;
+
+    # create whatever set of objects needed, depending on the wanted syntax.
+    given ( $opts->{syntax} ) {
+        when ('befunge98') {
+            $opts->{dims}     = 2;
+            $opts->{ops}      = 'Language::Befunge::Ops::Befunge98';
+            $opts->{storage}  = 'Language::Befunge::Storage::2D::Sparse';
+            $opts->{wrapping} = 'Language::Befunge::Wrapping::LaheySpace';
+        }
+        default { croak "syntax '$opts->{syntax}' not recognized." }
+    }
+
+=pod
+
+    #my $file;
     # an odd number of arguments means a filename was passed.  (Previous
     # revs took an optional file argument; this is preserved for reverse
     # compatibility.)
-    $file = shift if(scalar @_ & 1);
+    #$file = shift if(scalar @_ & 1);
     my %args = @_;
     $args{Dimensions} = 2            unless exists($args{Dimensions});
     $args{Storage}    = 'laheyspace' unless exists($args{Storage});
@@ -96,8 +124,10 @@ sub new {
     	}
     }
 
+=cut
+
     my $self  =
-      { dimensions => $args{Dimensions},
+      { dimensions => $opts->{dims},
         file     => "STDIN",
         params   => [],
         retval   => 0,
@@ -108,6 +138,8 @@ sub new {
         handprint => 'JQBF98', # the handprint of the interpreter.
       };
     bless $self, $class;
+
+=pod
 
     # TODO: if we're going to have multiple types of storage, we'll need a
     # registration API for them, and replace this with a hash lookup or
@@ -131,13 +163,18 @@ sub new {
 	    die "Supported Syntax types: " . join(", ",keys(%syntaxes));
     }
 
+=cut
+
     # FIXME: taking only 2D case into account by now
-    $self->storage  ( Language::Befunge::Storage::Sparse2D->new    );
-    $self->_wrapping( Language::Befunge::Wrapping::LaheySpace->new );
+    $opts->{storage}->use;
+    $opts->{wrapping}->use;
+    $self->storage  ( $opts->{storage}->new( $opts->{dims} )    );
+    $self->_wrapping( $opts->{wrapping}->new );
+    $self->{ops} = $syntaxes{ $opts->{syntax} }->();
     #/FIXME
 
     # Read the file if needed.
-    defined($file) and $self->read_file( $file );
+    defined($opts->{file}) and $self->read_file( $opts->{file} );
 
     # Return the object.
     return $self;

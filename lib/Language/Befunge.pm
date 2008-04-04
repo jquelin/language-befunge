@@ -36,7 +36,7 @@ Language::Befunge - a Befunge-98 interpreter
 =head1 SYNOPSIS
 
     use Language::Befunge;
-    my $interp = Language::Befunge->new( "program.bf" );
+    my $interp = Language::Befunge->new( { file => 'program.bf' } );
     $interp->run_code( "param", 7, "foo" );
 
     Or, one can write directly:
