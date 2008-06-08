@@ -96,9 +96,10 @@ sub new {
     $opts->{wrapping}->use;
 
     # create the object
+    my $wrapping = $opts->{wrapping}->new;
     my $self  = {
         dimensions => $opts->{dims},
-        storage    => $opts->{storage}->new( $opts->{dims} ),
+        storage    => $opts->{storage}->new( $opts->{dims}, Wrapping => $wrapping ),
         file       => "STDIN",
         params     => [],
         retval     => 0,
@@ -108,7 +109,7 @@ sub new {
         ips        => [],
         newips     => [],
         handprint  => 'JQBF98', # the official handprint
-        _wrapping  => $opts->{wrapping}->new,
+        _wrapping  => $wrapping,
       };
     bless $self, $class;
 

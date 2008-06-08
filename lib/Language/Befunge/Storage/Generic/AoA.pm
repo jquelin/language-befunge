@@ -26,13 +26,17 @@ use Language::Befunge::Vector;
 sub new {
     my $package = shift;
     my $dimensions = shift;
-    croak "Usage: $package->new(\$dimensions)" unless defined $dimensions;
-    croak "Usage: $package->new(\$dimensions)" unless $dimensions > 0;
+    my %args = @_;
+    my $usage = "Usage: $package->new(\$dimensions, Wrapping => \$wrapping)";
+    croak $usage unless defined $dimensions;
+    croak $usage unless $dimensions > 0;
+    croak $usage unless exists $args{Wrapping};
     my $self  = {
         nd  => $dimensions,
         min => Language::Befunge::Vector->new_zeroes($dimensions), # upper-left
         max => Language::Befunge::Vector->new_zeroes($dimensions), # lower-right
         torus => [32],
+        wrapping => $args{Wrapping},
     };
     $$self{torus} = [$$self{torus}] for(1..$dimensions);
     bless $self, $package;
@@ -497,25 +501,30 @@ sub _out_of_bounds {
 # definition. Return undef if it wasn't a label definition, or the name
 # of the label if it was a valid label.
 #
+# called internally by labels_lookup().
+#
 sub _labels_try {
-    my ($self, $orig, $delta) = @_;
-    my $vector = $orig->copy;
+    my ($self, $start, $delta) = @_;
     my $comment = "";
+    my $wrapping = $$self{wrapping};
+    my $ip = Language::Befunge::IP->new($$self{nd});
+    $ip->set_position($start->copy);
+    $ip->set_delta($delta);
 
     # don't affect the parent
     #$vector = $vector->copy();
     # Fetch the whole comment stuff.
     do {
         # Calculate the next cell coordinates.
-        $vector = $self->wrap($vector + $delta, $delta);
-        $comment .= $self->get_char($vector);
+        $wrapping->wrap($ip);
+        $comment .= $self->get_char($ip->get_position());
     } while ( $comment !~ /;.$/ );
 
     # Check if the comment matches the pattern.
     $comment =~ /^:(\w[^\s;]*)[^;]*;.$/;
     return undef unless defined $1;
     return undef unless length  $1;
-    return ($1, $vector);
+    return ($1, $ip->get_position());
 }
 
 
