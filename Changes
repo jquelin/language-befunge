@@ -35,6 +35,7 @@ Low-level changelog
  - API standards: labels_lookup should return Vector objects. (mg)
  - Adapt Storage::Generic::AoA to new LB tree.  Test it properly. (mg)
  - API standards: expand() should exist for all Storage modules. (mg)
+ - Add new Generic::Vec storage module, with support for LBSGVXS. (mg)
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency
