@@ -9,15 +9,16 @@
 #
 
 #
-# Language::Befunge::Storage tests for 2D special case
+# Language::Befunge::Storage tests for Generic Sparse plugin
 #
 
 use strict;
 use warnings;
 
-use Test::More tests => 91;
+use Test::More tests => 92;
 
-use Language::Befunge::Storage::2D::Sparse;
+use aliased 'Language::Befunge::Storage::Generic::Sparse' => 'Storage';
+use Language::Befunge::Wrapping::LaheySpace;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use List::Util qw{ max };
 
@@ -30,32 +31,24 @@ my $has_test_exception = defined($Test::Exception::VERSION);
 my ($href, $l, $s, $str, $v);
 my $str1 = 'Foobar baz';  my $lstr1 = length $str1;
 my $str2 = 'camel llama'; my $lstr2 = length $str2;
+my $wrap = Language::Befunge::Wrapping::LaheySpace->new();
 
 
 #-- constructor
 
 #- new()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 isa_ok($s, 'Language::Befunge::Storage');
-isa_ok($s, 'Language::Befunge::Storage::2D::Sparse');
+isa_ok($s, 'Language::Befunge::Storage::Generic::Sparse');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
-is($s->get_dims, 2, '2D::Sparse objects report 2 dimensions');
-$s = Language::Befunge::Storage::2D::Sparse->new(2);
-is($s->get_dims, 2, '2D::Sparse objects still report 2 dimensions');
-
-SKIP: {
-    skip 'need Test::Exception', 1 unless $has_test_exception;
-    throws_ok(sub { Language::Befunge::Storage::2D::Sparse->new(3) },
-        qr/only useful for 2-dimensional storage/,
-        'new() chokes on non-2 dimensionality');
-}
+is($s->get_dims, 2, 'get_dims() returns the number passed to new()');
 
 
 #-- storage update
 
 # clear()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new( 2, 2));
 $s->clear;
@@ -65,7 +58,7 @@ is($s->get_value(LBV->new(2,2)), 32, 'clear() clears previous data');
 
 
 #- store_binary()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 
 # basic store_binary(), defaulting to origin
 $s->store_binary( $str1 );
@@ -78,8 +71,12 @@ $s->store_binary( $str1 );
 is($s->min, '(0,0)', 'store_binary() does not grow min bounds if not needed');
 is($s->max, '(9,0)', 'store_binary() grows max bounds if needed');
 is($s->rectangle(LBV->new(0,0), LBV->new($lstr1,1)), $str1, 'store_binary() stores everything');
+is($s->min, '(0,0)', 'rectangle() does not unnecessarily expand the array');
+is($s->max, '(9,0)', 'rectangle() does not unnecessarily expand the array');
 is($s->get_value(LBV->new(-1,0)), 32, 'store_binary() does not spill');
 is($s->get_value(LBV->new(10,0)), 32, 'store_binary() does not spill');
+is($s->min, '(0,0)', 'get_value() does not unnecessarily expand the array');
+is($s->max, '(9,0)', 'get_value() does not unnecessarily expand the array');
 
 # store_binary() with a positive offset
 $s->store_binary( $str1, LBV->new(4,2) );
@@ -146,7 +143,7 @@ is($v, "($l,1)", 'store_binary() does not treat \r as special');
 
 
 #- store()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 
 # basic store(), defaulting to origin
 $s->store( $str1 );
@@ -226,7 +223,7 @@ is($v, "($l,2)", 'store() supports \r eol');
 
 
 #- set_value()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 # set_value() grows storage
 $s->set_value(LBV->new(8,4), 65);
 is($s->min, '(0,0)', 'set_value() does not grow min bounds if not needed');
@@ -252,13 +249,13 @@ is($s->get_value($v), 32, 'set_value() overwrites even with space values');
 
 #- get_value() already tested plenty of time
 # just need to test default value
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 is($s->get_value(LBV->new(3,4)), 32, 'get_value() defaults to space');
 
 
 #- get_char()
 # basics
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 $v = LBV->new(8,4);
 $s->set_value($v, 65);
 is($s->get_char($v), 'A', 'get_char() return correct character');
@@ -266,11 +263,11 @@ is($s->get_char($v), 'A', 'get_char() return correct character');
 is($s->get_char(LBV->new(3,2)), ' ', 'get_char() defaults to space');
 # utf8 char
 $s->set_value($v, 9786); # smiley face
-is($s->get_char($v), chr(9786), 'get_char() return correct character');
+is($s->get_char($v), "<np-0x263a>", 'get_char() return correct character');
 
 
 #- rectangle()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new(-1,-1));
 $s->store($str1, LBV->new( 0, 0));
@@ -289,14 +286,14 @@ is($s->rectangle(LBV->new(2,-1),LBV->new(9,3)), "bar baz  \nobar baz \noobar baz
    'rectangle() returns correct data even with newlines');
 is($s->rectangle(LBV->new(19,1),LBV->new(5,1)), '     ', 'rectangle() returns correct data even with spaces');
 # empty row / column
-is($s->rectangle(LBV->new(0,0),LBV->new(5,0)), '',     'rectangle() with no height returns empty string');
-is($s->rectangle(LBV->new(0,0),LBV->new(0,5)), "\n"x4, 'rectangle() with no width returns only newlines');
+is($s->rectangle(LBV->new(0,0),LBV->new(5,0)), '', 'rectangle() with no height returns empty string');
+is($s->rectangle(LBV->new(0,0),LBV->new(0,5)), '', 'rectangle() with no width returns empty string');
 
 
 #-- misc methods
 
 # labels_lookup()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Storage->new(2, Wrapping => $wrap);
 # four directions.
 $s->clear;
 $s->store( <<'EOF', LBV->new(-2, -1 ));
@@ -319,7 +316,6 @@ $href = $s->labels_lookup;
 isa_ok($href, 'HASH');
 is(scalar(keys(%$href)), 4,    'labels_lookup() finds everything');
 is($href->{foo}[0],  '(10,5)', 'labels_lookup() finds left-right');
-is($href->{foo}[1],  '(1,0)',  'labels_lookup() deals with left-right');
 is($href->{bar}[0],  '(-2,5)', 'labels_lookup() finds right-left');
 is($href->{bar}[1],  '(-1,0)', 'labels_lookup() deals with right-left');
 is($href->{baz}[0],  '(4,-1)', 'labels_lookup() finds bottom-top');
@@ -358,7 +354,7 @@ $s->store( <<'EOF', LBV->new(-2, -1 ));
      ;not a label;
 EOF
 $href = $s->labels_lookup;
-is(scalar(keys(%$href)), 1,    'labels_lookup() does not get fooled by looks-alike labels');
+is(scalar(keys(%$href)), 1,    'labels_lookup() does not get fooled by look-alike labels');
 is($href->{foo}[0], '(14,-1)', 'labels_lookup() discards comments');
 is($href->{foo}[1], '(1,0)',   'labels_lookup() discards comments');
 
@@ -374,6 +370,7 @@ SKIP: {
 		qr/^Help! I found two labels 'foo' in the funge space/,
         'labels_lookup() chokes on double-defined labels');
 }
+
 
 
 __END__

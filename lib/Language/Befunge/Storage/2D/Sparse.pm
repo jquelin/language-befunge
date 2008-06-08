@@ -30,7 +30,10 @@ Readonly my $SPACE => ' ';
 # Create a new storage.
 #
 sub new {
-    my ($class) = @_;
+    my ($class, $dims) = @_;
+    $dims //= 2;
+    croak("$class is only useful for 2-dimensional storage.")
+        unless $dims == 2;
     my $self    = {};
     bless $self, $class;
     $self->clear;
@@ -158,6 +161,15 @@ sub set_value {
 #- data retrieval
 
 #
+# my $dims = $storage->get_dims;
+#
+# Return the dimensionality of the storage.  For this module, the value is
+# always 2.
+#
+sub get_dims { 2 }
+
+
+#
 # my $vmin = $storage->min;
 #
 # Return a LBV pointing to the lower bounds of the storage.
@@ -212,7 +224,7 @@ sub get_value {
 # guarantee is made that the return value is printable.
 #
 sub get_char {
-	my ($self, $v) = @_;
+    my ($self, $v) = @_;
     return chr $self->get_value($v);
 }
 
@@ -278,7 +290,10 @@ sub labels_lookup {
                 # how exciting, we found a label!
                 exists $labels->{$label}
                     and croak "Help! I found two labels '$label' in the funge space";
-                $labels->{$label} = [$labx, $laby, @$vec];
+                $labels->{$label} = [
+                    Language::Befunge::Vector->new($labx, $laby),
+                    Language::Befunge::Vector->new(@$vec)
+                ];
             }
         }
     }
@@ -332,12 +347,12 @@ LBS::2D::Sparse - a 2D storage, using sparse hash
 
 =head1 SYNOPSIS
 
-	my $storage = Language::Befunge::Storage::2D::Sparse->new;
-	$storage->clear;
-	$storage->store(<<EOF);
-	12345
-	67890
-	EOF
+    my $storage = Language::Befunge::Storage::2D::Sparse->new;
+    $storage->clear;
+    $storage->store(<<EOF);
+    12345
+    67890
+    EOF
 
 
 =head1 DESCRIPTION
@@ -420,6 +435,12 @@ that's Befunge! :o) ).
 
 
 =over 4
+
+
+=item my $dims = $storage->get_dims;
+
+Return the dimensionality of the storage.  For this module, the value is
+always 2.
 
 
 =item my $vmin = $storage->min;

@@ -9,15 +9,16 @@
 #
 
 #
-# Language::Befunge::Storage tests for 2D special case
+# Language::Befunge::Storage tests for Generic Vec plugin
 #
 
 use strict;
 use warnings;
 
-use Test::More tests => 91;
+use Test::More tests => 104;
 
-use Language::Befunge::Storage::2D::Sparse;
+use Language::Befunge::Storage::Generic::Vec;
+use Language::Befunge::Wrapping::LaheySpace;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use List::Util qw{ max };
 
@@ -30,32 +31,38 @@ my $has_test_exception = defined($Test::Exception::VERSION);
 my ($href, $l, $s, $str, $v);
 my $str1 = 'Foobar baz';  my $lstr1 = length $str1;
 my $str2 = 'camel llama'; my $lstr2 = length $str2;
+my $wrap = Language::Befunge::Wrapping::LaheySpace->new();
 
 
 #-- constructor
 
 #- new()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 isa_ok($s, 'Language::Befunge::Storage');
-isa_ok($s, 'Language::Befunge::Storage::2D::Sparse');
+isa_ok($s, 'Language::Befunge::Storage::Generic::Vec');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
-is($s->get_dims, 2, '2D::Sparse objects report 2 dimensions');
-$s = Language::Befunge::Storage::2D::Sparse->new(2);
-is($s->get_dims, 2, '2D::Sparse objects still report 2 dimensions');
+is($s->get_dims, 2, 'get_dims() returns the number passed to new()');
 
-SKIP: {
-    skip 'need Test::Exception', 1 unless $has_test_exception;
-    throws_ok(sub { Language::Befunge::Storage::2D::Sparse->new(3) },
-        qr/only useful for 2-dimensional storage/,
-        'new() chokes on non-2 dimensionality');
-}
+
+# _offset
+$$s{min} = LBV->new(0, 0);
+$$s{max} = LBV->new(2, 4);
+is($s->_offset(LBV->new(0, 0)), 0, 'offset returns origin correctly');
+is($s->_offset(LBV->new(1, 0)), 1, 'offset increments correctly for X axis');
+is($s->_offset(LBV->new(0, 1)), 3, 'offset increments correctly for Y axis');
+$$s{min} = LBV->new(-1, -1);
+$$s{max} = LBV->new(1, 3);
+is($s->_offset(LBV->new(-1, -1)), 0, 'offset returns origin correctly');
+is($s->_offset(LBV->new(0, -1)), 1, 'offset increments correctly for X axis');
+is($s->_offset(LBV->new(-1, 0)), 3, 'offset increments correctly for Y axis');
+$s->clear();
 
 
 #-- storage update
 
 # clear()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new( 2, 2));
 $s->clear;
@@ -65,7 +72,7 @@ is($s->get_value(LBV->new(2,2)), 32, 'clear() clears previous data');
 
 
 #- store_binary()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 
 # basic store_binary(), defaulting to origin
 $s->store_binary( $str1 );
@@ -78,8 +85,12 @@ $s->store_binary( $str1 );
 is($s->min, '(0,0)', 'store_binary() does not grow min bounds if not needed');
 is($s->max, '(9,0)', 'store_binary() grows max bounds if needed');
 is($s->rectangle(LBV->new(0,0), LBV->new($lstr1,1)), $str1, 'store_binary() stores everything');
+is($s->min, '(0,0)', 'rectangle() does not unnecessarily expand the array');
+is($s->max, '(9,0)', 'rectangle() does not unnecessarily expand the array');
 is($s->get_value(LBV->new(-1,0)), 32, 'store_binary() does not spill');
 is($s->get_value(LBV->new(10,0)), 32, 'store_binary() does not spill');
+is($s->min, '(0,0)', 'get_value() does not unnecessarily expand the array');
+is($s->max, '(9,0)', 'get_value() does not unnecessarily expand the array');
 
 # store_binary() with a positive offset
 $s->store_binary( $str1, LBV->new(4,2) );
@@ -146,7 +157,7 @@ is($v, "($l,1)", 'store_binary() does not treat \r as special');
 
 
 #- store()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 
 # basic store(), defaulting to origin
 $s->store( $str1 );
@@ -226,7 +237,7 @@ is($v, "($l,2)", 'store() supports \r eol');
 
 
 #- set_value()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 # set_value() grows storage
 $s->set_value(LBV->new(8,4), 65);
 is($s->min, '(0,0)', 'set_value() does not grow min bounds if not needed');
@@ -252,13 +263,13 @@ is($s->get_value($v), 32, 'set_value() overwrites even with space values');
 
 #- get_value() already tested plenty of time
 # just need to test default value
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 is($s->get_value(LBV->new(3,4)), 32, 'get_value() defaults to space');
 
 
 #- get_char()
 # basics
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 $v = LBV->new(8,4);
 $s->set_value($v, 65);
 is($s->get_char($v), 'A', 'get_char() return correct character');
@@ -266,11 +277,11 @@ is($s->get_char($v), 'A', 'get_char() return correct character');
 is($s->get_char(LBV->new(3,2)), ' ', 'get_char() defaults to space');
 # utf8 char
 $s->set_value($v, 9786); # smiley face
-is($s->get_char($v), chr(9786), 'get_char() return correct character');
+is($s->get_char($v), "<np-0x263a>", 'get_char() return correct character');
 
 
 #- rectangle()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 $s->store($str1, LBV->new(-2,-2));
 $s->store($str1, LBV->new(-1,-1));
 $s->store($str1, LBV->new( 0, 0));
@@ -289,14 +300,14 @@ is($s->rectangle(LBV->new(2,-1),LBV->new(9,3)), "bar baz  \nobar baz \noobar baz
    'rectangle() returns correct data even with newlines');
 is($s->rectangle(LBV->new(19,1),LBV->new(5,1)), '     ', 'rectangle() returns correct data even with spaces');
 # empty row / column
-is($s->rectangle(LBV->new(0,0),LBV->new(5,0)), '',     'rectangle() with no height returns empty string');
-is($s->rectangle(LBV->new(0,0),LBV->new(0,5)), "\n"x4, 'rectangle() with no width returns only newlines');
+is($s->rectangle(LBV->new(0,0),LBV->new(5,0)), '', 'rectangle() with no height returns empty string');
+is($s->rectangle(LBV->new(0,0),LBV->new(0,5)), '', 'rectangle() with no width returns empty string');
 
 
 #-- misc methods
 
 # labels_lookup()
-$s = Language::Befunge::Storage::2D::Sparse->new;
+$s = Language::Befunge::Storage::Generic::Vec->new(2, Wrapping => $wrap);
 # four directions.
 $s->clear;
 $s->store( <<'EOF', LBV->new(-2, -1 ));
@@ -319,7 +330,6 @@ $href = $s->labels_lookup;
 isa_ok($href, 'HASH');
 is(scalar(keys(%$href)), 4,    'labels_lookup() finds everything');
 is($href->{foo}[0],  '(10,5)', 'labels_lookup() finds left-right');
-is($href->{foo}[1],  '(1,0)',  'labels_lookup() deals with left-right');
 is($href->{bar}[0],  '(-2,5)', 'labels_lookup() finds right-left');
 is($href->{bar}[1],  '(-1,0)', 'labels_lookup() deals with right-left');
 is($href->{baz}[0],  '(4,-1)', 'labels_lookup() finds bottom-top');
@@ -358,7 +368,7 @@ $s->store( <<'EOF', LBV->new(-2, -1 ));
      ;not a label;
 EOF
 $href = $s->labels_lookup;
-is(scalar(keys(%$href)), 1,    'labels_lookup() does not get fooled by looks-alike labels');
+is(scalar(keys(%$href)), 1,    'labels_lookup() does not get fooled by look-alike labels');
 is($href->{foo}[0], '(14,-1)', 'labels_lookup() discards comments');
 is($href->{foo}[1], '(1,0)',   'labels_lookup() discards comments');
 
@@ -370,101 +380,18 @@ $s->store( <<'EOF', LBV->new(-2, -1 ));
 EOF
 SKIP: {
     skip 'need Test::Exception', 1 unless $has_test_exception;
-	throws_ok(sub { $s->labels_lookup },
-		qr/^Help! I found two labels 'foo' in the funge space/,
+    throws_ok(sub { $s->labels_lookup },
+        qr/^Help! I found two labels 'foo' in the funge space/,
         'labels_lookup() chokes on double-defined labels');
 }
 
-
-__END__
-
-
-
-# move ip.
-$ls->clear;   # "positive" playfield.
-$ls->_set_max(5, 10);
-$ip->set_position(LBV->new( 4, 3 ));
-$ip->get_delta->set_component(0, 1 );
-$ip->get_delta->set_component(1, 0 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 5, "move_ip_forward respects dx" );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 0, "move_ip_forward wraps xmax" );
-$ip->set_position(LBV->new( 4, 3 ));
-$ip->get_delta->set_component(0, 7 );
-$ip->get_delta->set_component(1, 0 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 4, "move_ip_forward deals with delta overflowing torus width" );
-$ls->move_ip_forward( $ip ); # wrap xmax harder
-is( $ip->get_position->get_component(0), 4, "move_ip_forward deals with delta overflowing torus width" );
-$ip->set_position(LBV->new( 0, 4 ));
-$ip->get_delta->set_component(0, -1 );
-$ip->get_delta->set_component(1, 0 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 5, "move_ip_forward wraps xmin" );
-
-$ip->set_position(LBV->new(2, 9 ));
-$ip->get_delta->set_component(0, 0 );
-$ip->get_delta->set_component(1, 1 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 10, "move_ip_forward respects dy" );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 0,  "move_ip_forward wraps ymax" );
-$ip->set_position(LBV->new(2, 9 ));
-$ip->get_delta->set_component(0, 0 );
-$ip->get_delta->set_component(1, 12 );               # apply delta that overflows torus height
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 9, "move_ip_forward deals with delta overflowing torus heigth" );
-$ls->move_ip_forward( $ip ); # wrap ymax harder
-is( $ip->get_position->get_component(1), 9, "move_ip_forward deals with delta overflowing torus heigth" );
-$ip->set_position(LBV->new(1, 0 ));
-$ip->get_delta->set_component(0, 0 );
-$ip->get_delta->set_component(1, -1 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 10, "move_ip_forward wraps ymin" );
-BEGIN { $tests += 10 }
-
-$ls->clear;   # "negative" playfield.
-$ls->_set_min(-1, -3);
-$ls->_set_max(5, 10);
-$ip->set_position(LBV->new(4, 3 ));
-$ip->get_delta->set_component(0, 1 );
-$ip->get_delta->set_component(1, 0 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 5, "move_ip_forward respects dx" );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), -1, "move_ip_forward wraps xmax" );
-$ip->set_position(LBV->new(-1, 4 ));
-$ip->get_delta->set_component(0, -1 );
-$ip->get_delta->set_component(1, 0 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 5, "move_ip_forward wraps xmin" );
-$ip->set_position(LBV->new(2, 9 ));
-$ip->get_delta->set_component(0, 0 );
-$ip->get_delta->set_component(1, 1 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 10, "move_ip_forward respects dy" );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), -3, "move_ip_forward wraps ymax" );
-$ip->set_position(LBV->new(1, -3 ));
-$ip->get_delta->set_component(0, 0 );
-$ip->get_delta->set_component(1, -1 );
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(1), 10, "move_ip_forward wraps ymin" );
-BEGIN { $tests += 6; }
-
-$ls->clear;   # diagonals.
-$ls->_set_min(-1, -2);
-$ls->_set_max(6, 5);
-$ip->set_position(LBV->new(0, 0));
-$ip->get_delta->set_component(0,-2);
-$ip->get_delta->set_component(1,-3);
-$ls->move_ip_forward( $ip );
-is( $ip->get_position->get_component(0), 2, "move_ip_forward deals with diagonals" );
-is( $ip->get_position->get_component(1), 3, "move_ip_forward deals with diagonals" );
-BEGIN { $tests += 2; }
-
-
-
-
-BEGIN { plan tests => $tests };
+# _copy
+my $n = $s->_copy();
+is($$s{torus}, $$n{torus}, "torids are equal (at first)");
+$s->expand(LBV->new(0, 1));
+$n->expand(LBV->new(0,-2));
+isnt($$s{torus}, $$n{torus}, "torids are now separate and distinct");
+is($$s{min}, "(-2,-1)", "s has old min");
+is($$n{min}, "(-2,-2)", "n has new min");
+is($$s{max}, "(15,1)" , "s has new max");
+is($$n{max}, "(15,0)" , "n has old max");
