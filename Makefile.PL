@@ -22,7 +22,9 @@ WriteMakefile(
     LICENSE       => 'perl',
     PREREQ_PM     => {
         'aliased'               => '0.22',
+        'Carp'                  => 0,
         'Class::Accessor::Fast' => 0,
+        'List::Util'            => 0,
         'Readonly'              => 0,
         'Storable'              => 0,
         'Test::More'            => 0,
