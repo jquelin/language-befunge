@@ -43,7 +43,7 @@ if ( defined $Language::Befunge::Vector::XS::VERSION ) {
         my $lbvxs_sub = "Language::Befunge::Vector::XS::$sub";
         *$sub = \&$lbvxs_sub;
     }
-    # LBV::XS 1.0.1 adds rasterize()
+    # LBV::XS 1.1.0 adds rasterize()
     @subs = qw[ rasterize _xs_rasterize_ptr ];
     if($xsversion gt "1.0.0") {
         # import the XS functions from LBVXS
