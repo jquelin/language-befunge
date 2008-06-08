@@ -32,8 +32,15 @@ $| = 1;
 #
 # Create a new funge interpreter. One can pass some options as a hash
 # reference, with the following keys:
-#  - file:    the filename to read funge code from (default: blank storage)
-#  - syntax:  the tunings set (default: 'befunge98')
+#  - file:     the filename to read funge code from (default: blank storage)
+#  - syntax:   the tunings set (default: 'befunge98')
+#  - dims:     the number of dimensions
+#  - ops:      the Ops subclass used in this interpreter
+#  - storage:  the Storage subclass used in this interpreter
+#  - wrapping: the Wrapping subclass used in this interpreter
+#
+# Usually, the "dims", "ops", "storage" and "wrapping" keys are left
+# undefined, and are implied by the "syntax" key.
 #
 # Depending on the value of syntax will change the interpreter
 # internals: set of allowed ops, storage implementation, wrapping. The
@@ -41,7 +48,12 @@ $| = 1;
 # number of dimensions, the set of operation loaded, the storage
 # implementation and the wrapping implementation):
 #
-#  - befunge98: 2, LBO:Befunge98, LBS:2D:Sparse, LBW:LaheySpace
+#  - unefunge98: 1, LBO:Unefunge98, LBS:Generic::AoA, LBW:LaheySpace
+#  - befunge98:  2, LBO:Befunge98,  LBS:2D:Sparse,    LBW:LaheySpace
+#  - trefunge98: 3, LBO:GenericFunge98, LBS:Generic::AoA, LBW:LaheySpace
+#  - 4funge98:   4, LBO:GenericFunge98, LBS:Generic::AoA, LBW:LaheySpace
+#  - 5funge98:   5, LBO:GenericFunge98, LBS:Generic::AoA, LBW:LaheySpace
+#  ...and so on.
 #
 #
 # If none of those values suit your needs, you can pass the value
@@ -53,10 +65,22 @@ $| = 1;
 sub new {
     my ($class, $opts) = @_;
 
-    # default set of options.
-    my $default = 'befunge98';
-    $opts           //= { syntax => $default };
-    $opts->{syntax} //= $default;
+    $opts //= { dims => 2 };
+    unless(exists($$opts{syntax})) {
+        $$opts{dims} //= 2;
+        croak("If you pass a 'dims' attribute, it must be numeric.")
+            if $$opts{dims} =~ /\D/;
+        my %defaults = (
+            1 => 'unefunge98',
+            2 => 'befunge98',
+            3 => 'trefunge98',
+        );
+        if(exists($defaults{$$opts{dims}})) {
+            $$opts{syntax} = $defaults{$$opts{dims}};
+        } else {
+            $$opts{syntax} = $$opts{dims} . 'funge98';
+        }
+    }
 
     # select the classes to use, depending on the wanted syntax.
     my $lbo = 'Language::Befunge::Ops::';
@@ -64,28 +88,28 @@ sub new {
     my $lbw = 'Language::Befunge::Wrapping::';
     given ( $opts->{syntax} ) {
         when ('unefunge98') {
-            $opts->{dims}     = 1;
-            $opts->{ops}      = $lbo . 'Unefunge98';
-            $opts->{storage}  = $lbs . 'Generic::AoA';
-            $opts->{wrapping} = $lbw . 'LaheySpace';
+            $opts->{dims}     //= 1;
+            $opts->{ops}      //= $lbo . 'Unefunge98';
+            $opts->{storage}  //= $lbs . 'Generic::AoA';
+            $opts->{wrapping} //= $lbw . 'LaheySpace';
         }
         when ('befunge98') {
-            $opts->{dims}     = 2;
-            $opts->{ops}      = $lbo . 'Befunge98';
-            $opts->{storage}  = $lbs . '2D::Sparse';
-            $opts->{wrapping} = $lbw . 'LaheySpace';
+            $opts->{dims}     //= 2;
+            $opts->{ops}      //= $lbo . 'Befunge98';
+            $opts->{storage}  //= $lbs . '2D::Sparse';
+            $opts->{wrapping} //= $lbw . 'LaheySpace';
         }
         when ('trefunge98') {
-            $opts->{dims}     = 3;
-            $opts->{ops}      = $lbo . 'GenericFunge98';
-            $opts->{storage}  = $lbs . 'Generic::AoA';
-            $opts->{wrapping} = $lbw . 'LaheySpace';
+            $opts->{dims}     //= 3;
+            $opts->{ops}      //= $lbo . 'GenericFunge98';
+            $opts->{storage}  //= $lbs . 'Generic::AoA';
+            $opts->{wrapping} //= $lbw . 'LaheySpace';
         }
         when (/(\d+)funge98$/) { # accept values like "4funge98"
-            $opts->{dims}     = $1;
-            $opts->{ops}      = $lbo . 'GenericFunge98';
-            $opts->{storage}  = $lbs . 'Generic::AoA';
-            $opts->{wrapping} = $lbw . 'LaheySpace';
+            $opts->{dims}     //= $1;
+            $opts->{ops}      //= $lbo . 'GenericFunge98';
+            $opts->{storage}  //= $lbs . 'Generic::AoA';
+            $opts->{wrapping} //= $lbw . 'LaheySpace';
         }
         default { croak "syntax '$opts->{syntax}' not recognized." }
     }

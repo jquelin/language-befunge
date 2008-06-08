@@ -38,6 +38,8 @@ Low-level changelog
  - Add new Generic::Vec storage module, with support for LBSGVXS. (mg)
  - Consolidate generic Storage methods into a Storage base class. (mg)
  - API standards: add get_dims() to the Storage API. (mg)
+ - Fix Interpreter->new() to allow specifying alternative plugins for
+   Storage and Wrapping and so forth. (mg)
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency
