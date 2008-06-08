@@ -224,7 +224,7 @@ sub get_value {
 # guarantee is made that the return value is printable.
 #
 sub get_char {
-	my ($self, $v) = @_;
+    my ($self, $v) = @_;
     return chr $self->get_value($v);
 }
 
@@ -347,12 +347,12 @@ LBS::2D::Sparse - a 2D storage, using sparse hash
 
 =head1 SYNOPSIS
 
-	my $storage = Language::Befunge::Storage::2D::Sparse->new;
-	$storage->clear;
-	$storage->store(<<EOF);
-	12345
-	67890
-	EOF
+    my $storage = Language::Befunge::Storage::2D::Sparse->new;
+    $storage->clear;
+    $storage->store(<<EOF);
+    12345
+    67890
+    EOF
 
 
 =head1 DESCRIPTION

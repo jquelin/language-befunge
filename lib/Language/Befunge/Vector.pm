@@ -15,14 +15,14 @@ use integer;
 use Carp;
 
 use overload
-	'='   => \&copy,
-	'+'   => \&_add,
-	'-'   => \&_substract,
-	'neg' => \&_invert,
-	'+='  => \&_add_inplace,
+    '='   => \&copy,
+    '+'   => \&_add,
+    '-'   => \&_substract,
+    'neg' => \&_invert,
+    '+='  => \&_add_inplace,
     '-='  => \&_substract_inplace,
-	'<=>' => \&_compare,
-	'""'  => \&as_string;
+    '<=>' => \&_compare,
+    '""'  => \&as_string;
 
 # try to load speed-up LBV
 eval 'use Language::Befunge::Vector::XS';
@@ -74,16 +74,16 @@ if ( defined $Language::Befunge::Vector::XS::VERSION ) {
 # integer per dimension.
 #
 sub new {
-	my $pkg = shift;
+    my $pkg = shift;
 
     # sanity checks
-	my $usage = "Usage: $pkg->new(\$x, ...)";
-	croak $usage unless scalar(@_) > 0;
+    my $usage = "Usage: $pkg->new(\$x, ...)";
+    croak $usage unless scalar(@_) > 0;
 
     # regular LBV object
     my $self = [@_];
     bless $self, $pkg;
-	return $self;
+    return $self;
 }
 
 
@@ -97,14 +97,14 @@ sub new_zeroes {
     my ($pkg, $dims) = @_;
 
     # sanity checks
-	my $usage = "Usage: $pkg->new_zeroes(\$dimensions)";
-	croak $usage unless defined $dims;
-	croak $usage unless $dims > 0;
+    my $usage = "Usage: $pkg->new_zeroes(\$dimensions)";
+    croak $usage unless defined $dims;
+    croak $usage unless $dims > 0;
 
     # regular LBV object
     my $self = [ (0) x $dims ];
     bless $self, $pkg;
-	return $self;
+    return $self;
 }
 
 
@@ -133,8 +133,8 @@ sub copy {
 # might look like "(1,2)".
 #
 sub as_string {
-	my $self = shift;
-	return "(" . join(",",@$self) . ")";
+    my $self = shift;
+    return "(" . join(",",@$self) . ")";
 }
 
 
@@ -144,8 +144,8 @@ sub as_string {
 # Return the number of dimensions, an integer.
 #
 sub get_dims {
-	my $self = shift;
-	return scalar(@$self);
+    my $self = shift;
+    return scalar(@$self);
 }
 
 
@@ -206,14 +206,14 @@ sub set_component {
 # Return 1 if vector is contained within the box, and 0 otherwise.
 #
 sub bounds_check {
-	my ($vchk, $begin, $end) = @_;
-	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $begin->get_dims;
-	croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $end->get_dims;
-	for (my $d = 0; $d < $vchk->get_dims; $d++) {
-		return 0 if $vchk->get_component($d) < $begin->get_component($d);
-		return 0 if $vchk->get_component($d) >   $end->get_component($d);
-	}
-	return 1;
+    my ($vchk, $begin, $end) = @_;
+    croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $begin->get_dims;
+    croak "uneven dimensions in bounds check!" unless $vchk->get_dims == $end->get_dims;
+    for (my $d = 0; $d < $vchk->get_dims; $d++) {
+        return 0 if $vchk->get_component($d) < $begin->get_component($d);
+        return 0 if $vchk->get_component($d) >   $end->get_component($d);
+    }
+    return 1;
 }
 
 
@@ -261,13 +261,13 @@ sub rasterize {
 # Return a new LBV object, which is the result of $v1 plus $v2.
 #
 sub _add {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
-	my $rv = ref($v1)->new_zeroes($v1->get_dims);
-	for (my $i = 0; $i < $v1->get_dims; $i++) {
-		$rv->[$i] = $v1->[$i] + $v2->[$i];
-	}
-	return $rv;
+    my ($v1, $v2) = @_;
+    croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
+    my $rv = ref($v1)->new_zeroes($v1->get_dims);
+    for (my $i = 0; $i < $v1->get_dims; $i++) {
+        $rv->[$i] = $v1->[$i] + $v2->[$i];
+    }
+    return $rv;
 }
 
 
@@ -330,12 +330,12 @@ sub _add_inplace {
 # Substract $v2 to $v1, and stores the result back into $v1.
 #
 sub _substract_inplace {
-	my ($v1, $v2) = @_;
-	croak "uneven dimensions in vector substraction!" unless $v1->get_dims == $v2->get_dims;
-	for (my $i = 0; $i < $v1->get_dims; $i++) {
-		$v1->[$i] -= $v2->[$i];
-	}
-	return $v1;
+    my ($v1, $v2) = @_;
+    croak "uneven dimensions in vector substraction!" unless $v1->get_dims == $v2->get_dims;
+    for (my $i = 0; $i < $v1->get_dims; $i++) {
+        $v1->[$i] -= $v2->[$i];
+    }
+    return $v1;
 }
 
 
@@ -349,12 +349,12 @@ sub _substract_inplace {
 # do, 1 if they don't.
 #
 sub _compare {
- 	my ($v1, $v2) = @_;
- 	croak "uneven dimensions in bounds check!" unless $v1->get_dims == $v2->get_dims;
-	for (my $d = 0; $d < $v1->get_dims; $d++) {
-		return 1 if $v1->get_component($d) != $v2->get_component($d);
- 	}
-	return 0;
+    my ($v1, $v2) = @_;
+    croak "uneven dimensions in bounds check!" unless $v1->get_dims == $v2->get_dims;
+    for (my $d = 0; $d < $v1->get_dims; $d++) {
+        return 1 if $v1->get_component($d) != $v2->get_component($d);
+    }
+    return 0;
 }
 
 
