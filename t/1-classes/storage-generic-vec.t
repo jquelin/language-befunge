@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 97;
+use Test::More tests => 98;
 
 use Language::Befunge::Storage::Generic::Vec;
 use Language::Befunge::Wrapping::LaheySpace;
@@ -42,6 +42,7 @@ isa_ok($s, 'Language::Befunge::Storage');
 isa_ok($s, 'Language::Befunge::Storage::Generic::Vec');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
+is($s->get_dims, 2, 'get_dims() returns the number passed to new()');
 
 
 # _offset

@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 91;
+use Test::More tests => 92;
 
 use Language::Befunge::Storage::Generic::AoA;
 use Language::Befunge::Wrapping::LaheySpace;
@@ -42,6 +42,7 @@ isa_ok($s, 'Language::Befunge::Storage');
 isa_ok($s, 'Language::Befunge::Storage::Generic::AoA');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
+is($s->get_dims, 2, 'get_dims() returns the number passed to new()');
 
 
 #-- storage update

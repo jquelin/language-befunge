@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 88;
+use Test::More tests => 91;
 
 use Language::Befunge::Storage::2D::Sparse;
 use aliased 'Language::Befunge::Vector' => 'LBV';
@@ -40,6 +40,16 @@ isa_ok($s, 'Language::Befunge::Storage');
 isa_ok($s, 'Language::Befunge::Storage::2D::Sparse');
 is($s->min, '(0,0)', 'new() initializes storage');
 is($s->max, '(0,0)', 'new() initializes storage');
+is($s->get_dims, 2, '2D::Sparse objects report 2 dimensions');
+$s = Language::Befunge::Storage::2D::Sparse->new(2);
+is($s->get_dims, 2, '2D::Sparse objects still report 2 dimensions');
+
+SKIP: {
+    skip 'need Test::Exception', 1 unless $has_test_exception;
+    throws_ok(sub { Language::Befunge::Storage::2D::Sparse->new(3) },
+        qr/only useful for 2-dimensional storage/,
+        'new() chokes on non-2 dimensionality');
+}
 
 
 #-- storage update
@@ -364,7 +374,6 @@ SKIP: {
 		qr/^Help! I found two labels 'foo' in the funge space/,
         'labels_lookup() chokes on double-defined labels');
 }
-
 
 
 __END__

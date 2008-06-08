@@ -30,7 +30,10 @@ Readonly my $SPACE => ' ';
 # Create a new storage.
 #
 sub new {
-    my ($class) = @_;
+    my ($class, $dims) = @_;
+    $dims //= 2;
+    croak("$class is only useful for 2-dimensional storage.")
+        unless $dims == 2;
     my $self    = {};
     bless $self, $class;
     $self->clear;
@@ -156,6 +159,15 @@ sub set_value {
 
 
 #- data retrieval
+
+#
+# my $dims = $storage->get_dims;
+#
+# Return the dimensionality of the storage.  For this module, the value is
+# always 2.
+#
+sub get_dims { 2 }
+
 
 #
 # my $vmin = $storage->min;
@@ -423,6 +435,12 @@ that's Befunge! :o) ).
 
 
 =over 4
+
+
+=item my $dims = $storage->get_dims;
+
+Return the dimensionality of the storage.  For this module, the value is
+always 2.
 
 
 =item my $vmin = $storage->min;

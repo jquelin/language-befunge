@@ -267,6 +267,7 @@ class.  These methods are:
     store
     store_binary
     get_char
+    get_dims
     rectangle
     min
     max

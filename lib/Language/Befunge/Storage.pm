@@ -276,6 +276,17 @@ sub labels_lookup {
 
 
 #
+# my $dims = get_dims()
+#
+# Returns the number of dimensions this storage object operates in.
+#
+sub get_dims {
+    my $self = shift;
+    return $$self{nd};
+}
+
+
+#
 # my $vector = min()
 #
 # Returns a Vector object, pointing at the beginning of the torus.
@@ -431,6 +442,11 @@ implement a specific method to resize their data structure.
 
 
 =over 4
+
+
+=item my $dims = $storage->get_dims;
+
+Return the number of dimensions this storage object operates in.
 
 
 =item my $vmin = $storage->min;
