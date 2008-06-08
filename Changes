@@ -40,6 +40,7 @@ Low-level changelog
  - API standards: add get_dims() to the Storage API. (mg)
  - Fix Interpreter->new() to allow specifying alternative plugins for
    Storage and Wrapping and so forth. (mg)
+ - Add new Generic::Sparse storage module, and test it properly. (mg)
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency
