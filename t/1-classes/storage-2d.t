@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 106;
+use Test::More tests => 88;
 
 use Language::Befunge::Storage::2D::Sparse;
 use aliased 'Language::Befunge::Vector' => 'LBV';
@@ -307,23 +307,15 @@ $s->store( <<'EOF', LBV->new(-2, -1 ));
 EOF
 $href = $s->labels_lookup;
 isa_ok($href, 'HASH');
-is(scalar(keys(%$href)), 4, 'labels_lookup() finds everything');
-is($href->{foo}[0],  10, 'labels_lookup() finds left-right');
-is($href->{foo}[1],   5, 'labels_lookup() finds left-right');
-is($href->{foo}[2],   1, 'labels_lookup() deals with left-right');
-is($href->{foo}[3],   0, 'labels_lookup() deals with left-right');
-is($href->{bar}[0],  -2, 'labels_lookup() finds right-left');
-is($href->{bar}[1],   5, 'labels_lookup() finds right-left');
-is($href->{bar}[2],  -1, 'labels_lookup() deals with right-left');
-is($href->{bar}[3],   0, 'labels_lookup() deals with right-left');
-is($href->{baz}[0],   4, 'labels_lookup() finds bottom-top');
-is($href->{baz}[1],  -1, 'labels_lookup() finds bottom-top');
-is($href->{baz}[2],   0, 'labels_lookup() deals with bottom-top');
-is($href->{baz}[3],  -1, 'labels_lookup() deals with bottom-top');
-is($href->{blah}[0],  4, 'labels_lookup() finds top-bottom');
-is($href->{blah}[1], 12, 'labels_lookup() finds top-bottom');
-is($href->{blah}[2],  0, 'labels_lookup() deals with top-bottom');
-is($href->{blah}[3],  1, 'labels_lookup() deals with top-bottom');
+is(scalar(keys(%$href)), 4,    'labels_lookup() finds everything');
+is($href->{foo}[0],  '(10,5)', 'labels_lookup() finds left-right');
+is($href->{foo}[1],  '(1,0)',  'labels_lookup() deals with left-right');
+is($href->{bar}[0],  '(-2,5)', 'labels_lookup() finds right-left');
+is($href->{bar}[1],  '(-1,0)', 'labels_lookup() deals with right-left');
+is($href->{baz}[0],  '(4,-1)', 'labels_lookup() finds bottom-top');
+is($href->{baz}[1],  '(0,-1)', 'labels_lookup() deals with bottom-top');
+is($href->{blah}[0], '(4,12)', 'labels_lookup() finds top-bottom');
+is($href->{blah}[1], '(0,1)',  'labels_lookup() deals with top-bottom');
 
 # wrapping...
 $s->clear;
@@ -339,23 +331,15 @@ rab:;   a  4      2;
         ;  h
 EOF
 $href = $s->labels_lookup;
-is(scalar(keys(%$href)), 4, 'labels_lookup() finds everything, even wrapping');
-is($href->{foo}[0], -1, 'labels_lookup() finds left-right');
-is($href->{foo}[1], -1, 'labels_lookup() finds left-right');
-is($href->{foo}[2],  1, 'labels_lookup() deals with left-right');
-is($href->{foo}[3],  0, 'labels_lookup() deals with left-right');
-is($href->{bar}[0], 16, 'labels_lookup() finds right-left');
-is($href->{bar}[1],  0, 'labels_lookup() finds right-left');
-is($href->{bar}[2], -1, 'labels_lookup() deals with right-left');
-is($href->{bar}[3],  0, 'labels_lookup() deals with right-left');
-is($href->{baz}[0],  6, 'labels_lookup() finds bottom-top');
-is($href->{baz}[1],  6, 'labels_lookup() finds bottom-top');
-is($href->{baz}[2],  0, 'labels_lookup() deals with bottom-top');
-is($href->{baz}[3], -1, 'labels_lookup() deals with bottom-top');
-is($href->{blah}[0], 9, 'labels_lookup() finds top-bottom');
-is($href->{blah}[1], 0, 'labels_lookup() finds top-bottom');
-is($href->{blah}[2], 0, 'labels_lookup() deals with top-bottom');
-is($href->{blah}[3], 1, 'labels_lookup() deals with top-bottom');
+is(scalar(keys(%$href)), 4,     'labels_lookup() finds everything, even wrapping');
+is($href->{foo}[0],  '(-1,-1)', 'labels_lookup() finds left-right');
+is($href->{foo}[1],  '(1,0)',   'labels_lookup() deals with left-right');
+is($href->{bar}[0],  '(16,0)',  'labels_lookup() finds right-left');
+is($href->{bar}[1],  '(-1,0)',  'labels_lookup() deals with right-left');
+is($href->{baz}[0],  '(6,6)',   'labels_lookup() finds bottom-top');
+is($href->{baz}[1],  '(0,-1)',  'labels_lookup() deals with bottom-top');
+is($href->{blah}[0], '(9,0)',   'labels_lookup() finds top-bottom');
+is($href->{blah}[1], '(0,1)',   'labels_lookup() deals with top-bottom');
 
 # garbage...
 $s->clear;
@@ -364,11 +348,9 @@ $s->store( <<'EOF', LBV->new(-2, -1 ));
      ;not a label;
 EOF
 $href = $s->labels_lookup;
-is(scalar(keys(%$href)), 1, 'labels_lookup() does not get fooled by looks-alike labels');
-is($href->{foo}[0], 14, 'labels_lookup() discards comments');
-is($href->{foo}[1], -1, 'labels_lookup() discards comments');
-is($href->{foo}[2], 1,  'labels_lookup() discards comments');
-is($href->{foo}[3], 0,  'labels_lookup() discards comments');
+is(scalar(keys(%$href)), 1,    'labels_lookup() does not get fooled by looks-alike labels');
+is($href->{foo}[0], '(14,-1)', 'labels_lookup() discards comments');
+is($href->{foo}[1], '(1,0)',   'labels_lookup() discards comments');
 
 # double define...
 $s->clear;

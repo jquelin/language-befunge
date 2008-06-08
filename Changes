@@ -32,6 +32,7 @@ Low-level changelog
  - Insert lots of nifty reorganization stuff here (jq)
  - LBV has additional rasterize method (moved and expanded from LBGSGA) (mg)
  - LBV supports accelerated rasterize method in LBVXS 1.0.1 (mg)
+ - API standards: labels_lookup should return Vector objects. (mg)
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency

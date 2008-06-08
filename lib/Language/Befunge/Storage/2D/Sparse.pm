@@ -278,7 +278,10 @@ sub labels_lookup {
                 # how exciting, we found a label!
                 exists $labels->{$label}
                     and croak "Help! I found two labels '$label' in the funge space";
-                $labels->{$label} = [$labx, $laby, @$vec];
+                $labels->{$label} = [
+                    Language::Befunge::Vector->new($labx, $laby),
+                    Language::Befunge::Vector->new(@$vec)
+                ];
             }
         }
     }
