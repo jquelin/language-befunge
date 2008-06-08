@@ -216,6 +216,18 @@ sub _u32_to_s32 {
     return $value;
 }
 
+sub _copy {
+    my $self = shift;
+    my $new = {
+        nd       => $$self{nd},
+        min      => $$self{min}->copy,
+        max      => $$self{max}->copy,
+        torus    => $$self{torus},
+        wrapping => $$self{wrapping},
+    };
+    return bless($new, ref($self));
+}
+
 sub _is_xs { 0 }
 
 1;

@@ -15,7 +15,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 98;
+use Test::More tests => 104;
 
 use Language::Befunge::Storage::Generic::Vec;
 use Language::Befunge::Wrapping::LaheySpace;
@@ -384,3 +384,14 @@ SKIP: {
         qr/^Help! I found two labels 'foo' in the funge space/,
         'labels_lookup() chokes on double-defined labels');
 }
+
+# _copy
+my $n = $s->_copy();
+is($$s{torus}, $$n{torus}, "torids are equal (at first)");
+$s->expand(LBV->new(0, 1));
+$n->expand(LBV->new(0,-2));
+isnt($$s{torus}, $$n{torus}, "torids are now separate and distinct");
+is($$s{min}, "(-2,-1)", "s has old min");
+is($$n{min}, "(-2,-2)", "n has new min");
+is($$s{max}, "(15,1)" , "s has new max");
+is($$n{max}, "(15,0)" , "n has old max");
