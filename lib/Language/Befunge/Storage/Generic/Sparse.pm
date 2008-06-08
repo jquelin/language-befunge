@@ -8,7 +8,7 @@
 #
 
 package Language::Befunge::Storage::Generic::Sparse;
-require 5.006;
+require 5.010;
 use strict;
 use warnings;
 use Carp;

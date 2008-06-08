@@ -8,7 +8,7 @@
 #
 
 package Language::Befunge::Storage::Generic::Vec;
-require 5.006;
+require 5.010;
 use strict;
 use warnings;
 no warnings 'portable'; # "Bit vector size > 32 non-portable" warnings on x64
