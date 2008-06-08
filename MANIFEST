@@ -75,8 +75,6 @@ t/2-ops/stack_swap.t
 t/2-ops/str_enter_string_mode.t
 t/2-ops/str_fetch_char.t
 t/2-ops/str_store_char.t
-t/3-lahey/generic.t
-t/3-lahey/lahey.t
 t/4-interpreter/befunge.t
 t/4-interpreter/trefunge.t
 t/4-interpreter/unefunge.t
