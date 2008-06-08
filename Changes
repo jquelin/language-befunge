@@ -33,6 +33,8 @@ Low-level changelog
  - LBV has additional rasterize method (moved and expanded from LBGSGA) (mg)
  - LBV supports accelerated rasterize method in LBVXS 1.0.1 (mg)
  - API standards: labels_lookup should return Vector objects. (mg)
+ - Adapt Storage::Generic::AoA to new LB tree.  Test it properly. (mg)
+ - API standards: expand() should exist for all Storage modules. (mg)
 
 3.05 Tue Jan 22 17:52:27 CET 2008
  - LBV now uses an array internally for more efficiency

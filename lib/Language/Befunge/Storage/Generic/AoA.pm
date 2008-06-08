@@ -13,7 +13,8 @@ use strict;
 use warnings;
 use Carp;
 use Language::Befunge::Vector;
-
+use Language::Befunge::IP;
+use base 'Language::Befunge::Storage';
 
 # -- CONSTRUCTOR
 
@@ -33,13 +34,10 @@ sub new {
     croak $usage unless exists $args{Wrapping};
     my $self  = {
         nd  => $dimensions,
-        min => Language::Befunge::Vector->new_zeroes($dimensions), # upper-left
-        max => Language::Befunge::Vector->new_zeroes($dimensions), # lower-right
-        torus => [32],
         wrapping => $args{Wrapping},
     };
-    $$self{torus} = [$$self{torus}] for(1..$dimensions);
     bless $self, $package;
+    $self->clear();
     return $self;
 }
 
@@ -57,6 +55,86 @@ sub clear {
     $$self{max} = Language::Befunge::Vector->new_zeroes($$self{nd});
     $$self{torus} = [32];
     $$self{torus} = [$$self{torus}] for(1..$$self{nd});
+}
+
+
+#
+# expand( vector )
+#
+# Expand the torus to include the provided point.
+#
+sub expand {
+    my ($self, $v) = @_;
+    my $nd = $$self{nd};
+    my ($min, $max) = ($$self{min}, $$self{max});
+
+    # if we have nothing to do, skip out early.
+    return 0 if $v->bounds_check($min,$max);
+
+    sub _expand_helper {
+        my ($d, $v, $torus, $min, $max) = @_;
+        my $oldmin = $min->get_component($d); # left end of old array
+        my $oldmax = $max->get_component($d); # right end of old array
+        my $doff = 0; # prepend this many elements
+        $doff = $oldmin - $v->get_component($d) if $v->get_component($d) < $oldmin;
+        my $newmin = $oldmin; # left end of new array
+        my $newmax = $oldmax; # right end of new array
+        $newmin = $v->get_component($d) if $v->get_component($d) < $newmin;
+        $newmax = $v->get_component($d) if $v->get_component($d) > $newmax;
+        my $append  = $v->get_component($d) - $max->get_component($d);
+        $append = 0 if $append < 0; # append this many elements
+        my $wholerow = 0;
+        # if a higher-level dimension has been expanded where we are, we
+        # have to create a new row out of whole cloth.
+        for(my $i = $v->get_dims()-1; $i > $d; $i--) {
+            $wholerow = 1 if $v->get_component($i) < $min->get_component($i);
+            $wholerow = 1 if $v->get_component($i) > $max->get_component($i);
+        }
+        my @newrow;
+        my $o = $v->get_component($d);
+        if($d > 0) {
+            # handle the nodes we have to create from whole cloth
+            for(my $i = 0; $i < $doff; $i++) {
+                $v->set_component($d,$i+$newmin);
+                push(@newrow,_expand_helper($d-1,$v,undef,$min,$max));
+            }
+            # handle the nodes we're expanding from existing data
+            for(my $i = 0; $i <= ($oldmax-$oldmin); $i++) {
+                $v->set_component($d,$i+$oldmin);
+                push(@newrow,_expand_helper($d-1,$v,$$torus[$i],$min,$max));
+            }
+            # handle more nodes we're creating from whole cloth
+            for(my $i = $oldmax + 1; $i < $newmax + 1; $i++) {
+                $v->set_component($d,$i);
+                push(@newrow,_expand_helper($d-1,$v,undef,$min,$max));
+            }
+        } else {
+            for(my $i = $newmin; $i <= $newmax; $i++) {
+                if(!$wholerow && ($i >= ($newmin+$doff) && (($i-($newmin+$doff)) <= ($oldmax-$oldmin)))) {
+                    # newmin = -3
+                    # oldmin = -1
+                    #   doff = 2
+                    # lhs offset -3-2-1 0 1 2 3 4 5 6 7 8
+                    # data        . . a b c d e f g h i j
+                    # array index . . 0 1 2 3 4 5 6 7 8 9
+                    my $newdata = $$torus[$i-$oldmin];
+                    push(@newrow,$newdata);
+                } else {
+                    push(@newrow,32);
+                }
+            }
+        }
+        $v->set_component($d,$o);
+        return \@newrow;
+    }
+    $$self{torus} = _expand_helper($nd - 1, $v, $$self{torus}, $min, $max);
+    for(my $d = $$self{nd} - 1; $d > -1; $d--) {
+        my $n = $v->get_component($d);
+        my $min = $$self{min}->get_component($d);
+        my $max = $$self{max}->get_component($d);
+        $$self{min}->set_component($d,$n) if $n < $min;
+        $$self{max}->set_component($d,$n) if $n > $max;
+    }
 }
 
 
@@ -86,9 +164,9 @@ sub clear {
 # to.)
 #
 sub store {
-    my ($self, $code, $v) = @_;
+    my ($self, $code, $base) = @_;
     my $nd = $$self{nd};
-    $v = Language::Befunge::Vector->new_zeroes($$self{nd}) unless defined $v;
+    $base = Language::Befunge::Vector->new_zeroes($$self{nd}) unless defined $base;
 
     # support for any eol convention
     $code =~ s/\r\n/\n/g;
@@ -114,33 +192,23 @@ sub store {
     # Figure out the rectangle size and the end-coordinate (max).
     my $size = Language::Befunge::Vector->new(@sizes);
     my $max  = Language::Befunge::Vector->new(map { $_ - 1 } (@sizes));
-    $max += $v;
+    $max += $base;
 
     # Enlarge torus to make sure our new values will fit.
-    $self->_enlarge( $v );
-    $self->_enlarge( $max );
+    $self->expand( $base );
+    $self->expand( $max );
 
     # Store code.
-    sub _code_store_helper {
-        my ($d, $v, $code, $torus, $min, $size) = @_;
-        my $o = $v->get_component($d);
-        if($d > 0) {
-            for(my $i = 0; exists($$code[$i]); $i++) {
-                $v->set_component($d,$i+$o);
-                my $trow = $i+$o - $min->get_component($d);
-                # recurse for the next dimension
-                _code_store_helper($d-1,$v,$$code[$i],$$torus[$trow], $min, $size);
-            }
-            $v->set_component($d,$o);
-        } else {
-            my $offset = $v->get_component($d) - $min->get_component($d);
-            for(my $i = 0; $i <= $size->get_component($d); $i++) {
-                my $val = exists($$code[$i]) ? ord($$code[$i]) : 32;
-                $$torus[$i+$offset] = $val;
-            }
+    TOP: for(my $v = $base->copy; defined($v); $v = $v->rasterize($base, $max)) {
+        my $cv = $v - $base;
+        my $code = $coderef;
+        foreach my $ent (reverse $cv->get_all_components()) {
+            next TOP unless exists $$code[$ent];
+            $code = $$code[$ent];
         }
+        next TOP if $code eq ' ';
+        $self->set_value($v, ord($code));
     }
-    _code_store_helper($nd - 1, $v, $coderef, $self->{torus}, $$self{min}, $size);
 
     return $size;
 }
@@ -159,9 +227,10 @@ sub store {
 # incremented.  The data is stored all in one row.
 #
 sub store_binary {
-    my ($self, $code, $v) = @_;
+    my ($self, $code, $base) = @_;
     my $nd = $$self{nd};
-    $v = Language::Befunge::Vector->new_zeroes($$self{nd}) unless defined $v;
+    $base = Language::Befunge::Vector->new_zeroes($$self{nd})
+        unless defined $base;
 
     # The torus is a tree of arrays of numbers.
     # The tree is N levels deep, where N is the number of dimensions.
@@ -170,26 +239,21 @@ sub store_binary {
     my @sizes = length($code);
     push(@sizes,1) for(2..$nd);
 
-    # Figure out the rectangle size and the end-coordinate (max).
+    # Figure out the min, max, and size
     my $size = Language::Befunge::Vector->new(@sizes);
     my $max  = Language::Befunge::Vector->new(map { $_ - 1 } (@sizes));
-    $max += $v;
+    $max += $base;
 
     # Enlarge torus to make sure our new values will fit.
-    $self->_enlarge( $v );
-    $self->_enlarge( $max );
+    $self->expand( $base );
+    $self->expand( $max );
 
     # Store code.
-    my $torus = $$self{torus};
-    # traverse the tree, get down to the line we want.
-    for my $n (1..$nd-1) {
-        my $d = $nd - $n;
-        my $i = $v->get_component($d) - $self->{min}->get_component($d);
-        $torus = $$torus[$i];
+    for(my $v = $base->copy; defined($v); $v = $v->rasterize($base, $max)) {
+        my $char = substr($code, 0, 1, "");
+        next if $char eq " ";
+        $self->set_value($v, ord($char));
     }
-    splice(@$torus, $v->get_component(0) - $self->{min}->get_component(0),
-        length($code), map { ord } (split //, $code));
-
     return $size;
 }
 
@@ -255,7 +319,7 @@ sub set_value {
     my ($self, $v, $val) = @_;
 
     # Ensure we can set the value.
-    $self->_enlarge($v);
+    $self->expand($v);
     # for each dimension, go one level deeper into the array.
     my $line = $$self{torus};
     for(my $d = $$self{nd} - 1; ($d > 0); $d--) {
@@ -274,15 +338,17 @@ sub set_value {
 sub rectangle {
     my ($self, $v1, $v2) = @_;
     my $nd = $$self{nd};
-    # Ensure we have enough data.
-    $self->_enlarge($v1);
-    $self->_enlarge($v1+$v2);
 
     # Fetch the data.
     my $data = "";
-    my $this = $v1->copy;
-    my $that = $v1 + $v2;
-    my $torus = $$self{torus};
+    my $min = $v1;
+    foreach my $d (0..$nd-1) {
+        # each dimension must >= 1, otherwise the rectangle will be empty.
+        return "" unless $v2->get_component($d);
+        # ... but we need to offset by -1, to calculate $max
+        $v2->set_component($d, $v2->get_component($d) - 1);
+    }
+    my $max = $v1 + $v2;
     # No separator is used for the first dimension, for obvious reasons.
     # Funge98 specifies lf/cr/crlf for a second-dimension separator.
     # Funge98 specifies a form feed for a third-dimension separator.
@@ -290,32 +356,17 @@ sub rectangle {
     # We use increasingly long strings of null bytes.
     # (4d uses 1 null byte, 5d uses 2, 6d uses 3, etc)
     my @separators = "";
-    push(@separators,"\n") if $$self{nd} > 1;
-    push(@separators,"\f") if $$self{nd} > 2;
+    push(@separators,"\n") if $nd > 1;
+    push(@separators,"\f") if $nd > 2;
     push(@separators,"\0"x($_-3)) for (4..$nd); # , "\0", "\0\0", "\0\0\0"...
-    my $done = 0;
-    TOPLOOP: until($done) {
-        $data .= $self->get_char($this);
-        # go to the next byte on the X axis
-        $this->set_component(0,$this->get_component(0)+1);
-        # this is a bit like long addition; each dimension is like a digit.
-        my $d;
-        for($d = 0; ($d < $this->get_dims)
-          && ($this->get_component($d) >= $that->get_component($d)); $d++) {
-            if($d == $this->get_dims - 1) {
-                $done++;
-                last TOPLOOP;
-            }
-            # carry the 1...
-            $this->set_component($d+1,$this->get_component($d+1)+1);
-            # zero us out
-            $this->set_component($d,$v1->get_component($d));
+    my $prev = $min->copy;
+    for(my $v = $min->copy; defined($v); $v = $v->rasterize($min, $max)) {
+        foreach my $d (0..$$self{nd}-1) {
+            $data .= $separators[$d]
+                if $prev->get_component($d) != $v->get_component($d);
         }
-        # ...and add our newline or form feed or whatever.
-        $data .= $separators[$d];
-    }
-    foreach my $sep (@separators[1..@separators-1]) {
-        $data .= $sep;
+        $prev = $v;
+        $data .= $self->get_char($v);
     }
     return $data;
 }
@@ -341,14 +392,9 @@ sub labels_lookup {
     my $labels = {};
 
     my ($min, $max) = ($$self{min}, $$self{max});
-    $max = $max->copy;
     my $nd = $$self{nd};
     my @directions = ();
     foreach my $dimension (0..$nd-1) {
-        # for the loop below, $max actually needs to be the point *after* the
-        # greatest point ever written to; otherwise the last column is skipped.
-        $max->set_component($dimension, $max->get_component($dimension)+1);
-
         # build the array of (non-diagonal) vectors
         my $v1 = Language::Befunge::Vector->new_zeroes($nd);
         my $v2 = $v1->copy;
@@ -402,97 +448,6 @@ sub max {
 
 # -- PRIVATE METHODS
 
-#
-# _enlarge( v )
-#
-# Expand the torus to include the provided point.
-#
-sub _enlarge {
-    my ($self, $v) = @_;
-    my $nd = $$self{nd};
-    my ($min, $max) = ($$self{min}, $$self{max});
-
-    # if we have nothing to do, skip out early.
-    return 0 if $v->bounds_check($min,$max);
-
-    sub _enlarge_helper {
-        my ($d, $v, $torus, $min, $max) = @_;
-        my $oldmin = $min->get_component($d); # left end of old array
-        my $oldmax = $max->get_component($d); # right end of old array
-        my $doff = 0; # prepend this many elements
-        $doff = $oldmin - $v->get_component($d) if $v->get_component($d) < $oldmin;
-        my $newmin = $oldmin; # left end of new array
-        my $newmax = $oldmax; # right end of new array
-        $newmin = $v->get_component($d) if $v->get_component($d) < $newmin;
-        $newmax = $v->get_component($d) if $v->get_component($d) > $newmax;
-        my $append  = $v->get_component($d) - $max->get_component($d);
-        $append = 0 if $append < 0; # append this many elements
-        my $wholerow = 0;
-        # if a higher-level dimension has been expanded where we are, we
-        # have to create a new row out of whole cloth.
-        for(my $i = $v->get_dims()-1; $i > $d; $i--) {
-            $wholerow = 1 if $v->get_component($i) < $min->get_component($i);
-            $wholerow = 1 if $v->get_component($i) > $max->get_component($i);
-        }
-        my @newrow;
-        my $o = $v->get_component($d);
-        if($d > 0) {
-            # handle the nodes we have to create from whole cloth
-            for(my $i = 0; $i < $doff; $i++) {
-                $v->set_component($d,$i+$newmin);
-                push(@newrow,_enlarge_helper($d-1,$v,undef,$min,$max));
-            }
-            # handle the nodes we're expanding from existing data
-            for(my $i = 0; $i <= ($oldmax-$oldmin); $i++) {
-                $v->set_component($d,$i+$oldmin);
-                push(@newrow,_enlarge_helper($d-1,$v,$$torus[$i],$min,$max));
-            }
-            # handle more nodes we're creating from whole cloth
-            for(my $i = $oldmax + 1; $i < $newmax + 1; $i++) {
-                $v->set_component($d,$i);
-                push(@newrow,_enlarge_helper($d-1,$v,undef,$min,$max));
-            }
-        } else {
-            for(my $i = $newmin; $i <= $newmax; $i++) {
-                if(!$wholerow && ($i >= ($newmin+$doff) && (($i-($newmin+$doff)) <= ($oldmax-$oldmin)))) {
-                    # newmin = -3
-                    # oldmin = -1
-                    #   doff = 2
-                    # lhs offset -3-2-1 0 1 2 3 4 5 6 7 8
-                    # data        . . a b c d e f g h i j
-                    # array index . . 0 1 2 3 4 5 6 7 8 9
-                    my $newdata = $$torus[$i-$oldmin];
-                    push(@newrow,$newdata);
-                } else {
-                    push(@newrow,32);
-                }
-            }
-        }
-        $v->set_component($d,$o);
-        return \@newrow;
-    }
-    $$self{torus} = _enlarge_helper($nd - 1, $v, $$self{torus}, $min, $max);
-    for(my $d = $$self{nd} - 1; $d > -1; $d--) {
-        my $n = $v->get_component($d);
-        my $min = $$self{min}->get_component($d);
-        my $max = $$self{max}->get_component($d);
-        $$self{min}->set_component($d,$n) if $n < $min;
-        $$self{max}->set_component($d,$n) if $n > $max;
-    }
-}
-
-
-#
-# _out_of_bounds( $vector )
-#
-# Return true if a location is out of bounds.
-#
-sub _out_of_bounds {
-    my ($self, $v) = @_;
-    my ($min, $max) = ($$self{min}, $$self{max});
-    return $v->bounds_check($min,$max) ? 0 : 1;
-}
-
 
 #
 # _labels_try( $start, $delta )
@@ -508,6 +463,8 @@ sub _labels_try {
     my $comment = "";
     my $wrapping = $$self{wrapping};
     my $ip = Language::Befunge::IP->new($$self{nd});
+    my $min = $self->min;
+    my $max = $self->max;
     $ip->set_position($start->copy);
     $ip->set_delta($delta);
 
@@ -516,7 +473,18 @@ sub _labels_try {
     # Fetch the whole comment stuff.
     do {
         # Calculate the next cell coordinates.
-        $wrapping->wrap($ip);
+        my $v = $ip->get_position;
+        my $d = $ip->get_delta;
+
+        # now, let's move the ip.
+        $v += $d;
+
+        if ( $v->bounds_check($min, $max) ) {
+            $ip->set_position( $v );
+        } else {
+            $wrapping->wrap( $self, $ip );
+        }
+        
         $comment .= $self->get_char($ip->get_position());
     } while ( $comment !~ /;.$/ );
 
@@ -571,6 +539,11 @@ Creates a new Lahey Space.
 =head2 clear(  )
 
 Clear the torus.
+
+
+=head2 expand( vector )
+
+Expand the torus to include the provided point.
 
 
 =head2 store( code, [vector] )
@@ -678,16 +651,6 @@ This is usually the largest position which has been written to.
 
 
 =head1 PRIVATE METHODS
-
-=head2 _enlarge( v )
-
-Expand the torus to include the provided point.
-
-
-=head2 _out_of_bounds( $vector )
-
-Return true if a location is out of bounds.
-
 
 =head2 _labels_try( start, delta )
 
