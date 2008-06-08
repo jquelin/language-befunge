@@ -524,13 +524,13 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::LaheySpace::Generic - a generic N-dimensional LaheySpace.
+Language::Befunge::Storage::Generic::AoA - a generic N-dimensional LaheySpace.
 
 
 =head1 SYNOPSIS
 
     # create a 3-dimensional LaheySpace.
-    my $torus = Language::Befunge::LaheySpace::Generic->new(3);
+    my $torus = Language::Befunge::Storage::Generic::AoA->new(3);
     $torus->clear();
     $torus->store(<<"EOF");
     12345
@@ -541,13 +541,13 @@ Language::Befunge::LaheySpace::Generic - a generic N-dimensional LaheySpace.
 
 Note you usually don't need to use this module directly.
 B<Language::Befunge::Interpreter> uses it internally, for non-2-dimensional
-storage.  For 2-dimensional storage, B<Language::Befunge::LaheySpace> is used
+storage.  For 2-dimensional storage, B<Language::Befunge::Storage::2D> is used
 instead, because it is more efficient.
 
 
 =head1 DESCRIPTION
 
-This module implements a traditional Lahey space.
+This module implements an N-dimensional storage space, as an array of arrays.
 
 
 =head1 CONSTRUCTOR
