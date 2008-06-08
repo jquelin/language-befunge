@@ -23,6 +23,7 @@ WriteMakefile(
     PREREQ_PM     => {
         'aliased'               => '0.22',
         'Class::Accessor::Fast' => 0,
+        'Readonly'              => 0,
         'Storable'              => 0,
         'Test::More'            => 0,
         'UNIVERSAL::require'    => 0,
