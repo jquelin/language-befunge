@@ -262,12 +262,9 @@ sub rasterize {
 #
 sub _add {
     my ($v1, $v2) = @_;
-    croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
-    my $rv = ref($v1)->new_zeroes($v1->get_dims);
-    for (my $i = 0; $i < $v1->get_dims; $i++) {
-        $rv->[$i] = $v1->[$i] + $v2->[$i];
-    }
-    return $rv;
+    my $nd = scalar @$v1;
+    croak "uneven dimensions in vector addition!" unless $nd == scalar @$v2;
+    return ref($v1)->new(map { $$v1[$_] + $$v2[$_] } (0..$nd-1));
 }
 
 
@@ -279,12 +276,9 @@ sub _add {
 #
 sub _substract {
     my ($v1, $v2) = @_;
-    croak "uneven dimensions in vector subtraction!" unless $v1->get_dims == $v2->get_dims;
-    my $rv = ref($v1)->new_zeroes($v1->get_dims);
-    for (my $i=0; $i<$v1->get_dims; $i++) {
-        $rv->[$i] = $v1->[$i] - $v2->[$i];
-    }
-    return $rv;
+    my $nd = scalar @$v1;
+    croak "uneven dimensions in vector subtraction!" unless $nd == scalar @$v2;
+    return ref($v1)->new(map { $$v1[$_] - $$v2[$_] } (0..$nd-1));
 }
 
 
@@ -298,11 +292,8 @@ sub _substract {
 #
 sub _invert {
     my ($v1) = @_;
-    my $rv = ref($v1)->new_zeroes($v1->get_dims);
-    for (my $i = 0; $i < $v1->get_dims; $i++) {
-        $rv->[$i] = -$v1->[$i];
-    }
-    return $rv;
+    my $nd = scalar @$v1;
+    return ref($v1)->new(map { -$_ } (@$v1));
 }
 
 
@@ -315,10 +306,9 @@ sub _invert {
 #
 sub _add_inplace {
     my ($v1, $v2) = @_;
-    croak "uneven dimensions in vector addition!" unless $v1->get_dims == $v2->get_dims;
-    for (my $i = 0; $i < $v1->get_dims; $i++) {
-        $v1->[$i] += $v2->[$i];
-    }
+    my $nd = scalar @$v1;
+    croak "uneven dimensions in vector addition!" unless $nd == scalar @$v2;
+    map { $$v1[$_] += $$v2[$_] } (0..$nd-1);
     return $v1;
 }
 
@@ -331,10 +321,9 @@ sub _add_inplace {
 #
 sub _substract_inplace {
     my ($v1, $v2) = @_;
-    croak "uneven dimensions in vector substraction!" unless $v1->get_dims == $v2->get_dims;
-    for (my $i = 0; $i < $v1->get_dims; $i++) {
-        $v1->[$i] -= $v2->[$i];
-    }
+    my $nd = scalar @$v1;
+    croak "uneven dimensions in vector substraction!" unless $nd == scalar @$v2;
+    map { $$v1[$_] -= $$v2[$_] } (0..$nd-1);
     return $v1;
 }
 
@@ -350,9 +339,10 @@ sub _substract_inplace {
 #
 sub _compare {
     my ($v1, $v2) = @_;
-    croak "uneven dimensions in bounds check!" unless $v1->get_dims == $v2->get_dims;
-    for (my $d = 0; $d < $v1->get_dims; $d++) {
-        return 1 if $v1->get_component($d) != $v2->get_component($d);
+    my $nd = scalar @$v1;
+    croak "uneven dimensions in bounds check!" unless $nd == scalar @$v2;
+    for (my $d = 0; $d < $nd; $d++) {
+        return 1 if $$v1[$d] != $$v2[$d];
     }
     return 0;
 }
