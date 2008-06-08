@@ -27,6 +27,7 @@ use overload
 # try to load speed-up LBV
 eval 'use Language::Befunge::Vector::XS';
 if ( defined $Language::Befunge::Vector::XS::VERSION ) {
+    my $xsversion = $Language::Befunge::Vector::XS::VERSION;
     my @subs = qw[
         new new_zeroes copy
         as_string get_dims get_component get_all_components
@@ -41,6 +42,25 @@ if ( defined $Language::Befunge::Vector::XS::VERSION ) {
         no warnings 'redefine';
         my $lbvxs_sub = "Language::Befunge::Vector::XS::$sub";
         *$sub = \&$lbvxs_sub;
+    }
+    # LBV::XS 1.0.1 adds rasterize()
+    @subs = qw[ rasterize _xs_rasterize_ptr ];
+    if($xsversion gt "1.0.0") {
+        # import the XS functions from LBVXS
+        no strict 'refs';
+        no warnings 'redefine';
+        foreach my $sub (@subs) {
+            my $lbvxs_sub = "Language::Befunge::Vector::XS::$sub";
+            *$sub = \&$lbvxs_sub;
+        }
+    } else {
+        # export the pure-perl functions to LBVXS
+        no strict 'refs';
+        no warnings 'redefine';
+        foreach my $sub (@subs) {
+            my $lbvxs_sub = "Language::Befunge::Vector::XS::$sub";
+            *$lbvxs_sub = \&$sub;
+        }
     }
 }
 
@@ -197,6 +217,39 @@ sub bounds_check {
 }
 
 
+#
+# $vec = $vec->rasterize($min, $max);
+#
+# Return the next vector in raster order, or undef if the hypercube space
+# has been fully covered.  To enumerate the entire storage area, the caller
+# should call rasterize on the storage area's "min" value the first time,
+# and keep looping while the return value is defined.  To enumerate a
+# smaller rectangle, the caller should pass in the min and max vectors
+# describing the rectangle, and keep looping while the return value is
+# defined.
+#
+
+sub rasterize {
+    my ($v, $min, $max) = @_;
+    return undef unless $v->bounds_check($min, $max);
+    $v = $v->copy;
+    my $nd = $v->get_dims();
+    for my $d (0..$nd-1) {
+        if($v->get_component($d) >= $max->get_component($d)) {
+            # wrap to the next highest dimension, continue loop
+            $v->set_component($d, $min->get_component($d));
+        } else {
+            # still have farther to go in this dimension.
+            $v->set_component($d, $v->get_component($d) + 1);
+            return $v;
+        }
+    }
+    # ran out of dimensions!
+    return undef;
+}
+
+
+
 # -- PRIVATE METHODS
 
 #- math ops
@@ -235,7 +288,6 @@ sub _substract {
 }
 
 
- 
 #
 # my $v2 = $v1->_invert;
 # my $v2 = -$v1;
@@ -304,6 +356,25 @@ sub _compare {
  	}
 	return 0;
 }
+
+
+#- other private methods
+
+#
+# my $ptr = $v1->_xs_rasterize_ptr();
+#
+# Get a pointer to the C "rasterize" function.  Returns undef if LBVXS is not
+# loaded.  This is useful for external XS modules, because calling the C
+# function directly is faster.
+#
+# The prototype of the C rasterize function is:
+#
+#     AV *rasterize(AV *vec_array, AV *min_array, AV *max_array);
+#
+# It operates just like the perl rasterize function, and returns NULL when the
+# end of the loop has been reached.
+#
+sub _xs_rasterize_ptr { return undef }
 
 
 1;
@@ -397,6 +468,18 @@ Check whether C<$vec> is within the box defined by C<$begin> and C<$end>.
 Return 1 if vector is contained within the box, and 0 otherwise.
 
 
+=head2 $vec->rasterize($min, $max);
+
+Return the next vector in raster order, or undef if the hypercube space
+has been fully covered.
+
+To enumerate the entire storage area, the caller should call rasterize
+on the storage area's "min" value the first time, and keep looping while
+the return value is defined.  To enumerate a smaller rectangle, the
+caller should pass in the min and max vectors describing the rectangle,
+and keep looping while the return value is defined.
+
+
 
 =head1 MATHEMATICAL OPERATIONS
 
@@ -437,6 +520,24 @@ both point at the same spot.
 
     print "same"   if $v1 == $v2;
     print "differ" if $v1 != $v2;
+
+
+=head1 PRIVATE METHODS
+
+=head2 _xs_rasterize_ptr
+
+    my $ptr = $v1->_xs_rasterize_ptr();
+
+Get a pointer to the C "rasterize" function.  Returns undef if LBVXS is not
+loaded.  This is useful for external XS modules, to allow them to call the
+C function directly for additional speed.
+
+The prototype of the C rasterize function is:
+
+    AV *rasterize(AV *vec_array, AV *min_array, AV *max_array);
+
+It operates just like the perl rasterize function, and returns NULL when the
+end of the loop has been reached.
 
 
 =head1 SEE ALSO

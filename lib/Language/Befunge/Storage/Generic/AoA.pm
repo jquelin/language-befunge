@@ -354,7 +354,7 @@ sub labels_lookup {
         push(@directions,$v2);
     }
     
-    R: for(my $this = $min->copy; $this != $max; $this = $self->_rasterize($this)) {
+    R: for(my $this = $min->copy; defined($this); $this = $this->rasterize($min, $max)) {
         V: for my $v (@directions) {
             next R unless $self->get_char($this) eq ";";
             my ($label, $loc) = $self->_labels_try( $this, $v );
@@ -516,33 +516,6 @@ sub _labels_try {
     return undef unless defined $1;
     return undef unless length  $1;
     return ($1, $vector);
-}
-
-
-#
-# _rasterize( $vector )
-#
-# Return the next vector in raster order.  To enumerate the entire
-# storage area, the caller should pass in $$self{min} the first time,
-# and keep looping until the return value == $$self{max}.
-#
-sub _rasterize {
-    my ($self, $v) = @_;
-    $v = $v->copy;
-    my $nd = $$self{nd};
-    my ($min, $max) = ($$self{min}, $$self{max});
-    for my $d (0..$nd-1) {
-        if($v->get_component($d) > $max->get_component($d)) {
-            # wrap to the next highest dimension, continue loop
-            $v->set_component($d, $min->get_component($d));
-        } else {
-            # still have farther to go in this dimension.
-            $v->set_component($d, $v->get_component($d) + 1);
-            return $v;
-        }
-    }
-    # ran out of dimensions!
-    return $max;
 }
 
 
@@ -712,14 +685,6 @@ Return true if a location is out of bounds.
 Try in the specified direction if the funge space matches a label
 definition. Return undef if it wasn't a label definition, or the name
 of the label if it was a valid label.
-
-
-=head2 _rasterize( vector )
-
-Return the next vector in raster order.  To enumerate the entire
-storage area, the caller should pass in $$self{min} the first time,
-and keep looping until the return value == $$self{max}.
-
 
 
 =head1 BUGS
