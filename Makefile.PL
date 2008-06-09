@@ -27,6 +27,7 @@ WriteMakefile(
         'List::Util'            => 0,
         'Readonly'              => 0,
         'Storable'              => 0,
+        'Test::Exception'       => 0,
         'Test::More'            => 0,
         'UNIVERSAL::require'    => 0,
     }
