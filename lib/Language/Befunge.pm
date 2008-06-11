@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Language::Befunge - a Befunge-98 interpreter
+Language::Befunge - a generic funge interpreter
 
 
 =head1 SYNOPSIS
@@ -52,7 +52,8 @@ Language::Befunge - a Befunge-98 interpreter
 Enter the realm of topological languages!
 
 This module implements the Funge-98 specifications on a 2D field (also
-called Befunge). It can also work as a Trefunge implementation (3D).
+called Befunge). It can also work as a n-funge implementation (3D and
+more).
 
 This Befunge-98 interpreters assumes the stack and Funge-Space cells
 of this implementation are 32 bits signed integers (I hope your os
@@ -83,8 +84,8 @@ This module also implements the Concurrent Funge semantics.
 
 =head2 new( [params] )
 
-Call directly the Language::Befunge::Interpreter constructor. Refer to
-L<Language::Befunge::Interpreter> for more information.
+Call directly the C<Language::Befunge::Interpreter> constructor. Refer
+to L<Language::Befunge::Interpreter> for more information.
 
 
 =head1 TODO
