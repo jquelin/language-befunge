@@ -72,10 +72,6 @@ Lahey-Space topology to be more precise) looks like the following:
                      y|2,147,483,647
                       v
 
-This implementation is meant to work on unix-like systems, because
-this interpreters only handle the character which ordinal value is 10
-(also known as \n) as an End-Of-Line chars. In particular, no warranty
-is made neither for Microsoft systems (\r\n) nor for Macs (\r).
 
 This module also implements the Concurrent Funge semantics.
 
