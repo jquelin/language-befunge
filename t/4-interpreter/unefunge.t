@@ -14,6 +14,8 @@
 
 use strict;
 use Language::Befunge;
+use aliased 'Language::Befunge::Vector' => 'LBV';
+
 use POSIX qw! tmpnam !;
 use Test::More;
 
@@ -118,6 +120,10 @@ END_OF_CODE
 $unef->run_code;
 $out = slurp;
 is( $out, "1 2 " );
+BEGIN { $tests += 1 };
+
+# rectangle() just returns the original string again
+is($unef->storage->rectangle(LBV->new(0), LBV->new(9)), '1#q.2^3.q', 'rectangle works');
 BEGIN { $tests += 1 };
 
 BEGIN { plan tests => $tests };

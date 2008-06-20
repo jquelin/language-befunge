@@ -14,6 +14,8 @@
 
 use strict;
 use Language::Befunge;
+use aliased 'Language::Befunge::Vector' => 'LBV';
+
 use POSIX qw! tmpnam !;
 use Test::More;
 
@@ -113,15 +115,21 @@ BEGIN { $tests += 1 };
 # Interpreter reads trefunge code properly, and operates in 3 dimensions, and
 # knows that vectors are 3 integers.
 sel;
-$tref->store_code( <<"END_OF_CODE" );
-#v401-11x\n
- >..q
-\f h>
-  ^3   <
+my $code = <<"END_OF_CODE";
+#v401-11x
+ >..q    
+\f h>      
+  ^3   < 
 END_OF_CODE
+$tref->store_code( $code );
 $tref->run_code;
 $out = slurp;
 is( $out, "3 4 ", 'full operation' );
+BEGIN { $tests += 1 };
+
+# rectangle() returns the original box again
+chomp $code;
+is($tref->storage->rectangle(LBV->new(0,0,0), LBV->new(9,2,2)), $code, 'rectangle works');
 BEGIN { $tests += 1 };
 
 BEGIN { plan tests => $tests };
