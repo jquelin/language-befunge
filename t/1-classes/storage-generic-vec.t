@@ -16,9 +16,9 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 104;
+use Test::More tests => 111;
 
-use Language::Befunge::Storage::Generic::Vec;
+use aliased 'Language::Befunge::Storage::Generic::Vec' => 'Storage';
 use Language::Befunge::Wrapping::LaheySpace;
 use aliased 'Language::Befunge::Vector' => 'LBV';
 use List::Util qw{ max };
@@ -389,3 +389,16 @@ is($$s{min}, "(-2,-1)", "s has old min");
 is($$n{min}, "(-2,-2)", "n has new min");
 is($$s{max}, "(15,1)" , "s has new max");
 is($$n{max}, "(15,0)" , "n has old max");
+
+# _s32_to_u32
+is($s->_s32_to_u32(0x7f000000), 0x7f000000, '_s32_to_u32');
+is($s->_s32_to_u32(-1        ), 0xffffffff, '_s32_to_u32');
+
+# _u32_to_s32
+is($s->_u32_to_s32(0x7f000000), 0x7f000000, '_u32_to_s32');
+is($s->_u32_to_s32(0xffffffff), -1        , '_u32_to_s32');
+
+# bad arguments to constructor
+throws_ok(sub { Storage->new()  }, qr/^Usage/, 'new chokes on undef dimensions');
+throws_ok(sub { Storage->new(0) }, qr/^Usage/, 'new chokes on zero dimensions');
+throws_ok(sub { Storage->new(1) }, qr/^Usage/, 'new chokes on null Wrapping');
