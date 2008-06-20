@@ -15,7 +15,7 @@
 use strict;
 use Language::Befunge;
 use POSIX qw! tmpnam !;
-use Test;
+use Test::More;
 
 # Vars.
 my ($file, $fh);
@@ -49,8 +49,27 @@ sel;
 $tref = Language::Befunge->new( {file=>'t/_resources/q.bf', syntax=>'trefunge98'} );
 $tref->run_code;
 $out = slurp;
-ok( $out, "" );
+is( $out, '', 'constructor worked' );
 BEGIN { $tests += 1 };
+
+# Custom constructor.
+$tref = Language::Befunge->new({
+    syntax  => 'trefunge98',
+    storage => 'Language::Befunge::Storage::Generic::Vec' });
+is(ref($tref->storage), 'Language::Befunge::Storage::Generic::Vec', 'storage specified');
+$tref = Language::Befunge->new({
+    syntax   => 'trefunge98',
+    wrapping => 'Language::Befunge::Wrapping::LaheySpace' });
+is(ref($tref->_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
+$tref = Language::Befunge->new({
+    syntax => 'trefunge98',
+    ops    => 'Language::Befunge::Ops::GenericFunge98' });
+ok(exists($$tref{ops}{m}), 'ops specified');
+$tref = Language::Befunge->new({
+    syntax => 'trefunge98',
+    dims   => 4 });
+is($$tref{dimensions}, 4, 'dims specified');
+BEGIN { $tests += 4 };
 
 # Basic reading.
 $tref = Language::Befunge->new( {syntax=>'trefunge98'} );
@@ -58,7 +77,7 @@ sel;
 $tref->read_file( "t/_resources/q.bf" );
 $tref->run_code;
 $out = slurp;
-ok( $out, "" );
+is( $out, "", 'read_file' );
 BEGIN { $tests += 1 };
 
 # Basic storing.
@@ -68,7 +87,7 @@ q
 END_OF_CODE
 $tref->run_code;
 $out = slurp;
-ok( $out, "" );
+is( $out, '', 'store_code' );
 BEGIN { $tests += 1 };
 
 # Interpreter must treat non-characters as if they were an 'r' instruction.
@@ -78,7 +97,7 @@ $tref->store_code( <<'END_OF_CODE' );
 END_OF_CODE
 $tref->run_code;
 $out = slurp;
-ok( $out, "1 2 " );
+is( $out, "1 2 ", 'treats non-characters like "r"' );
 BEGIN { $tests += 1 };
 
 # Interpreter must treat non-commands as if they were an 'r' instruction.
@@ -88,7 +107,7 @@ $tref->store_code( <<'END_OF_CODE' );
 END_OF_CODE
 $tref->run_code;
 $out = slurp;
-ok( $out, "1 2 " );
+is( $out, "1 2 ", 'treats non-commands like "r"' );
 BEGIN { $tests += 1 };
 
 # Interpreter reads trefunge code properly, and operates in 3 dimensions, and
@@ -102,7 +121,7 @@ $tref->store_code( <<"END_OF_CODE" );
 END_OF_CODE
 $tref->run_code;
 $out = slurp;
-ok( $out, "3 4 " );
+is( $out, "3 4 ", 'full operation' );
 BEGIN { $tests += 1 };
 
 BEGIN { plan tests => $tests };
