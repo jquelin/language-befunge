@@ -16,7 +16,7 @@ use strict;
 use warnings;
 
 use Test::Exception;
-use Test::More tests => 111;
+use Test::More tests => 112;
 
 use aliased 'Language::Befunge::Storage::Generic::Vec' => 'Storage';
 use Language::Befunge::Wrapping::LaheySpace;
@@ -397,6 +397,9 @@ is($s->_s32_to_u32(-1        ), 0xffffffff, '_s32_to_u32');
 # _u32_to_s32
 is($s->_u32_to_s32(0x7f000000), 0x7f000000, '_u32_to_s32');
 is($s->_u32_to_s32(0xffffffff), -1        , '_u32_to_s32');
+
+# this may return 0 or 1, depending on whether LBSGVXS is installed
+is($s->_is_xs(), $s->_is_xs(), "_is_xs");
 
 # bad arguments to constructor
 throws_ok(sub { Storage->new()  }, qr/^Usage/, 'new chokes on undef dimensions');
