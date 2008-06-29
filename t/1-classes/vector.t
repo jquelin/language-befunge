@@ -261,4 +261,4 @@ throws_ok(sub { $v2d != $v3d },
 	qr/uneven dimensions/, "misaligned vector arithmetic (!=)");
 
 # _xs_rasterize_ptr
-lives_ok(sub { $v2->_xs_rasterize_ptr() }, '_xs_rasterize_ptr');
+lives_ok(sub { Language::Befunge::Vector::_xs_rasterize_ptr() }, '_xs_rasterize_ptr');
