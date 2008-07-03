@@ -17,6 +17,9 @@ High-level changelog
 Low-level changelog
 ===================
 
+4.02
+ - completing list of required modules, even if in core
+
 4.01 Mon Jun  9 17:33:48 CEST 2008
  - Test::Exception now a hard prereq of the module
 
