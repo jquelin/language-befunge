@@ -17,7 +17,7 @@ High-level changelog
 Low-level changelog
 ===================
 
-4.02
+4.02 Thu Jul  3 20:44:11 CEST 2008
  - completing list of required modules, even if a corelist one
  - providing empty base class LBW
 
