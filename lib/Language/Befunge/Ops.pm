@@ -837,7 +837,7 @@ sub stdio_in_file {
         local $/; # slurp mode.
         $lines = <F>;
     }
-    close F or $ip->dir_reverse, return;
+    close F;
 
     # Store the code and the result vector.
     my ($size) = $flag % 2
@@ -875,7 +875,7 @@ sub stdio_out_file {
     # Write file.
     open F, ">", $path or $ip->dir_reverse, return;
     print F $data;
-    close F or $ip->dir_reverse, return;
+    close F;
 }
 
 
