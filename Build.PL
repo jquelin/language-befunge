@@ -48,7 +48,7 @@ my $builder = Module::Build->new
     build_requires       => \%build_requires,
     requires             => \%requires,
     recommends           => \%recommends,
-    script_files         => [ 'bin/jqbf98' ],
+    script_files         => [ 'bin/jqbef98' ],
     add_to_cleanup       =>
       [ 'Language-Befunge-*', map { ( '*/' x $_ ) . '*~' } 0..5 ],
     recursive_test_files => 1,

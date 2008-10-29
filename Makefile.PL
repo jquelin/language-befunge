@@ -18,7 +18,7 @@ WriteMakefile(
     AUTHOR        => 'Jerome Quelin, <jquelin@cpan.org>',
     VERSION_FROM  => 'lib/Language/Befunge.pm',
     ABSTRACT_FROM => 'lib/Language/Befunge.pm',
-    EXE_FILES     => [ 'bin/jqbf98' ],
+    EXE_FILES     => [ 'bin/jqbef98' ],
     LICENSE       => 'perl',
     PREREQ_PM     => {
         'aliased'               => '0.22',
