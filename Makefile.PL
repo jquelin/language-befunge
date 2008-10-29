@@ -25,6 +25,7 @@ WriteMakefile(
         'Carp'                  => 0,
         'Class::Accessor::Fast' => 0,
         'Config'                => 0,
+        'FindBin'               => 0,
         'List::Util'            => 0,
         'POSIX'                 => 0,
         'Readonly'              => 0,
