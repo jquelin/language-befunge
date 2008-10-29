@@ -14,6 +14,7 @@
 
 use strict;
 use Language::Befunge;
+use Language::Befunge::IP;
 use Language::Befunge::Vector;
 use POSIX qw! tmpnam !;
 use Test;
@@ -113,8 +114,8 @@ $out = slurp;
 ok( $out, "1 " );
 sel; # Negative.
 $bef->store_code( <<'END_OF_CODE' );
-v   q.1 < >06-j2.q
->         ^
+v   q.1 <>06-j2.q
+>        ^
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
@@ -168,18 +169,19 @@ $bef->store_code( <<'END_OF_CODE' );
 END_OF_CODE
 eval { $bef->run_code; };
 $out = slurp;
-ok( $@, qr/Attempt to repeat \('k'\) a forbidden instruction \(';'\)/ );
+ok( $out eq '' );
 sel; # repeat repeat.
 $bef->store_code( <<'END_OF_CODE' );
 5kkq
 END_OF_CODE
 eval { $bef->run_code; };
 $out = slurp;
-ok( $@, qr/Attempt to repeat \('k'\) a repeat instruction \('k'\)/ );
+ok( $out eq '' );
 sel; # move_ip() short circuits on a dead end
 $bef->store_code( <<'END_OF_CODE' );
 
 END_OF_CODE
+$bef->set_curip( Language::Befunge::IP->new );
 $bef->get_curip->set_position( Language::Befunge::Vector->new_zeroes(2) );
 eval {
     local $SIG{ALRM} = sub { die "timeout\n" };
