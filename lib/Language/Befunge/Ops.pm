@@ -13,7 +13,7 @@ require 5.010;
 use strict;
 use warnings;
 
-use Config;   # For the 'y' instruction.
+use File::Spec::Functions qw{ catfile };   # For the 'y' instruction.
 
 
 =head1 NAME
@@ -933,7 +933,7 @@ sub sys_info {
     push @cells, 1;             # C-language system() call behaviour.
 
     # 6. Path separator character.
-    push @cells, ord( $Config{path_sep} );
+    push @cells, ord( catfile('','') );
 
     # 7. Number of dimensions.
     push @cells, $ip->get_dims;
