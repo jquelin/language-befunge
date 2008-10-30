@@ -158,11 +158,11 @@ $out = slurp;
 ok( $out, "1 " );
 sel; # repeat negative.
 $bef->store_code( <<'END_OF_CODE' );
-5-kq
+5-k43.q
 END_OF_CODE
 eval { $bef->run_code; };
 $out = slurp;
-ok( $@, qr/Attempt to repeat \('k'\) a negative number of times \(-5\)/ );
+ok( $out, "3 " );
 sel; # repeat forbidden char.
 $bef->store_code( <<'END_OF_CODE' );
 5k;q
