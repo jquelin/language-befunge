@@ -13,8 +13,8 @@
 #---------------------------------#
 
 use strict;
+use File::Spec::Functions qw{ catfile };
 use Language::Befunge;
-use Config;
 use POSIX qw! tmpnam !;
 use Test::More;
 
@@ -89,11 +89,13 @@ BEGIN { $tests += 1 };
 
 sel; # 3. handprint.
 $bef->store_code( <<'END_OF_CODE' );
-3y,,,,,,.q
+3y.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-is( $out, "JQBF980 " );
+my $handprint = 0;
+$handprint = $handprint*256 + ord($_) for split //, $bef->get_handprint;
+is( $out, "$handprint " );
 BEGIN { $tests += 1 };
 
 sel; # 4. version of interpreter.
@@ -122,7 +124,7 @@ $bef->store_code( <<'END_OF_CODE' );
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-is( $out, $Config{path_sep} );
+is( $out, catfile('','') );
 BEGIN { $tests += 1 };
 
 sel; # 7. size of funge (2D).
@@ -199,7 +201,7 @@ $bef->store_code( <<'END_OF_CODE' );
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-is( $out, "13 34 " );
+is( $out, "12 33 " );
 BEGIN { $tests += 1 };
 
 sel; # 15. Date.
@@ -272,11 +274,11 @@ BEGIN { $tests += 1 };
 
 sel; # negative.
 $bef->store_code( <<'END_OF_CODE' );
-02-y..,,,,,,q
+02-y...q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-is( $out, "15 4 JQBF98" );
+is( $out, "15 4 $handprint " );
 BEGIN { $tests += 1 };
 
 sel; # pick in stack.
