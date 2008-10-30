@@ -483,7 +483,7 @@ sub flow_no_op {
 
 =item flow_comments(  )
 
-Bypass comments in one tick.
+Bypass comments in B<zero> tick.
 
 =cut
 sub flow_comments {
@@ -491,7 +491,9 @@ sub flow_comments {
     $lbi->move_ip($lbi->get_curip);
     $lbi->move_ip($lbi->get_curip, qr/[^;]/);
     $lbi->move_ip($lbi->get_curip);
+    $lbi->move_ip($lbi->get_curip);
     $lbi->debug( "skipping comments\n" );
+    $lbi->process_ip(0);
 }
 
 
