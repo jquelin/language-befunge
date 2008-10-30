@@ -923,8 +923,9 @@ sub sys_info {
     push @cells, 4;
 
     # 3. implementation handprint.
-    my @hand = reverse map { ord } split //, $lbi->get_handprint . chr(0);
-    push @cells, \@hand;
+    my $handprint = 0;
+    $handprint = $handprint * 256 + ord($_) for split //, $lbi->get_handprint;
+    push @cells, $handprint;
 
     # 4. version number.
     my $ver = $Language::Befunge::VERSION;

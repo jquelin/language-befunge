@@ -133,7 +133,7 @@ sub new {
         ops        => $opts->{ops}->get_ops_map,
         ips        => [],
         newips     => [],
-        handprint  => 'JQBF98', # the official handprint
+        handprint  => 'JQBF', # the official handprint
         _wrapping  => $wrapping,
       };
     bless $self, $class;
