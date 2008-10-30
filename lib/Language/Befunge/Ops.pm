@@ -941,7 +941,7 @@ sub sys_info {
     # 8. Unique IP number.
     push @cells, $ip->get_id;
 
-    # 9. Concurrent Funge (not implemented).
+    # 9. Unique team number for the IP (NetFunge, not implemented).
     push @cells, 0;
 
     # 10. Position of the curent IP.
