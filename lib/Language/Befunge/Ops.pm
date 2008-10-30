@@ -986,7 +986,7 @@ sub sys_info {
     push @cells, \@sizes;
 
     # 19. $file + params.
-    my $str = join chr(0), $lbi->get_file, @{$lbi->get_params}, chr(0);
+    my $str = join chr(0), $lbi->get_file, @{$lbi->get_params}, chr(0)x2;
     my @cmdline = reverse map { ord } split //, $str;
     push @cells, \@cmdline;
 
