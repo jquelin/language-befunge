@@ -965,8 +965,8 @@ sub sys_info {
     # 14. Dims of the storage.
     my $max = $storage->max;
     # FIXME: multiple dims?
-    my @dims = ( $max->get_component(0) - $min->get_component(0) + 1,
-                 $max->get_component(1) - $min->get_component(1) + 1 );
+    my @dims = ( $max->get_component(0) - $min->get_component(0),
+                 $max->get_component(1) - $min->get_component(1) );
     push @cells, \@dims;
 
     # 15/16. Current date/time.
