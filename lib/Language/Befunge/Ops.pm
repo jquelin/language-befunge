@@ -535,7 +535,7 @@ sub flow_repeat {
     $kcounter == 0 and return;
 
     # Ooops, error.
-    $kcounter < 0 and $lbi->abort( "Attempt to repeat ('k') a negative number of times ($kcounter)" );
+    $kcounter < 0 and return;
 
     # Fetch instruction to repeat.
     my $val = $lbi->storage->get_value( $ip->get_position );
