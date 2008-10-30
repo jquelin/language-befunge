@@ -541,10 +541,7 @@ sub flow_repeat {
     my $val = $lbi->storage->get_value( $ip->get_position );
 
     # Check if we can repeat the instruction.
-    $val > 0 and $val < 256 and chr($val) =~ /([ ;])/ and
-      $lbi->abort( "Attempt to repeat ('k') a forbidden instruction ('$1')" );
-    $val > 0 and $val < 256 and chr($val) eq "k" and
-      $lbi->abort( "Attempt to repeat ('k') a repeat instruction ('k')" );
+    $val > 0 and $val < 256 and chr($val) =~ /([ ;k])/ and return;
 
     $lbi->process_ip(0) for (1..$kcounter);
 }
