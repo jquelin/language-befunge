@@ -509,7 +509,7 @@ sub flow_comments {
 =cut
 sub flow_trampoline {
     my ($lbi) = @_;
-    $lbi->move_ip($lbi->get_curip);
+    $lbi->_move_ip_once($lbi->get_curip);
     $lbi->debug( "trampoline! (skipping next instruction)\n" );
 }
 
