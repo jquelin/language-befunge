@@ -103,7 +103,7 @@ sub str_store_char {
     my $ip = $lbi->get_curip;
 
     # Moving pointer.
-    $lbi->move_ip($lbi->get_curip);
+    $lbi->_move_ip_once($lbi->get_curip);
 
     # Fetching value.
     my $val = $ip->spop;
