@@ -136,11 +136,11 @@ BEGIN { $tests += 2 };
 # Repeat instruction (glurps).
 sel; # normal repeat.
 $bef->store_code( <<'END_OF_CODE' );
-572k.q
+3572k.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
-ok( $out, "7 5 " );
+ok( $out, "7 5 3 " );
 sel; # null repeat.
 $bef->store_code( <<'END_OF_CODE' );
 0k.q
@@ -151,7 +151,8 @@ ok( $out, "" );
 sel; # useless repeat.
 $bef->store_code( <<'END_OF_CODE' );
 5kv
-  > 1.q
+ > 1.q
+  >2.q
 END_OF_CODE
 $bef->run_code;
 $out = slurp;
