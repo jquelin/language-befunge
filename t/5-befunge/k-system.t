@@ -250,7 +250,7 @@ BEGIN { $tests += 1 };
 
 sel; # 23+. Args.
 $bef->store_code( <<'END_OF_CODE' );
-yf8+k$ >  :#, _ $a, :#v _q
+yf7+k$ >  :#, _ $a, :#v _q
        ^              <
 END_OF_CODE
 $bef->run_code( "foo", 7, "bar" );
@@ -265,7 +265,7 @@ sel; # 24+. %ENV.
 $bef->store_code( <<'END_OF_CODE' );
 v                   > $ ;EOL; a,  v
               > :! #^_ ,# #! #: <
-> y ff1++k$ : | ;new pair;   :    <
+> y ff+k$   : | ;new pair;   :    <
               q
 END_OF_CODE
 $bef->run_code;
