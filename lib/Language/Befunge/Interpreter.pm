@@ -453,7 +453,7 @@ sub _do_instruction {
     if ( exists $self->get_ops->{$char} ) {
         # regular instruction.
         my $meth = $self->get_ops->{$char};
-        $meth->($self);
+        $meth->($self, $char);
 
     } else {
         # not a regular instruction: reflect.
