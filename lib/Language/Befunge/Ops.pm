@@ -83,7 +83,7 @@ sub str_fetch_char {
     my $ip = $lbi->get_curip;
 
     # Moving pointer...
-    $lbi->move_ip($lbi->get_curip);
+    $lbi->_move_ip_once($lbi->get_curip);
 
    # .. then fetch value and push it.
     my $ord = $lbi->storage->get_value( $ip->get_position );
