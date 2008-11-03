@@ -527,25 +527,23 @@ sub flow_jump_to {
 =cut
 sub flow_repeat {
     my ($lbi) = @_;
-    my $ip = $lbi->get_curip;
+    my $ip  = $lbi->get_curip;
+    my $pos = $ip->get_position;
 
     my $kcounter = $ip->spop;
     $lbi->debug( "repeating next instruction $kcounter times.\n" );
+
+    # fetch instruction to repeat
     $lbi->move_ip($lbi->get_curip);
+    my $char = $lbi->storage->get_char($ip->get_position);
 
-    # Nothing to repeat.
-    $kcounter == 0 and return;
+    $char eq 'k' and return;     # k cannot be itself repeated
+    $kcounter == 0 and return;   # nothing to repeat
+    $kcounter  < 0 and return;   # oops, error
 
-    # Ooops, error.
-    $kcounter < 0 and return;
-
-    # Fetch instruction to repeat.
-    my $val = $lbi->storage->get_value( $ip->get_position );
-
-    # Check if we can repeat the instruction.
-    $val > 0 and $val < 256 and chr($val) =~ /([ ;k])/ and return;
-
-    $lbi->process_ip(0) for (1..$kcounter);
+    # reset position back to where k is, and repeat instruction
+    $ip->set_position($pos);
+    $lbi->_do_instruction($char) for (1..$kcounter);
 }
 
 
