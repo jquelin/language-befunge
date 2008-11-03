@@ -652,10 +652,10 @@ sub block_open {
     $ip->soss_push( $ip->get_storage->get_all_components );
 
     # Set the new Storage Offset.
-    $lbi->move_ip($lbi->get_curip);
+    $lbi->_move_ip_once($lbi->get_curip);
     $ip->set_storage( $ip->get_position );
     $ip->dir_reverse;
-    $lbi->move_ip($lbi->get_curip);
+    $lbi->_move_ip_once($lbi->get_curip);
     $ip->dir_reverse;
 }
 
