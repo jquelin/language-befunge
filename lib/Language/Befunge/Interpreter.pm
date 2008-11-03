@@ -217,7 +217,6 @@ sub move_ip {
     MOVE: while (1) {
         # sanity check
         my $pos = $ip->get_position;
-        $self->abort("infinite loop") if $pos == $orig;
         $char = $storage->get_char($pos);
 
         # skip spaces
