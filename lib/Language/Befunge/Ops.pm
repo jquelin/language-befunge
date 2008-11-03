@@ -524,7 +524,7 @@ sub flow_jump_to {
     $lbi->debug( "skipping $count instructions\n" );
     $count == 0 and return;
     $count < 0  and $ip->dir_reverse; # We can move backward.
-    $lbi->move_ip($lbi->get_curip) for (1..abs($count));
+    $lbi->_move_ip_once($lbi->get_curip) for (1..abs($count));
     $count < 0 and $ip->dir_reverse;
 }
 
