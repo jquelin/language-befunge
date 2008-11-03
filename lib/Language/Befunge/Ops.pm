@@ -40,11 +40,11 @@ Push the current number onto the TOSS.
 
 =cut
 sub num_push_number {
-    my ($lbi) = @_;
+    my ($lbi, $char) = @_;
 
     # Fetching char.
     my $ip  = $lbi->get_curip;
-    my $num = hex( chr( $lbi->storage->get_value( $ip->get_position ) ) );
+    my $num = hex( $char );
 
     # Pushing value.
     $ip->spush( $num );
