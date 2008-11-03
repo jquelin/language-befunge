@@ -985,10 +985,7 @@ sub sys_info {
     push @infos, $ip->ss_count + 1;
 
     # 18. Size of each stack in the stack stack.
-    # !!FIXME!! Funge specs just tell to push onto the
-    # stack the size of the stacks, but nothing is
-    # said about how user will retrieve the number of
-    # stacks.
+    # note: the number of stack is given by previous value.
     my @sizes = reverse $ip->ss_sizes;
     push @infos, \@sizes;
 
