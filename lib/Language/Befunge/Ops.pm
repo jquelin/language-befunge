@@ -467,8 +467,12 @@ A serie of spaces is to be treated as B<one> NO-OP.
 =cut
 sub flow_space {
     my ($lbi) = @_;
-    $lbi->move_ip( $lbi->get_curip, qr/ / );
-    $lbi->debug( "slurping serie of spaces\n" );
+    my $ip = $lbi->get_curip;
+    $lbi->_move_ip_till($ip, qr/ /);
+    $lbi->move_ip($lbi->get_curip);
+
+    my $char = $lbi->storage->get_char($ip->get_position);
+    $lbi->_do_instruction($char);
 }
 
 
@@ -488,12 +492,15 @@ Bypass comments in B<zero> tick.
 =cut
 sub flow_comments {
     my ($lbi) = @_;
-    $lbi->move_ip($lbi->get_curip);
-    $lbi->move_ip($lbi->get_curip, qr/[^;]/);
-    $lbi->move_ip($lbi->get_curip);
-    $lbi->move_ip($lbi->get_curip);
-    $lbi->debug( "skipping comments\n" );
-    $lbi->process_ip(0);
+    my $ip = $lbi->get_curip;
+
+    $lbi->_move_ip_once($ip);             # skip comment ';'
+    $lbi->_move_ip_till( $ip, qr/[^;]/ ); # till just before matching ';'
+    $lbi->_move_ip_once($ip);             # till matching ';'
+    $lbi->_move_ip_once($ip);             # till just after matching ';'
+
+    my $char = $lbi->storage->get_char($ip->get_position);
+    $lbi->_do_instruction($char);
 }
 
 
