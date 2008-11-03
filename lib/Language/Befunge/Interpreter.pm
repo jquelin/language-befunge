@@ -415,17 +415,7 @@ sub process_ip {
         }
 
     } else {
-        # Not in string-mode.
-        if ( exists $self->get_ops->{$char} ) {
-            # Regular instruction.
-            my $meth = $self->get_ops->{$char};
-            $meth->($self);
-
-        } else {
-            # Not a regular instruction: reflect.
-            $self->debug( "the command value $ord (char='$char') is not implemented.\n");
-            $ip->dir_reverse;
-        }
+        $self->_do_instruction($char);
     }
 
     if ($continue) {
@@ -441,6 +431,27 @@ sub process_ip {
 }
 
 #-- PRIVATE METHODS
+
+#
+# $lbi->_do_instruction( $char );
+#
+# interpret instruction $char according to loaded ops map.
+#
+sub _do_instruction {
+    my ($self, $char) = @_;
+
+    if ( exists $self->get_ops->{$char} ) {
+        # regular instruction.
+        my $meth = $self->get_ops->{$char};
+        $meth->($self);
+
+    } else {
+        # not a regular instruction: reflect.
+        my $ord = ord($char);
+        $self->debug( "the command value $ord (char='$char') is not implemented.\n");
+        $self->get_curip->dir_reverse;
+    }
+}
 
 
 #
