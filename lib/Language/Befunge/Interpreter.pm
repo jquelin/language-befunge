@@ -212,22 +212,32 @@ sub move_ip {
 
     my $storage = $self->storage;
     my $orig = $ip->get_position;
+    $self->_move_ip_once($ip);
     my $char;
-    do {
-        # moving one step beyond...
-        $self->_move_ip_once($ip);
+    MOVE: while (1) {
+        # sanity check
         my $pos = $ip->get_position;
         $self->abort("infinite loop") if $pos == $orig;
+        $char = $storage->get_char($pos);
+
+        # skip spaces
+        if ( $char eq ' ' ) {
+            $self->_move_ip_till( $ip, qr/ / );   # skip all spaces
+            $self->_move_ip_once($ip);            # skip last space
+            redo MOVE;
+        }
 
         # skip comments
-        $char = $storage->get_char($pos);
         if ( $char eq ';' ) {
             $self->_move_ip_once($ip);             # skip comment ';'
             $self->_move_ip_till( $ip, qr/[^;]/ ); # till just before matching ';'
             $self->_move_ip_once($ip);             # till matching ';'
             $self->_move_ip_once($ip);             # till just after matching ';'
+            redo MOVE;
         }
-    } while ( $char eq ' ' );
+
+        last MOVE;
+    }
 }
 
 
