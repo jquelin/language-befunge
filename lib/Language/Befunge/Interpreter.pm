@@ -202,39 +202,31 @@ BEGIN {
 
 
 #
-# move_ip( $ip [,regex] )
+# move_ip( $ip )
 #
-# Move $ip according to its delta on the storage.
-#
-# If a regex ( a C<qr//> object ) is specified, then $ip will move as
-# long as the pointed character match the supplied regex.
-#
-# Example: given the code C<;foobar;> (assuming the IP points on the
-# first C<;>) and the regex C<qr/[^;]/>, the IP will move in order to
-# point on the C<r>.
+# Move $ip according to its delta on the storage. Spaces and comments
+# (enclosed with semi-colons ';') are skipped silently.
 #
 sub move_ip {
-    my ($self, $ip, $re) = @_;
+    my ($self, $ip) = @_;
+
     my $storage = $self->storage;
-
-    if ( defined $re ) {
-        my $orig = $ip->get_position;
-        # moving as long as we did not reach the condition.
-        while ( $storage->get_char($ip->get_position) =~ $re ) {
-            $self->_move_ip_forward($ip);
-            $self->abort("infinite loop")
-                if $ip->get_position == $orig;
-        }
-
-        # we moved one char too far.
-        $ip->dir_reverse;
-        $self->_move_ip_forward($ip);
-        $ip->dir_reverse;
-
-    } else {
+    my $orig = $ip->get_position;
+    my $char;
+    do {
         # moving one step beyond...
-        $self->_move_ip_forward($ip);
-    }
+        $self->_move_ip_once($ip);
+        my $pos = $ip->get_position;
+        $self->abort("infinite loop") if $pos == $orig;
+
+        # skip comments
+        $char = $storage->get_char($pos);
+        if ( $char eq ';' ) {
+            $self->_move_ip_till( $ip, qr/[^;]/ ); # skip till just before matching ';'
+            $self->_move_ip_once($ip);           # till matching ';'
+            $self->_move_ip_once($ip);           # till just after matching ';'
+        }
+    } while ( $char eq ' ' );
 }
 
 
@@ -412,7 +404,7 @@ sub process_ip {
         } elsif ( $char eq ' ' ) {
             # A serie of spaces, to be treated as one space.
             $self->debug( "string-mode: pushing char ' '\n" );
-            $self->move_ip( $ip, qr/ / );
+            $self->_move_ip_till( $ip, qr/ / );
             $ip->spush( $ord );
 
         } else {
@@ -438,7 +430,11 @@ sub process_ip {
     if ($continue) {
         # Tick done for this IP, let's move it and push it in the
         # set of non-terminated IPs.
-        $self->move_ip( $self->get_curip );
+        if ( $ip->get_string_mode ) {
+            $self->_move_ip_once( $self->get_curip );
+        } else {
+            $self->move_ip( $self->get_curip );
+        }
         push @{ $self->get_newips }, $ip unless $ip->get_end;
     }
 }
@@ -447,13 +443,13 @@ sub process_ip {
 
 
 #
-# $lbi->_move_ip_forward( $ip );
+# $lbi->_move_ip_once( $ip );
 #
 # move $ip one step further, according to its velocity. if $ip gets out
 # of bounds, then a wrapping is performed (according to current
 # interpreter wrapping implementation) on the ip.
 #
-sub _move_ip_forward {
+sub _move_ip_once {
     my ($self, $ip) = @_;
     my $storage = $self->storage;
 
@@ -471,6 +467,35 @@ sub _move_ip_forward {
         # wrap needed - this will update the position.
         $self->_wrapping->wrap( $storage, $ip );
     }
+}
+
+
+#
+# _move_ip_till( $ip,regex )
+#
+# Move $ip according to its delta on the storage,  as long as the pointed
+# character match the supplied regex (a qr// object).
+#
+# Example: given the code C<;foobar;> (assuming the IP points on the
+# first C<;>) and the regex C<qr/[^;]/>, the IP will move in order to
+# point on the C<r>.
+#
+sub _move_ip_till {
+    my ($self, $ip, $re) = @_;
+    my $storage = $self->storage;
+
+    my $orig = $ip->get_position;
+    # moving as long as we did not reach the condition.
+    while ( $storage->get_char($ip->get_position) =~ $re ) {
+        $self->_move_ip_once($ip);
+        $self->abort("infinite loop")
+        if $ip->get_position == $orig;
+    }
+
+    # we moved one char too far.
+    $ip->dir_reverse;
+    $self->_move_ip_once($ip);
+    $ip->dir_reverse;
 }
 
 
