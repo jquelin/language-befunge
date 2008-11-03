@@ -222,9 +222,10 @@ sub move_ip {
         # skip comments
         $char = $storage->get_char($pos);
         if ( $char eq ';' ) {
-            $self->_move_ip_till( $ip, qr/[^;]/ ); # skip till just before matching ';'
-            $self->_move_ip_once($ip);           # till matching ';'
-            $self->_move_ip_once($ip);           # till just after matching ';'
+            $self->_move_ip_once($ip);             # skip comment ';'
+            $self->_move_ip_till( $ip, qr/[^;]/ ); # till just before matching ';'
+            $self->_move_ip_once($ip);             # till matching ';'
+            $self->_move_ip_once($ip);             # till just after matching ';'
         }
     } while ( $char eq ' ' );
 }
