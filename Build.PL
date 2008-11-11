@@ -20,6 +20,7 @@ my %requires = (
     'Class::Accessor::Fast' => 0,
     'Config'                => 0,
     'FindBin'               => 0,
+    'Math::BaseCalc'        => 0,
     'Readonly'              => 0,
     'Storable'              => 0,
     'UNIVERSAL::require'    => 0,
