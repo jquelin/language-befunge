@@ -14,11 +14,16 @@ use warnings;
 
 sub new { return bless {}, shift; }
 
+
+# basic IP reflection
 sub _reverse {
     my (undef, $interp) = @_;
 	$interp->get_curip->dir_reverse;
 }
 
+#
+# for each of the library instructions, override it with a reflection.
+#
 BEGIN {
 	for my $l ( 'A'..'Z' ) {
 		eval "*$l = \\&_reverse";

@@ -16,8 +16,14 @@ use Language::Befunge::Vector;
 
 sub new { return bless {}, shift; }
 
+
 # -- bit operations
 
+#
+# $v = A( $a, $b )
+#
+# push $a & $b back onto the stack (bitwise AND)
+#
 sub A {
     my ($self, $interp) = @_;
     my $ip = $interp->get_curip();
@@ -30,6 +36,12 @@ sub A {
 	$ip->spush( $a&$b );
 }
 
+
+#
+# $v = E( $a, $b )
+#
+# push $a ^ $b back onto the stack (bitwise XOR)
+#
 sub E {
     my ($self, $interp) = @_;
     my $ip = $interp->get_curip();
@@ -42,6 +54,12 @@ sub E {
 	$ip->spush( $a^$b );
 }
 
+
+#
+# $v = O( $a, $b )
+#
+# push $a | $b back onto the stack (bitwise OR)
+#
 sub O {
     my ($self, $interp) = @_;
     my $ip = $interp->get_curip();
@@ -57,6 +75,12 @@ sub O {
 
 # -- push / get
 
+#
+# $v = G( $y, $x )
+#
+# push back value stored at coords ($x, $y). note that befunge get is g($x,$y)
+# (ie, the arguments are reversed).
+#
 sub G {
 	my ($self, $lbi) = @_;
 	my $ip = $lbi->get_curip;
@@ -68,6 +92,13 @@ sub G {
     $ip->spush( $val );
 }
 
+
+#
+# P( $v, $y, $x )
+#
+# store value $v at coords ($x, $y). note that befunge put is p($v,$x,$y) (ie,
+# the coordinates are reversed).
+#
 sub P {
 	my ($self, $lbi) = @_;
 	my $ip = $lbi->get_curip;
@@ -82,6 +113,11 @@ sub P {
 
 # -- output
 
+#
+# S( 0gnirts )
+#
+# print popped 0gnirts on stdout.
+#
 sub S {
     my ($self, $lbi) = @_;
     print $lbi->get_curip->spop_gnirts;
@@ -90,6 +126,11 @@ sub S {
 
 # -- coordinates & velocity changes
 
+#
+# X( $x )
+#
+# Change X coordinate of IP to $x.
+#
 sub X {
     my ($self, $lbi) = @_;
     my $ip = $lbi->get_curip;
@@ -98,6 +139,11 @@ sub X {
 	$v->set_component(0,$x);
 }
 
+#
+# Y( $y )
+#
+# Change Y coordinate of IP to $y.
+#
 sub Y {
     my ($self, $lbi) = @_;
     my $ip = $lbi->get_curip;
@@ -106,6 +152,12 @@ sub Y {
 	$v->set_component(1,$y);
 }
 
+
+#
+# V( $dx )
+#
+# Change X coordinate of IP velocity to $dx.
+#
 sub V {
     my ($self, $lbi) = @_;
     my $ip = $lbi->get_curip;
@@ -114,6 +166,12 @@ sub V {
 	$v->set_component(0,$dx);
 }
 
+
+#
+# W( $dy )
+#
+# Change Y coordinate of IP velocity to $dy.
+#
 sub W {
     my ($self, $lbi) = @_;
     my $ip = $lbi->get_curip;
@@ -125,6 +183,12 @@ sub W {
 
 # -- misc
 
+#
+# Z( $bool )
+#
+# Test the top stack element, and if zero, skip over the next cell (i.e., add
+# the delta twice to the current position).
+#
 sub Z {
 	my ($self, $lbi) = @_;
     my $ip = $lbi->get_curip;

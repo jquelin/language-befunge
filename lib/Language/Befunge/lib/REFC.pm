@@ -18,6 +18,14 @@ sub new { return bless {}, shift; }
 
 my @vectors;
 
+
+#
+# $id = R( $x, $y )
+#
+# 'Reference' pops a vector off the stack, and pushes a scalar value back onto
+# the stack, unique within an internal list of references, which refers to that
+# vector.
+#
 sub R { 
 	my ($self, $lbi) = @_;
 	my $ip = $lbi->get_curip;
@@ -26,6 +34,13 @@ sub R {
 	$ip->spush( $#vectors );
 }
 
+
+#
+# ($x, $y) = D( $id )
+#
+# 'Dereference' pops a scalar value off the stack, and pushes the vector back
+# onto the stack which corresponds to that unique reference value.
+#
 sub D {
 	my ($self, $lbi) = @_;
 	my $ip = $lbi->get_curip;

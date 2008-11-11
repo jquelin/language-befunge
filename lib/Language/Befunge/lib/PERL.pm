@@ -16,6 +16,14 @@ use warnings;
 sub new { return bless {}, shift; }
 
 
+# -- Perl embedding
+
+#
+# 0gnirts = E( 0gnirts )
+#
+# 'Eval' pops a 0gnirts string and performs a Perl eval() on it. The
+# result of the call is pushed as a 0gnirts string back onto the stack.
+#
 sub E {
     my ($self, $interp) = @_;
     my $ip = $interp->get_curip();
@@ -28,6 +36,13 @@ sub E {
 	$ip->spush( map{ ord($_) } reverse split(//, $return) );
 }
 
+
+#
+# val = I( 0gnirts )
+#
+# 'Int Eval' acts the same as 'E', except that the result of the call
+# is converted to an integer and pushed as a single cell onto the stack. 
+#
 sub I {
     my ($self, $interp) = @_;
     my $ip = $interp->get_curip();
@@ -39,6 +54,14 @@ sub I {
 	$ip->spush( int $return );
 }
 
+
+# -- Module information
+
+#
+# S
+# 'Shelled' pushes a 0 on the stack, meaning that the Perl language is already
+# loaded (e.g. the interpreter is written in Perl).
+#
 sub S {
     my ($self, $interp) = @_;
     $interp->get_curip->spush(0);

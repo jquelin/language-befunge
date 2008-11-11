@@ -16,6 +16,18 @@ use Language::Befunge::Vector;
 
 sub new { return bless {}, shift; }
 
+# -- roman numbers
+
+#
+# push the corresponding value onto the stack:
+#  - M: 1000
+#  - D: 500
+#  - C: 100
+#  - L: 50
+#  - X: 10
+#  - V: 5
+#  - I: 1
+#
 sub C { $_[1]->get_curip->spush(100); }
 sub D { $_[1]->get_curip->spush(500); }
 sub I { $_[1]->get_curip->spush(1); }
