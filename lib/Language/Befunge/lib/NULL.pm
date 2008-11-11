@@ -32,13 +32,9 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::IP::lib::NULL - extension to opacify loaded extensions
+Language::Befunge::IP::lib::NULL - Extension to opacify loaded extensions
 
 
-=head1 SYNOPSIS
-
-    A-Z - reflect curip (act as 'r')
-    
 
 =head1 DESCRIPTION
 
@@ -49,6 +45,7 @@ This can be loaded before loading a regular transparent fingerprint to make
 it act opaquely.
 
 
+
 =head1 FUNCTIONS
 
 =head2 new
@@ -56,9 +53,15 @@ it act opaquely.
 Create a new NULL instance.
 
 
-=head2 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+=head2 Opacification
 
-Reflect current IP (same as instruction C<r>).
+=over 4
+
+=item A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+All the library instructions reflect current IP (same as instruction C<r>).
+
+=back
 
 
 
@@ -67,9 +70,11 @@ Reflect current IP (same as instruction C<r>).
 L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/NULL.html>.
 
 
+
 =head1 AUTHOR
 
 Jerome Quelin, C<< <jquelin@cpan.org> >>
+
 
 
 =head1 COPYRIGHT & LICENSE

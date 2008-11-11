@@ -72,22 +72,36 @@ semantics.
 Create a new PERL instance.
 
 
-=head2 E( 0gnirts )
+
+=head2 Module information
+
+=over 4
+
+=item S
+
+C<Shelled> pushes a 0 on the stack, meaning that the Perl language is already
+loaded (e.g. the interpreter is written in Perl).
+
+=back
+
+
+=head2 Perl embedding
+
+=over 4
+
+=item 0gnirts = E( 0gnirts )
 
 C<Eval> pops a 0gnirts string and performs a Perl C<eval()> on it. The
 result of the call is pushed as a 0gnirts string back onto the stack.
 
 
-=head2 I( 0gnirts )
+=item val = I( 0gnirts )
 
-C<'Int Eval'> acts the same as C<E>, except that the result of the call
+C<Int Eval> acts the same as C<E>, except that the result of the call
 is converted to an integer and pushed as a single cell onto the stack. 
 
 
-=head2 S
-
-C<Shelled> pushes a 0 on the stack, meaning that the Perl language is already
-loaded (e.g. the interpreter is written in Perl).
+=back
 
 
 
@@ -96,9 +110,11 @@ loaded (e.g. the interpreter is written in Perl).
 L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/PERL.html>.
 
 
+
 =head1 AUTHOR
 
 Jerome Quelin, C<< <jquelin@cpan.org> >>
+
 
 
 =head1 COPYRIGHT & LICENSE

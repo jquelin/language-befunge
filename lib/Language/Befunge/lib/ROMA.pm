@@ -32,7 +32,7 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::IP::lib::ROMA - Roman numerals library
+Language::Befunge::IP::lib::ROMA - Roman numerals extension
 
 
 
@@ -44,6 +44,7 @@ have to do the arithmetic yourself. Executing MCMLXXXIV will not leave 1984
 on the stack. But executing C<MCM\-+LXXX+++IV\-++> should.
 
 
+
 =head1 FUNCTIONS
 
 =head2 new
@@ -51,9 +52,15 @@ on the stack. But executing C<MCM\-+LXXX+++IV\-++> should.
 Create a new ROMA instance.
 
 
-=head2 C D I L M V X
+=head2 Roman numbers
+
+=over 4
+
+=item C D I L M V X
 
 Push the corresponding roman value (M=1000, D=500, etc.) onto the stack.
+
+=back
 
 
 
@@ -66,6 +73,7 @@ L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/ROMA.html>.
 =head1 AUTHOR
 
 Jerome Quelin, C<< <jquelin@cpan.org> >>
+
 
 
 =head1 COPYRIGHT & LICENSE

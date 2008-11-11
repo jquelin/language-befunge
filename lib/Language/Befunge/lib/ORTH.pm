@@ -140,7 +140,7 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::IP::lib::ORTH - Orthogonal Easement Library
+Language::Befunge::IP::lib::ORTH - Orthogonal easement extension
 
 
 
