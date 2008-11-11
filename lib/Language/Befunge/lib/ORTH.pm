@@ -243,6 +243,18 @@ Change Y coordinate of IP velocity to C<$dy>.
 =back
 
 
+=head2 Miscellaneous
+
+=over 4
+
+=item Z( $bool )
+
+Test the top stack element, and if zero, skip over the next cell (i.e., add
+the delta twice to the current position).
+
+
+=back
+
 
 =head1 SEE ALSO
 
