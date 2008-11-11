@@ -19,6 +19,7 @@ lib/Language/Befunge/IP.pm
 lib/Language/Befunge/lib/FOO.pm
 lib/Language/Befunge/lib/HELO.pm
 lib/Language/Befunge/lib/NULL.pm
+lib/Language/Befunge/lib/ORTH.pm
 lib/Language/Befunge/lib/PERL.pm
 lib/Language/Befunge/lib/TEST.pm
 lib/Language/Befunge/Ops.pm
