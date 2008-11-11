@@ -64,7 +64,7 @@ Reflect current IP (same as instruction C<r>).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>.
+L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/NULL.html>.
 
 
 =head1 AUTHOR

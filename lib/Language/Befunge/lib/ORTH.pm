@@ -246,8 +246,9 @@ Change Y coordinate of IP velocity to C<$dy>.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.muppetlabs.com/~breadbox/orth/orth.html>
-and L<http://catseye.tc/projects/funge98/library/ORTH.html>
+L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/ORTH.html>,
+and L<http://www.muppetlabs.com/~breadbox/orth/orth.html>.
+
 
 
 =head1 AUTHOR

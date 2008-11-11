@@ -93,7 +93,7 @@ loaded (e.g. the interpreter is written in Perl).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>.
+L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/PERL.html>.
 
 
 =head1 AUTHOR
