@@ -20,7 +20,7 @@ sub new { return bless {}, shift; }
 # -- modulus
 
 #
-# $mod = M( $x, $y )
+# $mod = M( $x, $y );
 #
 # signed-result modulo: x MOD y = x - FLOOR(x / y) * y
 #
@@ -110,32 +110,27 @@ Create a new MODU instance.
 
 
 
-=head2 Module information
+=head2 Modulo implementations
 
 =over 4
 
-=item S
+=item $mod = M( $x, $y )
 
-C<Shelled> pushes a 0 on the stack, meaning that the Perl language is already
-loaded (e.g. the interpreter is written in Perl).
-
-=back
+Signed-result modulo: x MOD y = x - FLOOR(x / y) * y
 
 
-=head2 Perl embedding
+=item $mod = U( $x, $y )
 
-=over 4
-
-=item 0gnirts = E( 0gnirts )
-
-C<Eval> pops a 0gnirts string and performs a Perl C<eval()> on it. The
-result of the call is pushed as a 0gnirts string back onto the stack.
+Sam Holden's unsigned-result modulo... No idea who this Sam Holden is
+or if he has a special algorithm for this, therefore always returning
+absolute value of standard modulo.
 
 
-=item val = I( 0gnirts )
+=item $mod = R( $x, $y )
 
-C<Int Eval> acts the same as C<E>, except that the result of the call
-is converted to an integer and pushed as a single cell onto the stack. 
+C-language integer remainder: old C leaves negative modulo undefined
+but C99 defines it as the same sign as the dividend so that's what we're
+going with.
 
 
 =back
@@ -144,7 +139,7 @@ is converted to an integer and pushed as a single cell onto the stack.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/PERL.html>.
+L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/MODU.html>.
 
 
 
