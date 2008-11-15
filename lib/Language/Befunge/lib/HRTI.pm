@@ -140,6 +140,8 @@ reliably handle, measured in microseconds.
 
 =head2 Time measurements
 
+=over 4
+
 =item M()
 
 C<Mark> designates the timer as having been read by the IP with this ID at
