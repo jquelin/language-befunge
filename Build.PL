@@ -38,6 +38,7 @@ my %recommends = (
     'Test::Builder'                                => 0, # TEST lib
     'Test::Pod'                                    => 0,
     'Test::Pod::Coverage'                          => 0,
+    'Time::HiRes'                                  => 0, # HRTI lib
 );
 
 
