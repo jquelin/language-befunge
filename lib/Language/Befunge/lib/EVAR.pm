@@ -83,7 +83,7 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::IP::lib::EVAR - Orthogonal easement extension
+Language::Befunge::IP::lib::EVAR - Environment variables extention
 
 
 

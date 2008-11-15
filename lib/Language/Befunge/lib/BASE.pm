@@ -106,7 +106,7 @@ __END__
 
 =head1 NAME
 
-Language::Befunge::IP::lib::BASE - 
+Language::Befunge::IP::lib::BASE - Non-standard math bases extension
 
 
 
