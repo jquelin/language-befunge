@@ -21,6 +21,7 @@ lib/Language/Befunge/lib/BOOL.pm
 lib/Language/Befunge/lib/EVAR.pm
 lib/Language/Befunge/lib/FOO.pm
 lib/Language/Befunge/lib/HELO.pm
+lib/Language/Befunge/lib/HRTI.pm
 lib/Language/Befunge/lib/NULL.pm
 lib/Language/Befunge/lib/ORTH.pm
 lib/Language/Befunge/lib/PERL.pm
