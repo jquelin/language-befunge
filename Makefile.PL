@@ -37,9 +37,8 @@ WriteMakefile(
     },
     dist          => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean         => { FILES => [
-                    'Language-Befunge-*',
+                    'Language-Befunge-*', '*.tmp', '*.bak',
                     map { ( '*/' x $_ ) . '*~' } 0..5 ] },
     test          => { TESTS => 't/*.t t/*/*.t' },
 );
-
 
