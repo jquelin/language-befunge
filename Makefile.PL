@@ -23,7 +23,7 @@ WriteMakefile(
     PREREQ_PM     => {
         'aliased'               => '0.22',
         'Carp'                  => 0,
-        'Class::Accessor::Fast' => 0,
+        'Class::XSAccessor'     => 0,
         'Config'                => 0,
         'FindBin'               => 0,
         'List::Util'            => 0,
