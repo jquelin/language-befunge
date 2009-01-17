@@ -32,6 +32,7 @@ use Class::XSAccessor
         get_ops        => 'ops',
         get_handprint  => 'handprint',
         get_wrapping   => '_wrapping',
+        _get_input     => '_input',
     },
     setters => {
         set_dimensions => 'dimensions',
@@ -44,10 +45,9 @@ use Class::XSAccessor
         set_newips     => 'newips',
         set_ops        => 'ops',
         set_handprint  => 'handprint',
-    },
-    accessors => {
-        input     => 'input',
+        _set_input     => '_input',
     };
+
 
 # Public variables of the module.
 $| = 1;
@@ -154,7 +154,7 @@ sub new {
         dimensions => $opts->{dims},
         storage    => $opts->{storage}->new( $opts->{dims}, Wrapping => $wrapping ),
         file       => "STDIN",
-        input      => '',
+        _input     => '',
         params     => [],
         retval     => 0,
         DEBUG      => 0,
@@ -254,7 +254,7 @@ sub debug {
 #
 sub set_input {
     my ($self, $str) = @_;
-    $self->input($str);
+    $self->_set_input($str);
 }
 
 
@@ -267,7 +267,7 @@ sub set_input {
 
 sub get_input {
     my $self = shift;
-    return substr($$self{input}, 0, 1, '') if length $self->input;
+    return substr($$self{_input}, 0, 1, '') if length $self->_get_input;
     my $char;
     my $rv = sysread(STDIN, $char, 1);
     return $char if length $char;
