@@ -19,6 +19,7 @@ use Language::Befunge::Vector;
 use Storable qw(dclone);
 
 
+
 # -- CONSTRUCTORS
 
 sub new {
@@ -55,16 +56,16 @@ sub clone {
 # -- ACCESSORS
 
 BEGIN {
-    my @attrs = qw[ position data delta end id libs
-                    ss storage string_mode toss ];
-    foreach my $attr ( @attrs ) {
-        my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
-        $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
-        eval $code;
-    }
+    my @setters = qw{ position data delta end id libs ss storage string_mode toss };
+    my @getters = ( qw{ dims }, @setters );
+    require Class::XSAccessor;
+    Class::XSAccessor->import( 
+        getters   => { map { ( "get_$_" => $_ ) } @getters },
+        setters   => { map { ( "set_$_" => $_ ) } @setters },
+    );
 }
 
-sub get_dims { return $_[0]->{dims} };
+
 
 sub soss {
     my $self = shift;
