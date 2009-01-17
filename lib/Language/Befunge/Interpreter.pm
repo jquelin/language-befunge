@@ -31,6 +31,7 @@ use Class::XSAccessor
         get_newips     => 'newips',
         get_ops        => 'ops',
         get_handprint  => 'handprint',
+        get_wrapping   => '_wrapping',
     },
     setters => {
         set_dimensions => 'dimensions',
@@ -46,7 +47,6 @@ use Class::XSAccessor
     },
     accessors => {
         input     => 'input',
-        _wrapping => '_wrapping',
     };
 
 # Public variables of the module.
@@ -467,7 +467,7 @@ sub _move_ip_once {
         $ip->set_position( $v );
     } else {
         # wrap needed - this will update the position.
-        $self->_wrapping->wrap( $storage, $ip );
+        $self->get_wrapping->wrap( $storage, $ip );
     }
 }
 
@@ -571,6 +571,10 @@ the current return value of the interpreter (an integer)
 =item get_storage()
 
 the C<LB::Storage> object containing the playfield.
+
+=item get_wrapping()
+
+the C<LB::Wrapping> object driving wrapping policy. Private.
 
 =back
 

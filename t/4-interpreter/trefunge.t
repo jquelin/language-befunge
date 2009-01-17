@@ -62,7 +62,7 @@ is(ref($tref->get_storage), 'Language::Befunge::Storage::Generic::Vec', 'storage
 $tref = Language::Befunge->new({
     syntax   => 'trefunge98',
     wrapping => 'Language::Befunge::Wrapping::LaheySpace' });
-is(ref($tref->_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
+is(ref($tref->get_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
 $tref = Language::Befunge->new({
     syntax => 'trefunge98',
     ops    => 'Language::Befunge::Ops::GenericFunge98' });

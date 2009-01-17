@@ -62,7 +62,7 @@ is(ref($unef->get_storage), 'Language::Befunge::Storage::Generic::Vec', 'storage
 $unef = Language::Befunge->new({
     syntax   => 'unefunge98',
     wrapping => 'Language::Befunge::Wrapping::LaheySpace' });
-is(ref($unef->_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
+is(ref($unef->get_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
 $unef = Language::Befunge->new({
     syntax => 'unefunge98',
     ops    => 'Language::Befunge::Ops::GenericFunge98' });

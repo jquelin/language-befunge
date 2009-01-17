@@ -79,7 +79,7 @@ ok(exists($$interp{ops}{m}), 'GenericFunge98 ops used');
 $interp = Language::Befunge::Interpreter->new({
     syntax   => '4funge98',
     wrapping => 'Language::Befunge::Wrapping::LaheySpace' });
-is(ref($interp->_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
+is(ref($interp->get_wrapping), 'Language::Befunge::Wrapping::LaheySpace', 'wrapping specified');
 is(ref($interp->get_storage), 'Language::Befunge::Storage::Generic::AoA', 'default storage');
 $interp = Language::Befunge::Interpreter->new({
     syntax => '4funge98',
