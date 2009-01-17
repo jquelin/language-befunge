@@ -18,6 +18,32 @@ use Carp;
 use Language::Befunge::Vector;
 use Storable qw(dclone);
 
+use Class::XSAccessor
+    getters => {
+        get_position    => 'position',
+        get_data        => 'data',
+        get_delta       => 'delta',
+        get_dims        => 'dims',
+        get_end         => 'end',
+        get_id          => 'id',
+        get_libs        => 'libs',
+        get_ss          => 'ss',
+        get_storage     => 'storage',
+        get_string_mode => 'string_mode',
+        get_toss        => 'toss',
+    },
+    setters => {
+        set_position    => 'position',
+        set_data        => 'data',
+        set_delta       => 'delta',
+        set_end         => 'end',
+        set_id          => 'id',
+        set_libs        => 'libs',
+        set_ss          => 'ss',
+        set_storage     => 'storage',
+        set_string_mode => 'string_mode',
+        set_toss        => 'toss',
+    };
 
 
 # -- CONSTRUCTORS
@@ -54,17 +80,6 @@ sub clone {
 
 
 # -- ACCESSORS
-
-BEGIN {
-    my @setters = qw{ position data delta end id libs ss storage string_mode toss };
-    my @getters = ( qw{ dims }, @setters );
-    require Class::XSAccessor;
-    Class::XSAccessor->import( 
-        getters   => { map { ( "get_$_" => $_ ) } @getters },
-        setters   => { map { ( "set_$_" => $_ ) } @setters },
-    );
-}
-
 
 
 sub soss {
