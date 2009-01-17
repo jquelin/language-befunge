@@ -17,8 +17,37 @@ use Carp;
 use Language::Befunge::IP;
 use UNIVERSAL::require;
 
-use base qw{ Class::Accessor::Fast };
-__PACKAGE__->mk_accessors( qw{ storage _wrapping input } );
+# FIXME: wtf? always use get_/set_ or mutators, but not a mix of them!
+use Class::XSAccessor
+    getters => {
+        get_dimensions => 'dimensions',
+        get_file       => 'file',
+        get_params     => 'params',
+        get_retval     => 'retval',
+        get_DEBUG      => 'DEBUG',
+        get_curip      => 'curip',
+        get_ips        => 'ips',
+        get_newips     => 'newips',
+        get_ops        => 'ops',
+        get_handprint  => 'handprint',
+    },
+    setters => {
+        set_dimensions => 'dimensions',
+        set_file       => 'file',
+        set_params     => 'params',
+        set_retval     => 'retval',
+        set_DEBUG      => 'DEBUG',
+        set_curip      => 'curip',
+        set_ips        => 'ips',
+        set_newips     => 'newips',
+        set_ops        => 'ops',
+        set_handprint  => 'handprint',
+    },
+    accessors => {
+        input     => 'input',
+        storage   => 'storage',
+        _wrapping => '_wrapping',
+    };
 
 # Public variables of the module.
 $| = 1;
@@ -146,54 +175,6 @@ sub new {
 }
 
 
-
-# -- ACCESSORS
-
-# The following is a list of attributes of a Language::Befunge
-# object. For each of them, a method C<get_foobar> and C<set_foobar>
-# exists, which does what you can imagine - and if you can't, then i
-# wonder why you are reading this! :-)
-#
-# get_curip() / set_curip()
-# the current Instruction Pointer processed (a L::B::IP object)
-#
-# get_DEBUG() / set_DEBUG()
-# wether the interpreter should output debug messages (a boolean)
-#
-# get_dimensions() / set_dimensions()
-# the number of dimensions this interpreter works in.
-#
-# get_file() / set_file()
-# the script filename (a string)
-#
-# get_handprint() / set_handprint()
-# the handprint of the interpreter
-#
-# get_ips() / set_ips()
-# the current set of IPs travelling in the Lahey space (an array
-# reference)
-#
-# get_newips() / set_newips()
-# the set of IPs that B<will> travel in the Lahey space B<after> the
-# current tick (an array reference)
-#
-# get_ops() / set_ops()
-# the current supported operations set.
-#
-# get_params() / set_params()
-# the parameters of the script (an array reference)
-#
-# get_retval() / set_retval()
-# the current return value of the interpreter (an integer)
-#
-BEGIN {
-    my @attrs = qw[ dimensions file params retval DEBUG curip ips newips ops handprint ];
-    foreach my $attr ( @attrs ) {
-        my $code = qq[ sub get_$attr { return \$_[0]->{$attr} } ];
-        $code .= qq[ sub set_$attr { \$_[0]->{$attr} = \$_[1] } ];
-        eval $code;
-    }
-}
 
 
 # -- PUBLIC METHODS
