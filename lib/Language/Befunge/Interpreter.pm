@@ -24,6 +24,7 @@ use Class::XSAccessor
         get_file       => 'file',
         get_params     => 'params',
         get_retval     => 'retval',
+        get_storage    => 'storage',
         get_DEBUG      => 'DEBUG',
         get_curip      => 'curip',
         get_ips        => 'ips',
@@ -45,7 +46,6 @@ use Class::XSAccessor
     },
     accessors => {
         input     => 'input',
-        storage   => 'storage',
         _wrapping => '_wrapping',
     };
 
@@ -191,7 +191,7 @@ sub new {
 sub move_ip {
     my ($self, $ip) = @_;
 
-    my $storage = $self->storage;
+    my $storage = $self->get_storage;
     my $orig = $ip->get_position;
     $self->_move_ip_once($ip);
     my $char;
@@ -312,8 +312,8 @@ sub read_file {
 sub store_code {
     my ($self, $code) = @_;
     $self->debug( "Storing code\n" );
-    $self->storage->clear;
-    $self->storage->store( $code );
+    $self->get_storage->clear;
+    $self->get_storage->store( $code );
 }
 
 
@@ -379,8 +379,8 @@ sub process_ip {
 
     # Fetch values for this IP.
     my $v  = $ip->get_position;
-    my $ord  = $self->storage->get_value( $v );
-    my $char = $self->storage->get_char( $v );
+    my $ord  = $self->get_storage->get_value( $v );
+    my $char = $self->get_storage->get_char( $v );
 
     # Cosmetics.
     $self->debug( "#".$ip->get_id.":$v: $char (ord=$ord)  Stack=(@{$ip->get_toss})\n" );
@@ -453,7 +453,7 @@ sub _do_instruction {
 #
 sub _move_ip_once {
     my ($self, $ip) = @_;
-    my $storage = $self->storage;
+    my $storage = $self->get_storage;
 
     # fetch the current position of the ip.
     my $v = $ip->get_position;
@@ -484,7 +484,7 @@ sub _move_ip_once {
 #
 sub _move_ip_till {
     my ($self, $ip, $re) = @_;
-    my $storage = $self->storage;
+    my $storage = $self->get_storage;
 
     my $orig = $ip->get_position;
     # moving as long as we did not reach the condition.
@@ -567,6 +567,10 @@ the parameters of the script (an array reference)
 =item get_retval() / set_retval()
 
 the current return value of the interpreter (an integer)
+
+=item get_storage()
+
+the C<LB::Storage> object containing the playfield.
 
 =back
 
