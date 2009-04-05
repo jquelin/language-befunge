@@ -17,6 +17,9 @@ High-level changelog
 Low-level changelog
 ===================
 
+4.10 Sun Apr  5 15:44:57 CEST 2009
+ - new infinite loop detection (mg)
+
 4.09 Sat Jan 17 14:34:08 CET 2009
  - using class::xsaccessor internally, for a 10% speedup
 
