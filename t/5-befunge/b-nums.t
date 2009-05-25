@@ -8,332 +8,202 @@
 #
 #
 
-#--------------------------------#
-#          The numbers.          #
-#--------------------------------#
+# -- numbers
 
 use strict;
+use warnings;
+
+use Test::More tests => 34;
+use Test::Output;
+
 use Language::Befunge;
-use POSIX qw! tmpnam !;
-use Test;
-
-# Vars.
-my $file;
-my $fh;
-my $tests;
-my $out;
 my $bef = Language::Befunge->new;
-BEGIN { $tests = 0 };
 
-# In order to see what happens...
-sub sel () {
-    $file = tmpnam();
-    open OUT, ">$file" or die $!;
-    $fh = select OUT;
-}
-sub slurp () {
-    select $fh;
-    close OUT;
-    open OUT, "<$file" or die $!;
-    my $content;
-    {
-        local $/;
-        $content = <OUT>;
-    }
-    close OUT;
-    unlink $file;
-    return $content;
-}
 
-# empty stack.
-sel;
+# empty stack
 $bef->store_code( <<'END_OF_CODE' );
 ,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(0) );
-sel;
+stdout_is { $bef->run_code } chr(0), 'empty stack, string output';
 $bef->store_code( <<'END_OF_CODE' );
 .q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "0 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '0 ', 'empty stack, numeral output';
 
-# zero.
-sel;
+
+# zero
 $bef->store_code( <<'END_OF_CODE' );
 0,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(0) );
-sel;
+stdout_is { $bef->run_code } chr(0), 'zero, string output';
 $bef->store_code( <<'END_OF_CODE' );
 0.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "0 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '0 ', 'zero, numeral output';
 
-# one.
-sel;
+
+# one
 $bef->store_code( <<'END_OF_CODE' );
 1,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(1) );
-sel;
+stdout_is { $bef->run_code } chr(1), 'one, string output';
 $bef->store_code( <<'END_OF_CODE' );
 1.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "1 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '1 ', 'one, numeral output';
 
-# two.
-sel;
+
+# two
 $bef->store_code( <<'END_OF_CODE' );
 2,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(2) );
-sel;
+stdout_is { $bef->run_code } chr(2), 'two, string output';
 $bef->store_code( <<'END_OF_CODE' );
 2.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "2 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '2 ', 'two, numeral output';
 
-# three.
-sel;
+
+# three
 $bef->store_code( <<'END_OF_CODE' );
 3,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(3) );
-sel;
+stdout_is { $bef->run_code } chr(3), 'three, string output';
 $bef->store_code( <<'END_OF_CODE' );
 3.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "3 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '3 ', 'three, numeral output';
 
-# four.
-sel;
+
+# four
 $bef->store_code( <<'END_OF_CODE' );
 4,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(4) );
-sel;
+stdout_is { $bef->run_code } chr(4), 'four, string output';
 $bef->store_code( <<'END_OF_CODE' );
 4.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "4 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '4 ', 'four, numeral output';
 
-# five.
-sel;
+
+# five
 $bef->store_code( <<'END_OF_CODE' );
 5,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(5) );
-sel;
+stdout_is { $bef->run_code } chr(5), 'five, string output';
 $bef->store_code( <<'END_OF_CODE' );
 5.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "5 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '5 ', 'five, numeral output';
 
-# six.
-sel;
+
+# six
 $bef->store_code( <<'END_OF_CODE' );
 6,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(6) );
-sel;
+stdout_is { $bef->run_code } chr(6), 'six, string output';
 $bef->store_code( <<'END_OF_CODE' );
 6.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "6 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '6 ', 'six, numeral output';
 
-# seven.
-sel;
+
+# seven
 $bef->store_code( <<'END_OF_CODE' );
 7,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(7) );
-sel;
+stdout_is { $bef->run_code } chr(7), 'seven, string output';
 $bef->store_code( <<'END_OF_CODE' );
 7.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "7 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '7 ', 'seven, numeral output';
 
-# height.
-sel;
+
+# eight
 $bef->store_code( <<'END_OF_CODE' );
 8,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(8) );
-sel;
+stdout_is { $bef->run_code } chr(8), 'eight, string output';
 $bef->store_code( <<'END_OF_CODE' );
 8.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "8 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '8 ', 'eight, numeral output';
 
-# nine.
-sel;
+
+# nine
 $bef->store_code( <<'END_OF_CODE' );
 9,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(9) );
-sel;
+stdout_is { $bef->run_code } chr(9), 'nine, string output';
 $bef->store_code( <<'END_OF_CODE' );
 9.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "9 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '9 ', 'nine, numeral output';
 
-# ten.
-sel;
+
+# ten
 $bef->store_code( <<'END_OF_CODE' );
 a,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(10) );
-sel;
+stdout_is { $bef->run_code } chr(10), 'ten, string output';
 $bef->store_code( <<'END_OF_CODE' );
 a.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "10 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '10 ', 'ten, numeral output';
 
-# eleven.
-sel;
+
+# eleven
 $bef->store_code( <<'END_OF_CODE' );
 b,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(11) );
-sel;
+stdout_is { $bef->run_code } chr(11), 'eleven, string output';
 $bef->store_code( <<'END_OF_CODE' );
 b.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "11 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '11 ', 'eleven, numeral output';
 
-# twelve.
-sel;
+
+# twelve
 $bef->store_code( <<'END_OF_CODE' );
 c,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(12) );
-sel;
+stdout_is { $bef->run_code } chr(12), 'twelve, string output';
 $bef->store_code( <<'END_OF_CODE' );
 c.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "12 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '12 ', 'twelve, numeral output';
 
-# thirteen.
-sel;
+
+# thirteen
 $bef->store_code( <<'END_OF_CODE' );
 d,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(13) );
-sel;
+stdout_is { $bef->run_code } chr(13), 'thirteen, string output';
 $bef->store_code( <<'END_OF_CODE' );
 d.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "13 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '13 ', 'thirteen, numeral output';
 
-# fourteen.
-sel;
+
+# fourteen
 $bef->store_code( <<'END_OF_CODE' );
 e,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(14) );
-sel;
+stdout_is { $bef->run_code } chr(14), 'fourteen, string output';
 $bef->store_code( <<'END_OF_CODE' );
 e.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "14 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '14 ', 'fourteen, numeral output';
 
-# fifteen.
-sel;
+
+# fifteen
 $bef->store_code( <<'END_OF_CODE' );
 f,q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, chr(15) );
-sel;
+stdout_is { $bef->run_code } chr(15), 'fifteen, string output';
 $bef->store_code( <<'END_OF_CODE' );
 f.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-ok( $out, "15 " );
-BEGIN { $tests += 2 };
+stdout_is { $bef->run_code } '15 ', 'fifteen, numeral output';
 
-
-BEGIN { plan tests => $tests };
 
