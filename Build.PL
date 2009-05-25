@@ -55,6 +55,11 @@ my $builder = Module::Build->new
     add_to_cleanup       =>
       [ 'Language-Befunge-*', '*.tmp', '*.bak', map { ( '*/' x $_ ) . '*~' } 0..5 ],
     recursive_test_files => 1,
+    meta_merge           => {
+        resources => {
+            repository => 'http://repo.or.cz/w/language-befunge.git',
+        },
+    },
   );
 $builder->create_build_script;
 
