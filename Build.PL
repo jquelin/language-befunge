@@ -27,6 +27,7 @@ my %requires = (
 );
 my %build_requires = (
     %requires,
+    'IO::Handle'            => 0,
     'List::Util'            => 0,
     'POSIX'                 => 0,
     'Test::Exception'       => 0,

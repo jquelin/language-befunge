@@ -26,6 +26,7 @@ WriteMakefile(
         'Class::XSAccessor'     => 0,
         'Config'                => 0,
         'FindBin'               => 0,
+        'IO::Handle'            => 0,
         'List::Util'            => 0,
         'Math::BaseCalc'        => 0,
         'POSIX'                 => 0,
