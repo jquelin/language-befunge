@@ -8,125 +8,65 @@
 #
 #
 
-#-----------------------------------#
-#          Exported funcs.          #
-#-----------------------------------#
-
 use strict;
+use warnings;
+
 use Language::Befunge;
-use POSIX qw! tmpnam !;
-use Test::More;
 
-# Vars.
-my ($file, $fh);
-my $tests;
-my $out;
-my $bef = Language::Befunge->new;
-BEGIN { $tests = 0 };
+use Test::More tests => 10;
+use Test::Output;
 
-# In order to see what happens...
-sub sel () {
-    $file = tmpnam();
-    open OUT, ">$file" or die $!;
-    $fh = select OUT;
-}
-sub slurp () {
-    select $fh;
-    close OUT;
-    open OUT, "<$file" or die $!;
-    my $content;
-    {
-        local $/;
-        $content = <OUT>;
-    }
-    close OUT;
-    unlink $file;
-    return $content;
-}
+my $bef;
 
-# Basic constructor.
-sel;
+
+# basic constructor.
 $bef = Language::Befunge->new( {file => "t/_resources/q.bf"} );
-$bef->run_code;
-$out = slurp;
-is( $out, "" );
-BEGIN { $tests += 1 };
+stdout_is { $bef->run_code } '', 'constructor works';
+
 
 # debug tests.
-{
-    my $warning;
-    local $SIG{__WARN__} = sub { $warning = "@_" };
-    $bef = Language::Befunge->new;
-
-    $warning = "";
-    $bef->debug( "foo\n" );
-    is( $warning, "", "DEBUG is off by default" );
-
-    $warning = "";
-    $bef->set_DEBUG(1);
-    $bef->debug( "bar\n" );
-    is( $warning, "bar\n", "debug warns properly when DEBUG is on" );
-
-    $warning = "";
-    $bef->set_DEBUG(0);
-    $bef->debug( "baz\n" );
-    is( $warning, "",      "debug does not warn when DEBUG is off" );
-}
-BEGIN { $tests += 3 };
+stderr_is { $bef->debug( "foo\n" ) } '',      'DEBUG is off by default';
+$bef->set_DEBUG(1);
+stderr_is { $bef->debug( "bar\n" ) } "bar\n", 'debug warns properly when DEBUG is on';
+$bef->set_DEBUG(0);
+stderr_is { $bef->debug( "baz\n" ) } '',      'debug does not warn when DEBUG is off';
 
 
-# Basic reading.
+# basic reading.
 $bef = Language::Befunge->new;
-sel;
-$bef->read_file( "t/_resources/q.bf" );
-$bef->run_code;
-$out = slurp;
-is( $out, "" );
-BEGIN { $tests += 1 };
+$bef->read_file( 't/_resources/q.bf' );
+stdout_is { $bef->run_code } '', 'basic reading';
 
-# Reading a non existent file.
-eval { $bef->read_file( "/dev/a_file_that_is_not_likely_to_exist" ); };
-like( $@, qr/line/, "reading a non-existent file barfs" );
-BEGIN { $tests += 1 };
 
-# Basic storing.
-sel;
+# reading a non existent file.
+eval { $bef->read_file( '/dev/a_file_that_is_not_likely_to_exist' ); };
+like( $@, qr/line/, 'reading a non-existent file barfs' );
+
+
+# basic storing.
 $bef->store_code( <<'END_OF_CODE' );
 q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-is( $out, "" );
-BEGIN { $tests += 1 };
+stdout_is { $bef->run_code } '', 'basic storing';
 
-# Interpreter must treat non-characters as if they were an 'r' instruction.
-sel;
+
+# interpreter must treat non-characters as if they were an 'r' instruction.
 $bef->store_code( <<'END_OF_CODE' );
 01-b0p#q1.2 q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-is( $out, "1 2 " );
-BEGIN { $tests += 1 };
+stdout_is { $bef->run_code } '1 2 ', 'non-chars treated as "r" instruction';
 
-# Interpreter must treat non-commands as if they were an 'r' instruction.
-sel;
+
+# interpreter must treat non-commands as if they were an 'r' instruction.
 $bef->store_code( <<'END_OF_CODE' );
 01+b0p#q1.2 q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-is( $out, "1 2 " );
-BEGIN { $tests += 1 };
+stdout_is { $bef->run_code } '1 2 ', 'non-commands treated as "r" instruction';
 
-# Befunge Interpreter treats High/Low instructions as unknown characters.
-sel;
+
+# befunge interpreter treats high/low instructions as unknown characters.
 $bef->store_code( <<"END_OF_CODE" );
 1#q.2h3.q
 END_OF_CODE
-$bef->run_code;
-$out = slurp;
-is( $out, "1 2 " );
-BEGIN { $tests += 1 };
+stdout_is { $bef->run_code } '1 2 ', 'high/low treated as "r" instruction';
 
-BEGIN { plan tests => $tests };
