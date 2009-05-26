@@ -19,6 +19,7 @@ lib/Language/Befunge/IP.pm
 lib/Language/Befunge/lib/BASE.pm
 lib/Language/Befunge/lib/BOOL.pm
 lib/Language/Befunge/lib/CPLI.pm
+lib/Language/Befunge/lib/DIRF.pm
 lib/Language/Befunge/lib/EVAR.pm
 lib/Language/Befunge/lib/FOO.pm
 lib/Language/Befunge/lib/HELO.pm
