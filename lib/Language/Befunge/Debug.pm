@@ -71,15 +71,91 @@ sub _redef {
     }
 }
 
-
-
-
-
 1;
 
 __END__
 
+=head1 NAME
 
-=item get_DEBUG() / set_DEBUG()
+Language::Befunge::Debug - optimized debug solution for language::befunge
 
-wether the interpreter should output debug messages (a boolean)
+
+=head1 SYNOPSIS
+
+    use Language::Befunge::Debug;
+    debug("foo\n");     # does nothing by default
+    Language::Befunge::Debug::enable();
+    debug("bar\n");     # now that debug is enabled, output on STDERR
+    Language::Befunge::Debug::disable();
+    debug("baz\n");     # sorry dave, back to no output
+
+
+
+=head1 DESCRIPTION
+
+This module provides a C<debug()> subroutine, which output on STDERR if
+debugging is enabled. If debugging is disabled (the default), perl will
+optimize out those debugging calls.
+
+
+
+=head1 PUBLIC API
+
+=head2 Exported functions
+
+The module is exporting only one function:
+
+=over 4
+
+=item * debug( @stuff );
+
+If debugging is enabled (which is B<not> the default), write C<@stuff>
+on STDERR.
+
+=back
+
+
+=head2 Other functions
+
+The module also provides 2 functions to control debugging:
+
+=over 4
+
+=item * Language::Befunge::Debug::enable();
+
+Request that calls to C<debug()> really start output on STDERR.
+
+
+=item * Language::Befunge::Debug::disable();
+
+Request that calls to C<debug()> stop output-ing on STDERR.
+
+
+=back
+
+
+
+=head1 SEE ALSO
+
+L<Language::Befunge>
+
+
+
+=head1 AUTHOR
+
+Jerome Quelin, C<< <jquelin@cpan.org> >>
+
+Development is discussed on C<< <language-befunge@mongueurs.net> >>
+
+
+
+=head1 COPYRIGHT & LICENSE
+
+Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+
+=cut
+
