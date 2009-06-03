@@ -63,7 +63,10 @@ sub _redef {
         $ns = $parent . $ns;
         _redef($ns) unless $ns eq '::main::';
         foreach my $sub (keys %redef) {
-            *{$ns . $sub} = $redef{$sub} if exists ${$ns}{$sub} && \&{ ${$ns}{$sub} } == $orig{$sub};
+            next                                       # before replacing, check that...
+                unless exists ${$ns}{$sub}             # named sub exist...
+                && \&{ ${$ns}{$sub} } == $orig{$sub};  # ... and refer to the one we want to replace
+            *{$ns . $sub} = $redef{$sub};
         }
     }
 }
