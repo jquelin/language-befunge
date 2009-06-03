@@ -13,7 +13,7 @@ use warnings;
 
 use Language::Befunge;
 
-use Test::More tests => 10;
+use Test::More tests => 7;
 use Test::Output;
 
 my $bef;
@@ -22,14 +22,6 @@ my $bef;
 # basic constructor.
 $bef = Language::Befunge->new( {file => "t/_resources/q.bf"} );
 stdout_is { $bef->run_code } '', 'constructor works';
-
-
-# debug tests.
-stderr_is { $bef->debug( "foo\n" ) } '',      'DEBUG is off by default';
-$bef->set_DEBUG(1);
-stderr_is { $bef->debug( "bar\n" ) } "bar\n", 'debug warns properly when DEBUG is on';
-$bef->set_DEBUG(0);
-stderr_is { $bef->debug( "baz\n" ) } '',      'debug does not warn when DEBUG is off';
 
 
 # basic reading.
