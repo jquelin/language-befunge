@@ -39,7 +39,6 @@ use Class::XSAccessor
         set_file       => 'file',
         set_params     => 'params',
         set_retval     => 'retval',
-        set_DEBUG      => 'DEBUG',
         set_curip      => 'curip',
         set_ips        => 'ips',
         set_newips     => 'newips',
@@ -238,17 +237,23 @@ sub abort {
 }
 
 
-#
-# debug( LIST )
-#
-# Issue a warning if the interpreter has DEBUG enabled.
-#
-sub debug {
-    my $self = shift;
-    $self->get_DEBUG or return;
-    warn @_;
-}
+{
+    #
+    # debug( LIST )
+    #
+    # Issue a warning if the interpreter has DEBUG enabled.
+    #
+    sub debug {}
 
+    sub set_DEBUG {
+        my ($self, $debug) = @_;
+        my $sub = $debug
+            ? sub { shift; warn @_; }
+            : sub {};
+        no warnings 'redefine';
+        *debug = $sub;
+    }
+}
 
 #
 # set_input( $string )
