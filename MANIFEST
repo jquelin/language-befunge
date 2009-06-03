@@ -9,6 +9,7 @@ examples/prime.bef
 examples/tpr00.bef
 examples/tpr01.bef
 lib/Language/Befunge.pm
+lib/Language/Befunge/Debug.pm
 lib/Language/Befunge/doc/bf98-specs.html
 lib/Language/Befunge/doc/instr.txt
 lib/Language/Befunge/doc/laheys.jpg
@@ -101,6 +102,7 @@ t/2-ops/stdio_in_num.t
 t/2-ops/str_enter_string_mode.t
 t/2-ops/str_fetch_char.t
 t/2-ops/str_store_char.t
+t/3-misc/debug.t
 t/4-interpreter/befunge.t
 t/4-interpreter/trefunge.t
 t/4-interpreter/unefunge.t
