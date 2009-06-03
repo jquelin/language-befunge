@@ -17,15 +17,11 @@ use base qw{ Exporter };
 our @EXPORT = qw{ debug };
 
 
+# -- public subs
 
-#
-# debug( LIST )
-#
-# Issue a warning if the interpreter is in debug mode.
-#
 sub debug {}
 
-my (%orig, %redef);
+my %redef;
 sub enable {
     %redef = ( debug => sub { warn @_; } );
     _redef();
@@ -36,6 +32,23 @@ sub disable {
     _redef();
 }
 
+
+# -- private subs
+
+#
+# _redef()
+#
+# recursively walk the symbol table, and replace subs named after %redef
+# keys with the matching value of %redef.
+#
+# this is not really clean, but since the sub debug() is exported in
+# other modules, replacing the sub in *this* module is not enough: other
+# modules still refer to their local copy.
+#
+# also, calling sub with full name Language::Befunge::Debug::debug() has
+# performance issues (10%-15%) compared to using an exported sub...
+#
+my %orig; # original subs
 sub _redef {
     my $parent = shift;
     if ( not defined $parent ) {
