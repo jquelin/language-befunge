@@ -20,6 +20,10 @@ Low-level changelog
 4.11
  - new fingerprint: CPLI - complex numbers extension
  - new fingerprint: DIRF - directory operations
+ - new fingerprint: FILE - file i/o operations
+ - new fingerprint: FIXP - fixed point operations
+ - new fingerprint: SUBR - subroutines extension
+ - new fingerprint: TIME - date/time operations
  - debug() now a plain sub in Language::Befunge::Debug, for a ~20% speedup
  - tests sanitized (ported to test::more, test::output and test::exception)
 
