@@ -58,7 +58,10 @@ my $builder = Module::Build->new
     recursive_test_files => 1,
     meta_merge           => {
         resources => {
-            repository => 'http://repo.or.cz/w/language-befunge.git',
+            bugtracker  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Language-Befunge',
+            homepage    => 'http://search.cpan.org/dist/Language-Befunge',
+            repository  => 'http://repo.or.cz/w/language-befunge.git',
+            MailingList => 'http://listes.mongueurs.net/mailman/listinfo/language-befunge'
         },
     },
   );
