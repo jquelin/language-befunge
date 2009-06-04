@@ -35,6 +35,7 @@ lib/Language/Befunge/lib/REFC.pm
 lib/Language/Befunge/lib/ROMA.pm
 lib/Language/Befunge/lib/SUBR.pm
 lib/Language/Befunge/lib/TEST.pm
+lib/Language/Befunge/lib/TIME.pm
 lib/Language/Befunge/Ops.pm
 lib/Language/Befunge/Ops/Befunge98.pm
 lib/Language/Befunge/Ops/GenericFunge98.pm
