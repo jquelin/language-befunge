@@ -3,7 +3,7 @@ Revision history for Language::Befunge.
 High-level changelog
 ====================
 
-4.0x    LB:LS split in LBS/LBW
+4.0x    LB:LS split in LBS/LBW, extensions
 3.0x    multidims, multiops possibilities
 2.0x    optimizing + test coverage
 1.2x    real LaheySpace support
@@ -17,11 +17,12 @@ High-level changelog
 Low-level changelog
 ===================
 
-4.11
+4.11 Thu Jun  4 20:24:49 CEST 2009
  - new fingerprint: CPLI - complex numbers extension
  - new fingerprint: DIRF - directory operations
  - new fingerprint: FILE - file i/o operations
  - new fingerprint: FIXP - fixed point operations
+ - new fingerprint: STRN - string operations
  - new fingerprint: SUBR - subroutines extension
  - new fingerprint: TIME - date/time operations
  - debug() now a plain sub in Language::Befunge::Debug, for a ~20% speedup
