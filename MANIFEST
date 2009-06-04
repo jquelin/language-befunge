@@ -33,6 +33,7 @@ lib/Language/Befunge/lib/ORTH.pm
 lib/Language/Befunge/lib/PERL.pm
 lib/Language/Befunge/lib/REFC.pm
 lib/Language/Befunge/lib/ROMA.pm
+lib/Language/Befunge/lib/STRN.pm
 lib/Language/Befunge/lib/SUBR.pm
 lib/Language/Befunge/lib/TEST.pm
 lib/Language/Befunge/lib/TIME.pm
