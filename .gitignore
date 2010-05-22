@@ -12,6 +12,7 @@ blibdirs
 Build
 Build.bat
 _build
+MYMETA.yml
 
 # Avoid Devel::Cover generated files
 cover_db
