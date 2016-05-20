@@ -123,8 +123,7 @@ L<http://users.tkk.fi/~mniemenm/befunge/mycology.html>
 You can find more information on Befunge at
 L<http://www.catseye.mb.ca/esoteric/befunge/>.
 
-Our git repository is located at L<git://repo.or.cz/language-befunge.git>, and
-can be browsed at L<http://repo.or.cz/w/language-befunge.git>.
+Our git repository is located at L<https://github.com/jquelin/language-befunge>.
 
 You can also look for information on this module at:
 
