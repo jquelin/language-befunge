@@ -97,8 +97,7 @@ Thanks also to Matti Niemenmaa for his mycology test suite, available at
 You can find more information on Befunge at
 [http://www.catseye.mb.ca/esoteric/befunge/](http://www.catseye.mb.ca/esoteric/befunge/).
 
-Our git repository is located at [git://repo.or.cz/language-befunge.git](git://repo.or.cz/language-befunge.git), and
-can be browsed at [http://repo.or.cz/w/language-befunge.git](http://repo.or.cz/w/language-befunge.git).
+Our git repository is located at [https://github.com/jquelin/language-befunge](https://github.com/jquelin/language-befunge).
 
 You can also look for information on this module at:
 

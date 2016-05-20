@@ -1,6 +1,8 @@
 Revision history for Language-Befunge
 
 {{$NEXT}}
+
+5.000     2016-05-20 15:32:58+02:00 Europe/Paris
  - migrated to dist::zilla
  - fix rt#110870 - fix pod, mark pod tests as authoring
  - fix rt#110877 - get rid of given/when
