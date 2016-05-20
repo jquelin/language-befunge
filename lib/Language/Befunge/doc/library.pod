@@ -1,4 +1,5 @@
-# $Id: library.pod 2 2003-02-22 10:17:10Z jquelin $
+# PODNAME: library
+# ABSTRACT: How to write Befunge-98 libraries & extensions
 
 =head1 Befunge-98 Libraries & Extensions
 

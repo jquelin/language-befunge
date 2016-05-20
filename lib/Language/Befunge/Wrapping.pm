@@ -1,16 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Wrapping;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Wrapping;
+# ABSTRACT: base wrapping class
+
 
 # -- CONSTRUCTOR
 
@@ -33,12 +26,6 @@ sub wrap { die 'wrapping not implemented in LBW'; }
 
 1;
 __END__
-
-
-=head1 NAME
-
-Language::Befunge::Wrapping - base wrapping class
-
 
 =head1 DESCRIPTION
 
@@ -65,26 +52,4 @@ Note that C<$ip> is already out of bounds, ie, it has been moved once by
 LBI.
 
 As a side effect, $ip will have its position changed.
-
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
 

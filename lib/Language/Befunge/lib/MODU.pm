@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::MODU;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::MODU;
+# ABSTRACT: Modulo Arithmetic extension
 
 use POSIX qw{ floor };
 
@@ -87,13 +79,6 @@ sub R {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::MODU - Modulo Arithmetic extension
-
-
-
 =head1 DESCRIPTION
 
 The MODU fingerprint (0x4d4f4455) implements some of the finer, less-well-
@@ -139,22 +124,4 @@ going with.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/MODU.html>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://catseye.tc/projects/funge98/library/MODU.html>.

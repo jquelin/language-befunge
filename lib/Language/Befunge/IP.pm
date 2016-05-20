@@ -1,17 +1,10 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::IP;
-require 5.010;
-
+use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::IP;
+# ABSTRACT: an Instruction Pointer for a Befunge-98 program
+
 use integer;
 
 use Carp;
@@ -424,12 +417,6 @@ sub _get_new_id {
 1;
 __END__
 
-=head1 NAME
-
-Language::Befunge::IP - an Instruction Pointer for a Befunge-98 program.
-
-
-
 =head1 DESCRIPTION
 
 This is the class implementing the Instruction Pointers. An
@@ -816,26 +803,3 @@ to an array or even a hash.
 
 =back
 
-
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::TIME;
-
 use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::lib::TIME;
+# ABSTRACT: date / time extension
 
 use DateTime;
 sub new { return bless {}, shift; }
@@ -94,13 +86,6 @@ sub _tz {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::TIME - date / time extension
-
-
-
 =head1 DESCRIPTION
 
 The TIME fingerprint (0x54494D45) allows to work with date & time.
@@ -161,22 +146,5 @@ the timezone with the following:
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#TIME>.
+L<http://www.rcfunge98.com/rcsfingers.html#TIME>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

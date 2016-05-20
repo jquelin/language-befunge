@@ -1,15 +1,10 @@
 #!/usr/bin/perl
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
 
 use strict;
 use warnings;
+
+# PODNAME: jqbef98
+# ABSTRACT: a Befunge-98 interpreter
 
 use FindBin qw{ $Bin };
 use lib "$Bin/../lib";
@@ -27,43 +22,15 @@ exit $bef->run_code( @ARGV );
 
 __END__
 
-=head1 NAME
-
-jqbef98 - a Befunge-98 interpreter
-
-
-
 =head1 SYNOPSIS
 
     jqbef98 [-v] program.bef
-
-
 
 =head1 DESCRIPTION
 
 This is a full featured Concurrent Befunge-98 interpreter.
 Just provide the name of the Befunge script, and there you go!
 
-
-
 =head1 SEE ALSO
 
 L<Language::Befunge>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

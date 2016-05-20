@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2008 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Storage;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Storage;
+# ABSTRACT: a generic Storage base class for Language::Befunge
 
 use Carp;
 use Language::Befunge::Vector;
@@ -369,11 +361,6 @@ sub _labels_try {
 1;
 __END__
 
-=head1 NAME
-
-Language::Befunge::Storage - a generic Storage base class
-
-
 =head1 SYNOPSIS
 
     my $storage = Language::Befunge::Storage::Generic::AoA->new;
@@ -519,25 +506,3 @@ C<Inline::Befunge> (and maybe some exstensions).
 
 =back
 
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Mark Glines, C<< <infinoid@cpan.org> >>
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

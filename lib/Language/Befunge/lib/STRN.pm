@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::STRN;
-
 use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::lib::STRN;
+# ABSTRACT: string extension
 
 sub new { return bless {}, shift; }
 
@@ -156,13 +148,6 @@ sub V {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::STRN - string extension
-
-
-
 =head1 DESCRIPTION
 
 The STRN fingerprint (0x5354524E) allows to work with strings.
@@ -263,22 +248,5 @@ Push back the numerical value of C<str>.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#STRN>.
+L<http://www.rcfunge98.com/rcsfingers.html#STRN>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

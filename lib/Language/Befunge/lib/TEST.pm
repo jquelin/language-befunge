@@ -1,7 +1,9 @@
-package Language::Befunge::lib::TEST;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::TEST;
+# ABSTRACT: extension to run tests
+
 use Test::Builder;
 
 my $Tester = Test::Builder->new();
@@ -43,10 +45,6 @@ sub I {
 
 __END__
 
-=head1 NAME
-
-Language::Befunge::IP::lib::TEST - a Befunge extension to run tests
-
 =head1 SYNOPSIS
 
     P - plan
@@ -82,23 +80,4 @@ If the value is zero, outputs a C<not ok>, otherwise a C<ok>.
 Pop two values and a message off the TOSS.
 
 If the two values are equel, the test passes, otherwise it fails.
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-=head1 AUTHOR
-
-Philippe Bruhat (BooK) - C<< <book@cpan.org> >>.
-
-=head1 COPYRIGHT
-
-Copyright 2008 Philippe Bruhat (BooK), All Rights Reserved.
- 
-=head1 LICENSE
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 

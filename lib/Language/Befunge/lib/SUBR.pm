@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::SUBR;
-
 use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::lib::SUBR;
+# ABSTRACT: subroutines extension
 
 use Language::Befunge::Vector;
 
@@ -93,13 +85,6 @@ sub R {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::SUBR - subroutines extension
-
-
-
 =head1 DESCRIPTION
 
 The SUBR fingerprint (0x53554252) allows to use subroutines within befunge.
@@ -167,22 +152,4 @@ Switch in relative mode.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#SUBR>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://www.rcfunge98.com/rcsfingers.html#SUBR>.

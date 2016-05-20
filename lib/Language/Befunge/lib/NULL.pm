@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::NULL;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::NULL;
+# ABSTRACT: Extension to opacify loaded extensions
 
 sub new { return bless {}, shift; }
 
@@ -33,13 +25,6 @@ BEGIN {
 
 1;
 __END__
-
-
-=head1 NAME
-
-Language::Befunge::IP::lib::NULL - Extension to opacify loaded extensions
-
-
 
 =head1 DESCRIPTION
 
@@ -72,22 +57,5 @@ All the library instructions reflect current IP (same as instruction C<r>).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/NULL.html>.
+L<http://catseye.tc/projects/funge98/library/NULL.html>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::HELO;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::HELO;
+# ABSTRACT: extension to print Hello world!
 
 sub new { return bless {}, shift; }
 
@@ -26,12 +18,6 @@ sub S {
 
 1;
 __END__
-
-
-=head1 NAME
-
-Language::Befunge::IP::lib::HELO - a Befunge extension to print Hello world!
-
 
 =head1 SYNOPSIS
 
@@ -60,23 +46,3 @@ Output C<Hello world!\n>.
 
 Store the gnirts "Hello world!\n"0 on the TOSS.
 
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

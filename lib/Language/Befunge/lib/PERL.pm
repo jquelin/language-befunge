@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::PERL;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::PERL;
+# ABSTRACT: extension to embed Perl within Befunge
 
 
 sub new { return bless {}, shift; }
@@ -71,13 +63,6 @@ sub S {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::PERL - extension to embed Perl within Befunge
-
-
-
 =head1 DESCRIPTION
 
 The PERL fingerprint (0x5045524c) is designed to provide a basic, no-frills
@@ -130,22 +115,5 @@ is converted to an integer and pushed as a single cell onto the stack.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/PERL.html>.
+L<http://catseye.tc/projects/funge98/library/PERL.html>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

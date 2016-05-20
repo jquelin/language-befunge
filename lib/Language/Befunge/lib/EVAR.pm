@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::EVAR;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::EVAR;
+# ABSTRACT: Environment variables extention
 
 sub new { return bless {}, shift; }
 
@@ -80,13 +72,6 @@ sub V {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::EVAR - Environment variables extention
-
-
-
 =head1 DESCRIPTION
 
 
@@ -131,21 +116,5 @@ Get the C<$n>th environment variable (form: name=value).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#EVAR>.
+L<http://www.rcfunge98.com/rcsfingers.html#EVAR>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

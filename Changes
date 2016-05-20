@@ -1,21 +1,7 @@
-Revision history for Language::Befunge.
+Revision history for Language-Befunge
 
-High-level changelog
-====================
-
-4.0x    LB:LS split in LBS/LBW, extensions
-3.0x    multidims, multiops possibilities
-2.0x    optimizing + test coverage
-1.2x    real LaheySpace support
-1.1x    support for Build.PL
-1.0x    official release + mailing-list
-0.3x    oo interface
-0.2x    libraries semantics
-0.0x    initial work, with basic capabilities
-
-
-Low-level changelog
-===================
+{{$NEXT}}
+ - migrated to dist::zilla
 
 4.13 Sat May 22 18:20:27 2010
  - fix #57721: test suite fails with test::simple 0.95
@@ -214,6 +200,7 @@ Low-level changelog
  - unrolling k instruction to avoid deep recursion warning (mark)
 
 1.00 Thu Oct 28 19:13:59 CEST 2004
+ - official release
  - i instruction support binary flag (book)
  - mailing-list available: language-befunge@mongueurs.net
  - stable for now 2 years, -98 fully implemented: sane basis for further work

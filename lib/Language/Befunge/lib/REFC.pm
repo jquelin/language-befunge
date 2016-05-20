@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::REFC;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::REFC;
+# ABSTRACT: Referenced cells extension
 
 use Language::Befunge::Vector;
 
@@ -54,13 +46,6 @@ sub D {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::REFC - Referenced cells extension
-
-
-
 =head1 DESCRIPTION
 
 
@@ -102,21 +87,5 @@ onto the stack which corresponds to that unique reference value.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/REFC.html>.
+L<http://catseye.tc/projects/funge98/library/REFC.html>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

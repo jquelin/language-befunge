@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::HRTI;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::HRTI;
+# ABSTRACT: High-Resolution Timer extension
 
 use Time::HiRes qw{ gettimeofday };
 
@@ -100,13 +92,6 @@ sub S {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::HRTI - High-Resolution Timer extension
-
-
-
 =head1 DESCRIPTION
 
 The HRTI fingerprint (0x48525449) allows a Funge program to measure elapsed
@@ -173,21 +158,5 @@ second.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/HRTI.html>.
+L<http://catseye.tc/projects/funge98/library/HRTI.html>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

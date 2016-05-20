@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Storage::2D::Sparse;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Storage::2D::Sparse;
+# ABSTRACT: a 2D storage, using sparse hash
 
 use Carp;
 use aliased 'Language::Befunge::Vector' => 'LBV';
@@ -350,11 +342,6 @@ sub _labels_try {
 1;
 __END__
 
-=head1 NAME
-
-LBS::2D::Sparse - a 2D storage, using sparse hash
-
-
 =head1 SYNOPSIS
 
     my $storage = Language::Befunge::Storage::2D::Sparse->new;
@@ -524,24 +511,3 @@ C<Inline::Befunge> (and maybe some exstensions).
 
 =back
 
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

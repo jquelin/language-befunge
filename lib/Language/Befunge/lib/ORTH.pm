@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::ORTH;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::ORTH;
+# ABSTRACT: Orthogonal easement extension
 
 use Language::Befunge::Vector;
 
@@ -201,13 +193,6 @@ sub Z {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::ORTH - Orthogonal easement extension
-
-
-
 =head1 DESCRIPTION
 
 The ORTH fingerprint (0x4f525448) is designed to ease transition between the
@@ -322,22 +307,5 @@ the delta twice to the current position).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://catseye.tc/projects/funge98/library/ORTH.html>,
-and L<http://www.muppetlabs.com/~breadbox/orth/orth.html>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://catseye.tc/projects/funge98/library/ORTH.html>,
+L<http://www.muppetlabs.com/~breadbox/orth/orth.html>.

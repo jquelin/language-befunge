@@ -1,17 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::BOOL;
-
 use strict;
 use warnings;
 
+package Language::Befunge::lib::BOOL;
+# ABSTRACT: Boolean operations extension
 
 sub new { return bless {}, shift; }
 
@@ -95,13 +86,6 @@ sub X {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::BOOL - Boolean operations extension
-
-
-
 =head1 DESCRIPTION
 
 The BOOL fingerprint (0x424F4F4C) allows to do Boole logical operations.
@@ -145,21 +129,4 @@ Push back C<$a XOR $b> (logical XOR).
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#BOOL>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://www.rcfunge98.com/rcsfingers.html#BOOL>.

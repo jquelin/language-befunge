@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Debug;
-
 use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::Debug;
+# ABSTRACT: optimized debug solution for language::befunge
 
 use base qw{ Exporter };
 our @EXPORT = qw{ debug };
@@ -75,11 +67,6 @@ sub _redef {
 
 __END__
 
-=head1 NAME
-
-Language::Befunge::Debug - optimized debug solution for language::befunge
-
-
 =head1 SYNOPSIS
 
     use Language::Befunge::Debug;
@@ -90,13 +77,11 @@ Language::Befunge::Debug - optimized debug solution for language::befunge
     debug("baz\n");     # sorry dave, back to no output
 
 
-
 =head1 DESCRIPTION
 
 This module provides a C<debug()> subroutine, which output on STDERR if
 debugging is enabled. If debugging is disabled (the default), perl will
 optimize out those debugging calls.
-
 
 
 =head1 PUBLIC API
@@ -138,24 +123,3 @@ Request that calls to C<debug()> stop output-ing on STDERR.
 =head1 SEE ALSO
 
 L<Language::Befunge>
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-Development is discussed on C<< <language-befunge@mongueurs.net> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
-

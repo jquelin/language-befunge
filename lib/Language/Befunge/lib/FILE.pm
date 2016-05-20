@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::FILE;
-
 use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::lib::FILE;
+# ABSTRACT: file operations
 
 use Class::XSAccessor accessors => {
     _iohs => '_iohs',
@@ -168,13 +160,6 @@ sub W {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::FILE - file operations
-
-
-
 =head1 DESCRIPTION
 
 The FILE fingerprint (0x46494C45) allows to do file operations.
@@ -277,21 +262,4 @@ stack.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#FILE>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://www.rcfunge98.com/rcsfingers.html#FILE>.

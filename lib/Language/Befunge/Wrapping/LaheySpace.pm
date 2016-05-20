@@ -1,16 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Wrapping::LaheySpace;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Wrapping::LaheySpace;
+# ABSTRACT: a LaheySpace wrapping
+
 
 use base qw{ Language::Befunge::Wrapping };
 
@@ -57,12 +50,6 @@ sub wrap {
 1;
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::Wrapping::LaheySpace - a LaheySpace wrapping
-
-
 =head1 DESCRIPTION
 
 C<LBW::LaheySpace> implements a wrapping as defined in befunge specs - ie,
@@ -90,26 +77,4 @@ Note that C<$ip> is already out of bounds, ie, it has been moved once by
 LBI.
 
 As a side effect, $ip will have its position changed.
-
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
 

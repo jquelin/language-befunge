@@ -1,16 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Vector;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Vector;
+# ABSTRACT: an opaque, N-dimensional vector class
+
 use integer;
 use Carp;
 
@@ -384,12 +377,6 @@ sub _xs_rasterize_ptr { return undef }
 1;
 __END__
 
-=head1 NAME
-
-Language::Befunge::Vector - an opaque, N-dimensional vector class.
-
-
-
 =head1 SYNOPSIS
 
     my $v1 = Language::Befunge::Vector->new($x, $y, ...);
@@ -542,27 +529,4 @@ The prototype of the C rasterize function is:
 
 It operates just like the perl rasterize function, and returns NULL when the
 end of the loop has been reached.
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
 

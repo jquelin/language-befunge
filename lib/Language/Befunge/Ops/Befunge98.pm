@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Ops::Befunge98;
-require 5.010;
-
+use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::Ops::Befunge98;
+# ABSTRACT: operations supported by a Befunge-98 interpreter
 
 use Language::Befunge::Ops;
 
@@ -117,11 +109,6 @@ sub get_ops_map {
 __END__
 
 
-=head1 NAME
-
-Language::Befunge::Ops::Befunge98 - operations supported by a Befunge-98 interpreter
-
-
 =head1 DESCRIPTION
 
 This module defines the operations supported by a Befunge-98 interpreter.
@@ -137,27 +124,3 @@ return a mapping of the supported letter instructions with the associated
 operations.
 
 =back
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
-

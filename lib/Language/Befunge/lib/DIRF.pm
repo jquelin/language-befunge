@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::DIRF;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::DIRF;
+# ABSTRACT: directory operations
 
 sub new { return bless {}, shift; }
 
@@ -66,13 +58,6 @@ sub R {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::DIRF - directory operations
-
-
-
 =head1 DESCRIPTION
 
 The DIRF fingerprint (0x44495246) allows to do directory operations.
@@ -109,21 +94,4 @@ rmdir C<$directory>.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#DIRF>.
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<http://www.rcfunge98.com/rcsfingers.html#DIRF>.

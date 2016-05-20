@@ -1,25 +1,13 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Ops;
-require 5.010;
-
+use 5.010;
 use strict;
 use warnings;
 
+package Language::Befunge::Ops;
+# ABSTRACT: definition of the various operations
+
+
 use File::Spec::Functions qw{ catfile };   # For the 'y' instruction.
 use Language::Befunge::Debug;
-
-
-=head1 NAME
-
-Language::Befunge::Ops - definition of the various operations
 
 
 =head1 DESCRIPTION
@@ -1168,26 +1156,3 @@ sub lib_run_instruction {
 1;
 
 __END__
-
-=head1 SEE ALSO
-
-L<Language::Befunge>
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
-

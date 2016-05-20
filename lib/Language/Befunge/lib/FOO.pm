@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::FOO;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::FOO;
+# ABSTRACT: extension to print foo
 
 sub new { return bless {}, shift; }
 
@@ -20,11 +12,6 @@ sub P {
 
 1;
 __END__
-
-=head1 NAME
-
-Language::Befunge::IP::lib::FOO - a Befunge extension to print foo
-
 
 =head1 SYNOPSIS
 
@@ -47,23 +34,3 @@ Create a FOO instance.
 
 Output C<foo>.
 
-
-=head1 SEE ALSO
-
-L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

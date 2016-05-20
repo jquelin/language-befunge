@@ -1,16 +1,8 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::lib::BASE;
-
 use strict;
 use warnings;
+
+package Language::Befunge::lib::BASE;
+# ABSTRACT: Non-standard math bases extension
 
 use Math::BaseCalc;
 
@@ -103,13 +95,6 @@ sub I {
 
 __END__
 
-
-=head1 NAME
-
-Language::Befunge::IP::lib::BASE - Non-standard math bases extension
-
-
-
 =head1 DESCRIPTION
 
 
@@ -167,21 +152,5 @@ Input value in specified base, and push it on the stack.
 
 =head1 SEE ALSO
 
-L<Language::Befunge>, L<http://www.rcfunge98.com/rcsfingers.html#BASE>.
+L<http://www.rcfunge98.com/rcsfingers.html#BASE>.
 
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

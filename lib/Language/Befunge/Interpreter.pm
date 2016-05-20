@@ -1,17 +1,9 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Interpreter;
 use 5.010;
-
 use strict;
 use warnings;
+
+package Language::Befunge::Interpreter;
+# ABSTRACT: an interpreter for Language::Befunge
 
 use Carp;
 use Language::Befunge::Debug;
@@ -692,33 +684,3 @@ four letters, but perl will issue a warning about non-portability of
 numbers greater than C<0xffffffff>.
 
 =back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-I would like to thank Chris Pressey, creator of Befunge, who gave a
-whole new dimension to both coding and obfuscating.
-
-
-=head1 SEE ALSO
-
-L<Language::Befunge>
-
-
-=head1 AUTHOR
-
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
-

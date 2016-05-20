@@ -1,22 +1,12 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
+use 5.010;
+use warnings;
+use strict;
 
 package Language::Befunge;
-require 5.010;
-
-use strict;
-use warnings;
+# ABSTRACT: a generic funge interpreter
 
 use Language::Befunge::Interpreter;
 
-# Public variables of the module.
-our $VERSION = '4.13';
 $| = 1;
 
 sub new {
@@ -26,12 +16,6 @@ sub new {
 
 1;
 __END__
-
-=head1 NAME
-
-Language::Befunge - a generic funge interpreter
-
-
 
 =head1 SYNOPSIS
 
@@ -45,7 +29,6 @@ Language::Befunge - a generic funge interpreter
     < @,,,,"foo"a
     END_OF_CODE
     $interp->run_code;
-
 
 
 =head1 DESCRIPTION
@@ -161,23 +144,3 @@ L<http://cpanratings.perl.org/d/Language-Befunge>
 L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Language-Befunge>
 
 =back
-
-
-
-=head1 AUTHOR
-
-Jerome Quelin, C<< <jquelin@cpan.org> >>
-
-Development is discussed on C<< <language-befunge@mongueurs.net> >>
-
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut

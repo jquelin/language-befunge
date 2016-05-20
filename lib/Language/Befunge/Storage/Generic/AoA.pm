@@ -1,16 +1,10 @@
-#
-# This file is part of Language::Befunge.
-# Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the same terms as Perl itself.
-#
-#
-
-package Language::Befunge::Storage::Generic::AoA;
-require 5.010;
+use 5.010;
 use strict;
 use warnings;
+
+package Language::Befunge::Storage::Generic::AoA;
+# ABSTRACT: a generic N-dimensional LaheySpace
+
 use Carp;
 use Language::Befunge::Vector;
 use Language::Befunge::IP;
@@ -192,11 +186,6 @@ sub set_value {
 1;
 __END__
 
-=head1 NAME
-
-Language::Befunge::Storage::Generic::AoA - a generic N-dimensional LaheySpace.
-
-
 =head1 SYNOPSIS
 
     # create a 3-dimensional LaheySpace.
@@ -284,23 +273,4 @@ None known.  Please inform me if you find one.
 
 =head1 SEE ALSO
 
-L<Language::Befunge::Storage>, L<Language::Befunge>.
-
-
-=head1 AUTHOR
-
-Mark Glines, E<lt>infinoid@cpan.orgE<gt>
-Jerome Quelin, E<lt>jquelin@cpan.orgE<gt>
-
-Development is discussed on E<lt>language-befunge@mongueurs.netE<gt>
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright (c) 2001-2009 Jerome Quelin, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-
-=cut
+L<Language::Befunge::Storage>.
