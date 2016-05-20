@@ -106,32 +106,28 @@ sub new {
     my $lbo = 'Language::Befunge::Ops::';
     my $lbs = 'Language::Befunge::Storage::';
     my $lbw = 'Language::Befunge::Wrapping::';
-    given ( $opts->{syntax} ) {
-        when ('unefunge98') {
-            $opts->{dims}     = 1                     unless defined $opts->{dims};
-            $opts->{ops}      = $lbo . 'Unefunge98'   unless defined $opts->{ops};
-            $opts->{storage}  = $lbs . 'Generic::AoA' unless defined $opts->{storage};
-            $opts->{wrapping} = $lbw . 'LaheySpace'   unless defined $opts->{wrapping};
-        }
-        when ('befunge98') {
-            $opts->{dims}     = 2                     unless defined $opts->{dims};
-            $opts->{ops}      = $lbo . 'Befunge98'    unless defined $opts->{ops};
-            $opts->{storage}  = $lbs . '2D::Sparse'   unless defined $opts->{storage};
-            $opts->{wrapping} = $lbw . 'LaheySpace'   unless defined $opts->{wrapping};
-        }
-        when ('trefunge98') {
-            $opts->{dims}     = 3                       unless defined $opts->{dims};
-            $opts->{ops}      = $lbo . 'GenericFunge98' unless defined $opts->{ops};
-            $opts->{storage}  = $lbs . 'Generic::AoA'   unless defined $opts->{storage};
-            $opts->{wrapping} = $lbw . 'LaheySpace'     unless defined $opts->{wrapping};
-        }
-        when (/(\d+)funge98$/) { # accept values like "4funge98"
-            $opts->{dims}     = $1                      unless defined $opts->{dims};
-            $opts->{ops}      = $lbo . 'GenericFunge98' unless defined $opts->{ops};
-            $opts->{storage}  = $lbs . 'Generic::AoA'   unless defined $opts->{storage};
-            $opts->{wrapping} = $lbw . 'LaheySpace'     unless defined $opts->{wrapping};
-        }
-        default { croak "syntax '$opts->{syntax}' not recognized." }
+    if ( $opts->{syntax} eq 'unefunge98' ) {
+        $opts->{dims}     = 1                     unless defined $opts->{dims};
+        $opts->{ops}      = $lbo . 'Unefunge98'   unless defined $opts->{ops};
+        $opts->{storage}  = $lbs . 'Generic::AoA' unless defined $opts->{storage};
+        $opts->{wrapping} = $lbw . 'LaheySpace'   unless defined $opts->{wrapping};
+    } elsif ( $opts->{syntax} eq 'befunge98' ) {
+        $opts->{dims}     = 2                     unless defined $opts->{dims};
+        $opts->{ops}      = $lbo . 'Befunge98'    unless defined $opts->{ops};
+        $opts->{storage}  = $lbs . '2D::Sparse'   unless defined $opts->{storage};
+        $opts->{wrapping} = $lbw . 'LaheySpace'   unless defined $opts->{wrapping};
+    } elsif ( $opts->{syntax} eq 'trefunge98' ) {
+        $opts->{dims}     = 3                       unless defined $opts->{dims};
+        $opts->{ops}      = $lbo . 'GenericFunge98' unless defined $opts->{ops};
+        $opts->{storage}  = $lbs . 'Generic::AoA'   unless defined $opts->{storage};
+        $opts->{wrapping} = $lbw . 'LaheySpace'     unless defined $opts->{wrapping};
+    } elsif ( $opts->{syntax} =~ /(\d+)funge98$/ ) {
+        $opts->{dims}     = $1                      unless defined $opts->{dims};
+        $opts->{ops}      = $lbo . 'GenericFunge98' unless defined $opts->{ops};
+        $opts->{storage}  = $lbs . 'Generic::AoA'   unless defined $opts->{storage};
+        $opts->{wrapping} = $lbw . 'LaheySpace'     unless defined $opts->{wrapping};
+    } else {
+        croak "syntax '$opts->{syntax}' not recognized.";
     }
 
     # load the classes (through UNIVERSAL::require)
