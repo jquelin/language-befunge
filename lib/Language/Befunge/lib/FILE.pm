@@ -250,7 +250,7 @@ Seek to position C<$pos> in file C<$fid>. C<$mode> can be one of:
 =back
 
 
-=item * $fid = W( $fid, $count )
+=item $fid = W( $fid, $count )
 
 Write C<$count> bytes from buffer to file C<$fid>. Put back C<$fid> on the
 stack.
