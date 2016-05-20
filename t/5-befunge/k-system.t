@@ -23,7 +23,7 @@ SKIP: {
     $bef->store_code( '< q . = "a_file_unlikely_to_exist"0' );
     stdout_is { $bef->run_code } '-1 ', 'exec, non-existing file';
 }
-$bef->store_code( '< q . = "perl t/_resources/exit3.pl"0' );
+$bef->store_code( qq{< q . = "$^X t/_resources/exit3.pl"0} );
 stdout_is { $bef->run_code } '3 ', 'exec, regular';
 
 
